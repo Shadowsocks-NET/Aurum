@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum", "Aurum\Aurum.csproj", "{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum.Micro", "Aurum.Micro\Aurum.Micro.csproj", "{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

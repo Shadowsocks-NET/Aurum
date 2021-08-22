@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ReactiveUI;
 
-namespace Aurum.ViewModels
+namespace Aurum.Micro.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

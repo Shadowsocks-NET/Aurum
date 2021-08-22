@@ -1,13 +1,13 @@
 using System.Diagnostics;
+using Aurum.Micro.Services;
+using Aurum.Micro.ViewModels;
+using Aurum.Micro.Views;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Aurum.ViewModels;
-using Aurum.Views;
-using Aurum.Services;
 using Avalonia.Controls;
 
-namespace Aurum
+namespace Aurum.Micro
 {
     public class App : Application
     {

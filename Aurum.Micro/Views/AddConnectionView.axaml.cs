@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Aurum.Views
+namespace Aurum.Micro.Views
 {
     public class AddConnectionView : UserControl
     {

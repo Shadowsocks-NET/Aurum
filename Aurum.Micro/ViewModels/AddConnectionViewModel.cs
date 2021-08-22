@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using Aurum.Models;
+using Aurum.Micro.Models;
 using ReactiveUI;
 
-namespace Aurum.ViewModels
+namespace Aurum.Micro.ViewModels
 {
     class AddConnectionViewModel : ViewModelBase
     {
@@ -25,9 +25,10 @@ namespace Aurum.ViewModels
 
         public string Name
         {
-            get => name; 
+            get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
         }
+
         public ReactiveCommand<Unit, ConnectionItem> Ok { get; }
         public ReactiveCommand<Unit, Unit> Cancel { get; }
     }

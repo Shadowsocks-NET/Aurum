@@ -2,16 +2,13 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Aurum.Views
+namespace Aurum.Micro.Views
 {
-    public class AddConnectionWindow : Window
+    public class MainControlView : UserControl
     {
-        public AddConnectionWindow()
+        public MainControlView()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()

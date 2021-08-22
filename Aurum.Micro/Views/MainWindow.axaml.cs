@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Aurum.Views
+namespace Aurum.Micro.Views
 {
     public partial class MainWindow : Window
     {

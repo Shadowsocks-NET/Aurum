@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Aurum.Models;
+using Aurum.Micro.Models;
 
-namespace Aurum.ViewModels
+namespace Aurum.Micro.ViewModels
 {
     public class MainControlViewModel : ViewModelBase
     {
@@ -10,7 +10,7 @@ namespace Aurum.ViewModels
         {
             Items = new ObservableCollection<ConnectionItem>(items);
         }
-        
+
         public ObservableCollection<ConnectionItem> Items { get; }
     }
 }

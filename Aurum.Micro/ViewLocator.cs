@@ -1,9 +1,9 @@
 using System;
+using Aurum.Micro.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Aurum.ViewModels;
 
-namespace Aurum
+namespace Aurum.Micro
 {
     public class ViewLocator : IDataTemplate
     {
@@ -16,11 +16,11 @@ namespace Aurum
 
             if (type != null)
             {
-                return (Control) Activator.CreateInstance(type)!;
+                return (Control)Activator.CreateInstance(type)!;
             }
             else
             {
-                return new TextBlock {Text = "Not Found: " + name};
+                return new TextBlock { Text = "Not Found: " + name };
             }
         }
 

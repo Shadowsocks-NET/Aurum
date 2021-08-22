@@ -1,4 +1,4 @@
-﻿namespace Aurum.Models
+﻿namespace Aurum.Micro.Models
 {
     public class ConnectionItem
     {
