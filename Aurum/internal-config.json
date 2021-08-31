@@ -1,0 +1,40 @@
+{
+  "name": "Vultr Los Angeles",
+  "tags": [],
+  "host": "los-angeles.vultr-node.xyz",
+  "port": 6514,
+  "protocol": {
+    "type": "vless",
+    "settings": {
+      "credentials": {
+        "uuid": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "encryption": "none"
+      },
+      "transport": {
+        "protocol": "ws",
+        "settings": {
+          "path": "/wss",
+          "maxEarlyData": 0,
+          "browserForwarding": false,
+          "earlyDataHeader": "",
+          "headers": {
+            "Host": ""
+          }
+        }
+      },
+      "security": {
+        "type": "tls",
+        "settings": {
+          "sessionResumption": false,
+          "useSystemRootCert": true,
+          "sni": "",
+          "alpn": ""
+        }
+      },
+      "mux": {
+        "enabled": false,
+        "concurrency": 8
+      }
+    }
+  }
+}
