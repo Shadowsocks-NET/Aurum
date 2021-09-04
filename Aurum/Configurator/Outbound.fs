@@ -15,7 +15,7 @@ type ShadowsocksEncryption =
 // VLESS is removed in v2ray-go, so this is subject to removal too (may happen in any time).
 type VLESSEncryption = | None
 
-type Protocol =
+type Protocols =
     | VLESS // subject to removal.
     | VMess
     | Shadowsocks
@@ -68,7 +68,7 @@ type MuxObject = { enabled: bool; concurrency: int }
 
 type GenericOutboundObject<'T> =
     { sendThrough: string
-      protocol: Protocol
+      protocol: Protocols
       settings: 'T
       tag: string
       streamSettings: StreamSettingsObject
