@@ -10,6 +10,7 @@
         <Compile Include="Configurator\Transport.fs"/>
         <Compile Include="Configurator\Defaults.fs"/>
         <Compile Include="Configurator\Outbound.fs"/>
+        <Compile Include="Configurator\Inbound.fs"/>
     </ItemGroup>
 
     <ItemGroup>
