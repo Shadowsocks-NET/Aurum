@@ -36,6 +36,13 @@ type UserObject =
       alterId: int
       security: string (* should be VMessEncryption but not supported by the Serializer/Deserializer library *)  }
 
+// v2ray-go specific implementation, removed VLESS components.
+type GoUserObject =
+    { id: string
+      level: int
+      alterId: int
+      security: string }
+
 type ServerObject =
     { address: string
       port: int
@@ -50,12 +57,23 @@ type OutboundConfigurationObject =
     { vnext: ServerObject list
       servers: ServerObject list }
 
+// v2ray-go specific implementation, removed vnext layer.
+type GoOutboundConfigurationObject =
+    { address: string
+      port: int
+      users: UserObject list
+      servers: ServerObject list }
+
 type MuxObject = { enabled: bool; concurrency: int }
 
-type OutboundObject =
+type GenericOutboundObject<'T> =
     { sendThrough: string
       protocol: Protocol
-      settings: OutboundConfigurationObject
+      settings: 'T
       tag: string
       streamSettings: StreamSettingsObject
       mux: MuxObject }
+
+type OutboundObject = GenericOutboundObject<OutboundConfigurationObject>
+// v2ray-go specific implementation, removed vnext and VLESS.
+type GoOutboundObject = GenericOutboundObject<GoOutboundConfigurationObject>
