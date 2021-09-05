@@ -85,13 +85,14 @@ type HttpObject =
       method: HTTPMethod
       headers: Dictionary<string, string list> }
 
+// reserved for future annotations.
 type QuicSecurity =
     | None
     | [<JsonField("aes-128-gcm")>] AES
     | [<JsonField("chacha20-poly1305")>] ChaCha20
 
 type QuicObject =
-    { security: QuicSecurity
+    { security: string
       key: string
       header: UdpHeaderObject }
 
