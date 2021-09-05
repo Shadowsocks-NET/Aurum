@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurum.Micro", "Aurum.Micro\Aurum.Micro.csproj", "{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum", "Aurum\Aurum.fsproj", "{EE9DC233-2D04-449D-9B35-108AC1945F25}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Micro", "Aurum.Micro\Aurum.Micro.fsproj", "{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,13 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{718DE3AC-E3B3-48B9-B737-BD3116DAD8EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
