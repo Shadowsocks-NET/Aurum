@@ -146,6 +146,14 @@ module Transport =
           tcpFastOpen: bool option
           tproxy: TProxyType }
 
+    type TransportConfigurationTypes =
+        | TCP of TcpObject
+        | KCP of KcpObject
+        | WebSocket of WebSocketObject
+        | HTTP of HttpObject
+        | QUIC of QuicObject
+        | GRPC of GrpcObject
+
     type StreamSettingsObject =
         { network: Networks
           tls: TLSObject option
