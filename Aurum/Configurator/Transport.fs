@@ -27,32 +27,6 @@ module Transport =
           earlyDataHeader: string
           headers: Dictionary<string, string> option }
 
-    let createWebSocketObject
-        (
-            path: string option,
-            maxEarlyData: int option,
-            browserForwarding: bool option,
-            earlyDataHeader: string option,
-            headers: Dictionary<string, string> option
-        ) =
-        { WebSocketObject.path =
-              match path with
-              | None -> "/"
-              | Some path -> path
-          maxEarlyData =
-              match maxEarlyData with
-              | None -> 0
-              | Some maxEarlyData -> maxEarlyData
-          browserForwarding =
-              match browserForwarding with
-              | None -> false
-              | Some browserForwarding -> browserForwarding
-          earlyDataHeader =
-              match earlyDataHeader with
-              | None -> ""
-              | Some earlyDataHeader -> earlyDataHeader
-          headers = headers }
-
     type HttpRequestObject =
         { version: string
           method: string
@@ -164,3 +138,32 @@ module Transport =
           quic: QuicObject option
           grpc: GrpcObject option
           sockopt: SockoptObject option }
+
+    let createWebSocketObject
+        (
+            path: string option,
+            maxEarlyData: int option,
+            browserForwarding: bool option,
+            earlyDataHeader: string option,
+            headers: Dictionary<string, string> option
+        ) =
+        let config =
+            { WebSocketObject.path =
+                  match path with
+                  | None -> "/"
+                  | Some path -> path
+              maxEarlyData =
+                  match maxEarlyData with
+                  | None -> 0
+                  | Some maxEarlyData -> maxEarlyData
+              browserForwarding =
+                  match browserForwarding with
+                  | None -> false
+                  | Some browserForwarding -> browserForwarding
+              earlyDataHeader =
+                  match earlyDataHeader with
+                  | None -> ""
+                  | Some earlyDataHeader -> earlyDataHeader
+              headers = headers }
+
+        TransportConfigurationTypes.WebSocket config
