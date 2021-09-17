@@ -1,4 +1,4 @@
-﻿namespace Aurum
+﻿namespace Aurum.Configurator
 
 open FSharp.Json
 open SQLite
@@ -12,7 +12,7 @@ module Group =
 
     type SubscriptionType =
         | None
-        | Base64
+        | Base64 // not suggested
         | SIP008
         | OOCv1
 
