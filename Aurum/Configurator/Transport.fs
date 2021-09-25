@@ -140,13 +140,22 @@ module Transport =
           sockopt: SockoptObject option }
 
     let createWebSocketObject
-        (
-            path: string option,
-            maxEarlyData: int option,
-            browserForwarding: bool option,
-            earlyDataHeader: string option,
-            headers: Dictionary<string, string> option
-        ) =
+        (path: string option)
+        (maxEarlyData: int option)
+        (browserForwarding: bool option)
+        (earlyDataHeader: string option)
+        (host: string option)
+        (headers: Dictionary<string, string> option)
+        =
+        let constructedHeaders =
+            match headers with
+            | Some (header) -> header
+            | None -> Dictionary<string, string>()
+
+        match host with
+        | Some (host) -> constructedHeaders.Add("Host", host)
+        | None -> ignore ()
+
         let config =
             { WebSocketObject.path =
                   match path with
@@ -164,6 +173,6 @@ module Transport =
                   match earlyDataHeader with
                   | None -> ""
                   | Some earlyDataHeader -> earlyDataHeader
-              headers = headers }
+              headers = Some(constructedHeaders) }
 
         TransportConfigurationTypes.WebSocket config
