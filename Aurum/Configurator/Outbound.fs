@@ -79,4 +79,4 @@ module Outbound =
     // v2ray-go specific implementation, removed vnext and VLESS.
     type GoOutboundObject = GenericOutboundObject<GoOutboundConfigurationObject>
 
-    let createVMessOutboundObject
+    let createVMessOutboundObject = ()
