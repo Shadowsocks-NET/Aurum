@@ -26,8 +26,9 @@ module ShareLink =
         let retrieveFromShareLink =
             Helpers.getFirstQuerystringEntry queryParams
 
-        let tryRetrieveFromShareLink =
-            Helpers.tryGetFirstQuerystringEntry queryParams
+        let tryRetrieveFromShareLink key =
+            Helpers.tryGetFirstQuerystringEntry queryParams key
+            |> Helpers.blankStringToNone
 
         let transportType = retrieveFromShareLink "type"
 
