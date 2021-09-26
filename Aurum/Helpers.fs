@@ -4,30 +4,27 @@ open System
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
 
-let nullableToOption (value: 'T) : 'T option =
+let nullableToOption value =
     match value with
     | null -> None
     | value -> Some(value)
 
-let retrieveKeyFromDict (dict: Dictionary<'K, 'V>) (key: 'K) : Result<'V, KeyNotFoundException> =
+let retrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
         Ok(dict.[key])
     with
     | :? KeyNotFoundException as e -> Error(e)
 
-let tryRetrieveKeyFromDict (dict: Dictionary<'K, 'V>) (key: 'K) : 'V option =
+let tryRetrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
         Some(dict.[key])
     with
     | :? KeyNotFoundException as e -> None
 
-let unwrapResult (result: Result<'V, 'E>) : 'V =
-    let value =
-        match result with
-        | Ok (some) -> some
-        | Error (error) -> raise (error)
-
-    value
+let unwrapResult result =
+    match result with
+    | Ok (some) -> some
+    | Error (error) -> raise error
 
 let getFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) : string =
     (retrieveKeyFromDict dict key |> unwrapResult).[0]
