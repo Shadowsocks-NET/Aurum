@@ -50,6 +50,7 @@ module ShareLink =
                     (tryRetrieveFromShareLink "path")
                     (tryRetrieveFromShareLink "host")
                     (Dictionary())
+            | _ -> raise (Exceptions.ConfigurationParameterError "unknown transport protocol")
 
         ()
 
