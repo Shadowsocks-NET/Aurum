@@ -41,6 +41,14 @@ module ShareLink =
                     None
                     (tryRetrieveFromShareLink "host")
                     None
+            | "grpc" ->
+                retrieveFromShareLink "serviceName"
+                |> Transport.createGrpcObject
+            | "http" ->
+                Transport.createHttpObject
+                    (tryRetrieveFromShareLink "path")
+                    (tryRetrieveFromShareLink "host")
+                    (Dictionary())
 
         ()
 
