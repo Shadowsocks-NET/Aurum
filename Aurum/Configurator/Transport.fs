@@ -1,6 +1,7 @@
 namespace Aurum.Configurator
 
 open System.Collections.Generic
+open Aurum
 open FSharp.Json
 
 module Transport =
@@ -101,7 +102,7 @@ module Transport =
           key: string
           header: UdpHeaderObject }
 
-    type GrpcObject = { serviceName: string }
+    type GrpcObject = { serviceName: string; mode: string }
 
     type TLSObject =
         { serverName: string
@@ -139,14 +140,7 @@ module Transport =
           grpc: GrpcObject option
           sockopt: SockoptObject option }
 
-    let createWebSocketObject
-        (path: string option)
-        (maxEarlyData: int option)
-        (browserForwarding: bool option)
-        (earlyDataHeader: string option)
-        (host: string option)
-        (headers: Dictionary<string, string> option)
-        =
+    let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
         let constructedHeaders =
             match headers with
             | Some (header) -> header
@@ -176,3 +170,27 @@ module Transport =
               headers = Some(constructedHeaders) }
 
         TransportConfigurationTypes.WebSocket config
+
+    let createGrpcObject serviceName =
+        let config =
+            { serviceName = serviceName
+              mode = "gun" }
+
+        TransportConfigurationTypes.GRPC config
+
+    let createHttpObject path (host: string option) headers =
+        let parsedHost =
+            match host with
+            | Some (host) -> Helpers.splitString "," host
+            | None -> []
+
+        let config =
+            { HttpObject.path =
+                  match path with
+                  | None -> "/"
+                  | Some path -> path
+              headers = headers
+              host = parsedHost
+              method = HTTPMethod.PUT }
+
+        TransportConfigurationTypes.HTTP config
