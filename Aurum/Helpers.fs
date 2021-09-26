@@ -41,3 +41,11 @@ let enumerableToList (enumerable: IEnumerable<'T>) =
 let splitString (indicator: string) (string: string) =
     let intermediateArray = string.Split indicator
     enumerableToList intermediateArray
+
+let blankStringToNone string =
+    match string with
+    | Some (string) ->
+        match string with
+        | "" -> None
+        | string -> Some(string)
+    | None -> None
