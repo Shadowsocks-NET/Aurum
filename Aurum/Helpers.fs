@@ -38,6 +38,6 @@ let tryGetFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: s
 let enumerableToList (enumerable: IEnumerable<'T>) =
     enumerable.Aggregate([], (fun list curr -> list @ [ curr ]))
 
-let splitString indicator (string: string) =
-    let intermediateArray = string.Split(indicator)
+let splitString (indicator: string) (string: string) =
+    let intermediateArray = string.Split indicator
     enumerableToList intermediateArray
