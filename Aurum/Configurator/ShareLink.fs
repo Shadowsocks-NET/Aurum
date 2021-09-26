@@ -14,7 +14,7 @@ module ShareLink =
         let encodedBytes = System.Convert.FromBase64String encoded
         System.Text.Encoding.UTF8.GetString encodedBytes
 
-    let createVMessObjectFromUri (uriObject: System.Uri) =
+    let createV2FlyObjectFromUri (uriObject: System.Uri) =
         let uuid = uriObject.UserInfo
         let host = uriObject.Host
         let port = uriObject.Port
@@ -58,5 +58,12 @@ module ShareLink =
         let uriObject = System.Uri link
 
         match uriObject.Scheme with
-        | "vmess" -> createVMessObjectFromUri uriObject
-        | _ -> raise (Exceptions.ShareLinkFormatError("unknown shared link type"))
+        | "vmess"
+        | "vless" -> createV2FlyObjectFromUri uriObject
+        | "ss" ->
+            let mutable SSServer = Shadowsocks.Models.Server()
+
+            match Shadowsocks.Models.Server.TryParse(uriObject, &SSServer) with
+            | true -> ()
+            | false -> raise (Exceptions.ShareLinkFormatError "incorrect Shadowsocks link format")
+        | _ -> raise (Exceptions.ShareLinkFormatError "unknown share link type")
