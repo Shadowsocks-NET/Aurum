@@ -49,7 +49,7 @@ module Transport =
     type TcpObject = { header: TcpHeaderObject }
 
     [<RequireQualifiedAccess>]
-    type KcpHeaders =
+    type UdpHeaders =
         | None
         | SRTP
         | UTP
