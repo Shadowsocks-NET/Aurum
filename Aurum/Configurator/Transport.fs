@@ -194,3 +194,31 @@ module Transport =
               method = HTTPMethod.PUT }
 
         TransportConfigurationTypes.HTTP config
+
+    let createQUICObject security key headerType =
+        match security with
+        | Some "none"
+        | None -> ()
+        | Some "aes-128-gcm"
+        | Some "chacha20-poly1305" ->
+            match key with
+            | Some ""
+            | None -> raise (Exceptions.ConfigurationParameterError "no QUIC key specified")
+            | _ -> ()
+        | _ -> raise (Exceptions.ConfigurationParameterError "unknown QUIC security type")
+
+        let header =
+            { UdpHeaderObject.headerType =
+                  match headerType with
+                  | None -> "none"
+                  | Some headerType -> headerType }
+
+        let config =
+            { QuicObject.security =
+                  match security with
+                  | None -> "none"
+                  | Some security -> security
+              key = key
+              header = header }
+
+        TransportConfigurationTypes.QUIC config
