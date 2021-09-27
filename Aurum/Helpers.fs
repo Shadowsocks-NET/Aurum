@@ -1,6 +1,5 @@
 module Aurum.Helpers
 
-open System
 open System.Collections.Generic
 open System.Linq
 open Microsoft.Extensions.Primitives
@@ -20,19 +19,19 @@ let tryRetrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
         Some(dict.[key])
     with
-    | :? KeyNotFoundException as e -> None
+    | :? KeyNotFoundException -> None
 
 let unwrapResult result =
     match result with
-    | Ok (some) -> some
-    | Error (error) -> raise error
+    | Ok some -> some
+    | Error error -> raise error
 
 let getFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) : string =
     (retrieveKeyFromDict dict key |> unwrapResult).[0]
 
 let tryGetFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) : string option =
     match tryRetrieveKeyFromDict dict key with
-    | Some (value) -> Some(value.[0])
+    | Some value -> Some(value.[0])
     | None -> None
 
 let enumerableToList (enumerable: IEnumerable<'T>) =
@@ -44,7 +43,7 @@ let splitString (indicator: string) (string: string) =
 
 let blankStringToNone string =
     match string with
-    | Some (string) ->
+    | Some string ->
         match string with
         | "" -> None
         | string -> Some(string)
