@@ -143,12 +143,12 @@ module Transport =
     let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
         let constructedHeaders =
             match headers with
-            | Some (header) -> header
+            | Some header -> header
             | None -> Dictionary<string, string>()
 
         match host with
-        | Some (host) -> constructedHeaders.Add("Host", host)
-        | None -> ignore ()
+        | Some host -> constructedHeaders.Add("Host", host)
+        | None -> ()
 
         let config =
             { WebSocketObject.path =
@@ -181,7 +181,7 @@ module Transport =
     let createHttpObject path (host: string option) headers =
         let parsedHost =
             match host with
-            | Some (host) -> Helpers.splitString "," host
+            | Some host -> Helpers.splitString "," host
             | None -> []
 
         let config =
