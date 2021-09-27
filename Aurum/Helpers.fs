@@ -1,7 +1,6 @@
 module Aurum.Helpers
 
 open System.Collections.Generic
-open System.Linq
 open Microsoft.Extensions.Primitives
 
 let nullableToOption value =
@@ -33,13 +32,6 @@ let tryGetFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: s
     match tryRetrieveKeyFromDict dict key with
     | Some value -> Some(value.[0])
     | None -> None
-
-let enumerableToList (enumerable: IEnumerable<'T>) =
-    enumerable.Aggregate([], (fun list curr -> list @ [ curr ]))
-
-let splitString (indicator: string) (string: string) =
-    let intermediateArray = string.Split indicator
-    enumerableToList intermediateArray
 
 let blankStringToNone string =
     match string with

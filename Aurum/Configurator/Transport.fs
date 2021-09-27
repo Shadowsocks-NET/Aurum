@@ -181,7 +181,7 @@ module Transport =
     let createHttpObject path (host: string option) headers =
         let parsedHost =
             match host with
-            | Some host -> Helpers.splitString "," host
+            | Some host -> host.Split "," |> Seq.toList
             | None -> []
 
         let config =
