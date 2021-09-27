@@ -99,7 +99,7 @@ module Transport =
 
     type QuicObject =
         { security: string
-          key: string
+          key: string option
           header: UdpHeaderObject }
 
     type GrpcObject = { serviceName: string; mode: string }
