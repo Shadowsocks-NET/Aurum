@@ -59,7 +59,7 @@ module Transport =
 
     type UdpHeaderObject =
         { [<JsonField("type")>]
-          headerType: KcpHeaders }
+          headerType: string }
 
     type KcpObject =
         { mtu: int
