@@ -1,7 +1,8 @@
 namespace Aurum.Configurator
 
 open System.Collections.Generic
-open Aurum
+open Aurum.Helpers
+open Aurum.Exceptions
 open FSharp.Json
 
 module Transport =
@@ -141,32 +142,17 @@ module Transport =
           Sockopt: SockoptObject option }
 
     let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
-        let constructedHeaders =
-            match headers with
-            | Some header -> header
-            | None -> Dictionary<string, string>()
+        let constructedHeaders = unwrapOptionWithDefaults headers (Dictionary())
 
         match host with
         | Some host -> constructedHeaders.Add("Host", host)
         | None -> ()
 
         let config =
-            { WebSocketObject.Path =
-                  match path with
-                  | None -> "/"
-                  | Some path -> path
-              MaxEarlyData =
-                  match maxEarlyData with
-                  | None -> 0
-                  | Some maxEarlyData -> maxEarlyData
-              BrowserForwarding =
-                  match browserForwarding with
-                  | None -> false
-                  | Some browserForwarding -> browserForwarding
-              EarlyDataHeader =
-                  match earlyDataHeader with
-                  | None -> ""
-                  | Some earlyDataHeader -> earlyDataHeader
+            { WebSocketObject.Path = unwrapOptionWithDefaults path "/"
+              MaxEarlyData = unwrapOptionWithDefaults maxEarlyData 0
+              BrowserForwarding = unwrapOptionWithDefaults browserForwarding false
+              EarlyDataHeader = unwrapOptionWithDefaults earlyDataHeader ""
               Headers = Some(constructedHeaders) }
 
         WebSocket config
@@ -203,21 +189,15 @@ module Transport =
         | Some "chacha20-poly1305" ->
             match key with
             | Some ""
-            | None -> raise (Exceptions.ConfigurationParameterError "no QUIC key specified")
+            | None -> raise (ConfigurationParameterError "no QUIC key specified")
             | _ -> ()
-        | _ -> raise (Exceptions.ConfigurationParameterError "unknown QUIC security type")
+        | _ -> raise (ConfigurationParameterError "unknown QUIC security type")
 
         let header =
-            { UdpHeaderObject.HeaderType =
-                  match headerType with
-                  | None -> "none"
-                  | Some headerType -> headerType }
+            { UdpHeaderObject.HeaderType = unwrapOptionWithDefaults headerType "none" }
 
         let config =
-            { QuicObject.Security =
-                  match security with
-                  | None -> "none"
-                  | Some security -> security
+            { QuicObject.Security = unwrapOptionWithDefaults security "none"
               Key = key
               Header = header }
 
