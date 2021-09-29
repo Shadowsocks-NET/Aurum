@@ -169,14 +169,14 @@ module Transport =
                   | Some earlyDataHeader -> earlyDataHeader
               Headers = Some(constructedHeaders) }
 
-        TransportConfigurationTypes.WebSocket config
+        WebSocket config
 
     let createGrpcObject serviceName =
         let config =
             { ServiceName = serviceName
               Mode = "gun" }
 
-        TransportConfigurationTypes.GRPC config
+        GRPC config
 
     let createHttpObject path (host: string option) headers =
         let parsedHost =
@@ -193,7 +193,7 @@ module Transport =
               Host = parsedHost
               Method = HTTPMethod.PUT }
 
-        TransportConfigurationTypes.HTTP config
+        HTTP config
 
     let createQUICObject security key headerType =
         match security with
@@ -221,4 +221,4 @@ module Transport =
               Key = key
               Header = header }
 
-        TransportConfigurationTypes.QUIC config
+        QUIC config
