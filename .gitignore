@@ -5,3 +5,6 @@ riderModule.iml
 /_ReSharper.Caches/
 .vs
 .idea
+
+.fake
+.ionide
