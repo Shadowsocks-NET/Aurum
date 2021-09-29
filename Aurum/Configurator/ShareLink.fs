@@ -55,6 +55,17 @@ module ShareLink =
                     (tryRetrieveFromShareLink  "quicSecurity")
                     (tryRetrieveFromShareLink "key")
                     (tryRetrieveFromShareLink "headerType")
+            | "kcp" ->
+                Transport.createKCPObject
+                    None
+                    None
+                    None
+                    None
+                    None
+                    None
+                    None
+                    (tryRetrieveFromShareLink "headerType")
+                    (tryRetrieveFromShareLink "seed")
             | _ -> raise (Exceptions.ConfigurationParameterError "unknown transport protocol")
 
         ()

@@ -71,7 +71,7 @@ module Transport =
           ReadBufferSize: int
           WriteBufferSize: int
           Header: UdpHeaderObject
-          Seed: string }
+          Seed: string option }
 
     [<RequireQualifiedAccess>]
     type HTTPMethod =
@@ -142,7 +142,8 @@ module Transport =
           Sockopt: SockoptObject option }
 
     let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
-        let constructedHeaders = Option.defaultValue (Dictionary()) headers
+        let constructedHeaders =
+            Option.defaultValue (Dictionary()) headers
 
         match host with
         | Some host -> constructedHeaders.Add("Host", host)
@@ -151,7 +152,7 @@ module Transport =
         let config =
             { WebSocketObject.Path = Option.defaultValue "/" path
               MaxEarlyData = Option.defaultValue 0 maxEarlyData
-              BrowserForwarding = Option.defaultValue false browserForwarding 
+              BrowserForwarding = Option.defaultValue false browserForwarding
               EarlyDataHeader = Option.defaultValue "" earlyDataHeader
               Headers = Some(constructedHeaders) }
 
@@ -200,6 +201,29 @@ module Transport =
 
         QUIC config
 
-    let createKCPObject mtu tti uplinkCapacity downlinkCapacity congestion readBufferSize writeBufferSize seed headerType =
+    let createKCPObject
+        mtu
+        tti
+        uplinkCapacity
+        downlinkCapacity
+        congestion
+        readBufferSize
+        writeBufferSize
+        seed
+        headerType
+        =
+        let header =
+            { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
+
         let config =
-        { KcpObject.MTU = Option.defaultValue  }
+            { KcpObject.MTU = Option.defaultValue 1350 mtu
+              TTI = Option.defaultValue 20 tti
+              UplinkCapacity = Option.defaultValue 5 uplinkCapacity
+              DownlinkCapacity = Option.defaultValue 20 downlinkCapacity
+              Congestion = Option.defaultValue false congestion
+              ReadBufferSize = Option.defaultValue 2 readBufferSize
+              WriteBufferSize = Option.defaultValue 2 writeBufferSize
+              Seed = seed
+              Header = header }
+
+        KCP config
