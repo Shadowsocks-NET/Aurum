@@ -33,10 +33,4 @@ let tryGetFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: s
     | Some value -> Some(value.[0])
     | None -> None
 
-let blankStringToNone string =
-    match string with
-    | Some string ->
-        match string with
-        | "" -> None
-        | string -> Some(string)
-    | None -> None
+let blankStringToNone (string: string option) = Option.filter (fun x -> x.Equals("")) string
