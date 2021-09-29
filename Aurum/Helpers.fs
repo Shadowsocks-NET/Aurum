@@ -40,3 +40,8 @@ let blankStringToNone string =
         | "" -> None
         | string -> Some(string)
     | None -> None
+
+let unwrapOptionWithDefaults opt defaults =
+    match opt with
+    | Some value -> value
+    | None -> defaults
