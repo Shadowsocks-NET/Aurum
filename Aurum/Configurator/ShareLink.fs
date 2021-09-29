@@ -61,9 +61,9 @@ module ShareLink =
         | "vmess"
         | "vless" -> createV2FlyObjectFromUri uriObject
         | "ss" ->
-            let mutable SSServer = Shadowsocks.Models.Server()
+            let mutable ssServer = Shadowsocks.Models.Server()
 
-            match Shadowsocks.Models.Server.TryParse(uriObject, &SSServer) with
+            match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
             | true -> ()
             | false -> raise (Exceptions.ShareLinkFormatError "incorrect Shadowsocks link format")
         | _ -> raise (Exceptions.ShareLinkFormatError "unknown share link type")
