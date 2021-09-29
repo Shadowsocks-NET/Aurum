@@ -142,17 +142,17 @@ module Transport =
           Sockopt: SockoptObject option }
 
     let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
-        let constructedHeaders = unwrapOptionWithDefaults headers (Dictionary())
+        let constructedHeaders = Option.defaultValue (Dictionary()) headers
 
         match host with
         | Some host -> constructedHeaders.Add("Host", host)
         | None -> ()
 
         let config =
-            { WebSocketObject.Path = unwrapOptionWithDefaults path "/"
-              MaxEarlyData = unwrapOptionWithDefaults maxEarlyData 0
-              BrowserForwarding = unwrapOptionWithDefaults browserForwarding false
-              EarlyDataHeader = unwrapOptionWithDefaults earlyDataHeader ""
+            { WebSocketObject.Path = Option.defaultValue "/" path
+              MaxEarlyData = Option.defaultValue 0 maxEarlyData
+              BrowserForwarding = Option.defaultValue false browserForwarding 
+              EarlyDataHeader = Option.defaultValue "" earlyDataHeader
               Headers = Some(constructedHeaders) }
 
         WebSocket config
@@ -171,10 +171,7 @@ module Transport =
             | None -> []
 
         let config =
-            { HttpObject.Path =
-                  match path with
-                  | None -> "/"
-                  | Some path -> path
+            { HttpObject.Path = Option.defaultValue "/" path
               Headers = headers
               Host = parsedHost
               Method = HTTPMethod.PUT }
@@ -194,11 +191,15 @@ module Transport =
         | _ -> raise (ConfigurationParameterError "unknown QUIC security type")
 
         let header =
-            { UdpHeaderObject.HeaderType = unwrapOptionWithDefaults headerType "none" }
+            { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
 
         let config =
-            { QuicObject.Security = unwrapOptionWithDefaults security "none"
+            { QuicObject.Security = Option.defaultValue "none" security
               Key = key
               Header = header }
 
         QUIC config
+
+    let createKCPObject mtu tti uplinkCapacity downlinkCapacity congestion readBufferSize writeBufferSize seed headerType =
+        let config =
+        { KcpObject.MTU = Option.defaultValue  }
