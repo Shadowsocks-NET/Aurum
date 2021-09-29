@@ -50,6 +50,11 @@ module ShareLink =
                     (tryRetrieveFromShareLink "path")
                     (tryRetrieveFromShareLink "host")
                     (Dictionary())
+            | "quic" ->
+                Transport.createQUICObject
+                    (tryRetrieveFromShareLink  "quicSecurity")
+                    (tryRetrieveFromShareLink "key")
+                    (tryRetrieveFromShareLink "headerType")
             | _ -> raise (Exceptions.ConfigurationParameterError "unknown transport protocol")
 
         ()
