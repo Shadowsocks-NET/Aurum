@@ -22,31 +22,31 @@ module Transport =
         | XTLS
 
     type WebSocketObject =
-        { path: string
-          maxEarlyData: int
-          browserForwarding: bool
-          earlyDataHeader: string
-          headers: Dictionary<string, string> option }
+        { Path: string
+          MaxEarlyData: int
+          BrowserForwarding: bool
+          EarlyDataHeader: string
+          Headers: Dictionary<string, string> option }
 
     type HttpRequestObject =
-        { version: string
-          method: string
-          path: string list
-          headers: Dictionary<string, string list> }
+        { Version: string
+          Method: string
+          Path: string list
+          Headers: Dictionary<string, string list> }
 
     type HttpResponseObject =
-        { version: string
-          status: string
-          reason: string
-          headers: Dictionary<string, string list> }
+        { Version: string
+          Status: string
+          Reason: string
+          Headers: Dictionary<string, string list> }
 
     type TcpHeaderObject =
         { [<JsonField("type")>]
-          headerType: string
-          request: HttpRequestObject
-          response: HttpResponseObject }
+          HeaderType: string
+          Request: HttpRequestObject
+          Response: HttpResponseObject }
 
-    type TcpObject = { header: TcpHeaderObject }
+    type TcpObject = { Header: TcpHeaderObject }
 
     [<RequireQualifiedAccess>]
     type UdpHeaders =
@@ -59,18 +59,18 @@ module Transport =
 
     type UdpHeaderObject =
         { [<JsonField("type")>]
-          headerType: string }
+          HeaderType: string }
 
     type KcpObject =
-        { mtu: int
-          tti: int
-          uplinkCapacity: int
-          downlinkCapacity: int
-          congestion: bool
-          readBufferSize: int
-          writeBufferSize: int
-          header: UdpHeaderObject
-          seed: string }
+        { MTU: int
+          TTI: int
+          UplinkCapacity: int
+          DownlinkCapacity: int
+          Congestion: bool
+          ReadBufferSize: int
+          WriteBufferSize: int
+          Header: UdpHeaderObject
+          Seed: string }
 
     [<RequireQualifiedAccess>]
     type HTTPMethod =
@@ -85,10 +85,10 @@ module Transport =
         | PATCH
 
     type HttpObject =
-        { host: string list
-          path: string
-          method: HTTPMethod
-          headers: Dictionary<string, string list> }
+        { Host: string list
+          Path: string
+          Method: HTTPMethod
+          Headers: Dictionary<string, string list> }
 
     // reserved for future annotations.
     [<RequireQualifiedAccess>]
@@ -98,17 +98,17 @@ module Transport =
         | [<JsonField("chacha20-poly1305")>] ChaCha20
 
     type QuicObject =
-        { security: string
-          key: string option
-          header: UdpHeaderObject }
+        { Security: string
+          Key: string option
+          Header: UdpHeaderObject }
 
-    type GrpcObject = { serviceName: string; mode: string }
+    type GrpcObject = { ServiceName: string; Mode: string }
 
     type TLSObject =
-        { serverName: string
-          allowInsecure: bool
-          alpn: string list
-          disableSystemRoot: bool }
+        { ServerName: string
+          AllowInsecure: bool
+          Alpn: string list
+          DisableSystemRoot: bool }
 
     [<RequireQualifiedAccess>]
     type TProxyType =
@@ -117,9 +117,9 @@ module Transport =
         | Off
 
     type SockoptObject =
-        { mark: int
-          tcpFastOpen: bool option
-          tproxy: TProxyType }
+        { Mark: int
+          TcpFastOpen: bool option
+          Tproxy: TProxyType }
 
     type TransportConfigurationTypes =
         | TCP of TcpObject
@@ -130,15 +130,15 @@ module Transport =
         | GRPC of GrpcObject
 
     type StreamSettingsObject =
-        { network: Networks
-          tls: TLSObject option
-          tcp: TcpObject option
-          kcp: KcpObject option
-          ws: WebSocketObject option
-          http: HttpObject option
-          quic: QuicObject option
-          grpc: GrpcObject option
-          sockopt: SockoptObject option }
+        { Network: Networks
+          Tls: TLSObject option
+          Tcp: TcpObject option
+          Kcp: KcpObject option
+          Ws: WebSocketObject option
+          Http: HttpObject option
+          Quic: QuicObject option
+          Grpc: GrpcObject option
+          Sockopt: SockoptObject option }
 
     let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
         let constructedHeaders =
@@ -151,30 +151,30 @@ module Transport =
         | None -> ()
 
         let config =
-            { WebSocketObject.path =
+            { WebSocketObject.Path =
                   match path with
                   | None -> "/"
                   | Some path -> path
-              maxEarlyData =
+              MaxEarlyData =
                   match maxEarlyData with
                   | None -> 0
                   | Some maxEarlyData -> maxEarlyData
-              browserForwarding =
+              BrowserForwarding =
                   match browserForwarding with
                   | None -> false
                   | Some browserForwarding -> browserForwarding
-              earlyDataHeader =
+              EarlyDataHeader =
                   match earlyDataHeader with
                   | None -> ""
                   | Some earlyDataHeader -> earlyDataHeader
-              headers = Some(constructedHeaders) }
+              Headers = Some(constructedHeaders) }
 
         TransportConfigurationTypes.WebSocket config
 
     let createGrpcObject serviceName =
         let config =
-            { serviceName = serviceName
-              mode = "gun" }
+            { ServiceName = serviceName
+              Mode = "gun" }
 
         TransportConfigurationTypes.GRPC config
 
@@ -185,13 +185,13 @@ module Transport =
             | None -> []
 
         let config =
-            { HttpObject.path =
+            { HttpObject.Path =
                   match path with
                   | None -> "/"
                   | Some path -> path
-              headers = headers
-              host = parsedHost
-              method = HTTPMethod.PUT }
+              Headers = headers
+              Host = parsedHost
+              Method = HTTPMethod.PUT }
 
         TransportConfigurationTypes.HTTP config
 
@@ -208,17 +208,17 @@ module Transport =
         | _ -> raise (Exceptions.ConfigurationParameterError "unknown QUIC security type")
 
         let header =
-            { UdpHeaderObject.headerType =
+            { UdpHeaderObject.HeaderType =
                   match headerType with
                   | None -> "none"
                   | Some headerType -> headerType }
 
         let config =
-            { QuicObject.security =
+            { QuicObject.Security =
                   match security with
                   | None -> "none"
                   | Some security -> security
-              key = key
-              header = header }
+              Key = key
+              Header = header }
 
         TransportConfigurationTypes.QUIC config
