@@ -4,38 +4,36 @@ open FSharp.Json
 open Aurum.Configurator.Transport
 
 module Outbound =
-    // reserved for future annotations.
     type ShadowsocksEncryption =
-        | None
-        | Plain
-        | [<JsonField("chacha20-poly1305")>] ChaCha20
-        | [<JsonField("chacha20-ietf-poly1305")>] ChaCha20IETF
-        | [<JsonField("aes-128-gcm")>] AES128
-        | [<JsonField("aes-256-gcm")>] AES256
+        | [<JsonUnionCase("none")>] None
+        | [<JsonUnionCase("plain")>] Plain
+        | [<JsonUnionCase("chacha20-poly1305")>] ChaCha20
+        | [<JsonUnionCase("chacha20-ietf-poly1305")>] ChaCha20IETF
+        | [<JsonUnionCase("aes-128-gcm")>] AES128
+        | [<JsonUnionCase("aes-256-gcm")>] AES256
 
     // VLESS is removed in v2ray-go, so this is subject to removal too (may happen in any time).
     type VLESSEncryption = | None
 
     type Protocols =
-        | VLESS // subject to removal.
-        | VMess
-        | Shadowsocks
-        | Trojan
+        | [<JsonUnionCase("vless")>] VLESS // subject to removal.
+        | [<JsonUnionCase("vmess")>] VMess
+        | [<JsonUnionCase("shadowsocks")>] Shadowsocks
+        | [<JsonUnionCase("trojan")>] Trojan
 
-    // reserved for future annotations.
     type VMessEncryption =
-        | None
-        | Zero
-        | Auto
-        | [<JsonField("aes-128-gcm")>] AES
-        | [<JsonField("chacha20-poly1305")>] ChaCha20
+        | [<JsonUnionCase("none")>] None
+        | [<JsonUnionCase("zero")>] Zero
+        | [<JsonUnionCase("auto")>] Auto
+        | [<JsonUnionCase("aes-128-gcm")>] AES
+        | [<JsonUnionCase("chacha20-poly1305")>] ChaCha20
 
     type UserObject =
         { ID: string
           Encryption: VLESSEncryption
           Level: int
           AlterId: int
-          Security: string (* should be VMessEncryption but not supported by the Serializer/Deserializer library *)  }
+          Security: VMessEncryption }
 
     // v2ray-go specific implementation, removed VLESS components.
     type GoUserObject =
@@ -50,7 +48,7 @@ module Outbound =
           Password: string
           Email: string option
           Level: int
-          Method: string (* should be ShadowsocksEncryption but not supported by the Serializer/Deserializer library *)
+          Method: ShadowsocksEncryption
           IvCheck: bool
           Users: UserObject list }
 
