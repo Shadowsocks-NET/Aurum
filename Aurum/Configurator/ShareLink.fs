@@ -52,7 +52,7 @@ module ShareLink =
                     (Dictionary())
             | "quic" ->
                 Transport.createQUICObject
-                    (tryRetrieveFromShareLink  "quicSecurity")
+                    (tryRetrieveFromShareLink "quicSecurity")
                     (tryRetrieveFromShareLink "key")
                     (tryRetrieveFromShareLink "headerType")
             | "kcp" ->
