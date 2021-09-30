@@ -66,6 +66,7 @@ module ShareLink =
                     None
                     (tryRetrieveFromShareLink "headerType")
                     (tryRetrieveFromShareLink "seed")
+            | "tcp" -> Transport.createTCPObject None
             | _ -> raise (Exceptions.ConfigurationParameterError "unknown transport protocol")
 
         ()

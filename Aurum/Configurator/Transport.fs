@@ -44,8 +44,8 @@ module Transport =
     type TcpHeaderObject =
         { [<JsonField("type")>]
           HeaderType: string
-          Request: HttpRequestObject
-          Response: HttpResponseObject }
+          Request: HttpRequestObject option
+          Response: HttpResponseObject option }
 
     type TcpObject = { Header: TcpHeaderObject }
 
@@ -227,3 +227,15 @@ module Transport =
               Header = header }
 
         KCP config
+
+    let createTCPObject headerObject =
+        let tcpHeader =
+            Option.defaultValue
+                { TcpHeaderObject.HeaderType = "none"
+                  Request = None
+                  Response = None }
+                headerObject
+
+        let config = { TcpObject.Header = tcpHeader }
+
+        TCP config
