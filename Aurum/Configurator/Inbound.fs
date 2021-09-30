@@ -1,16 +1,16 @@
-namespace Aurum.Configurator.Inbound
+module Aurum.Configurator.Inbound
 
-open Aurum.Configurator.Transport
+open FSharp.Json
 
 // reserved for future annotations.
 type Protocols =
-    | HTTP
-    | Socks
-    | DokodemoDoor
+    | [<JsonUnionCase("http")>] HTTP
+    | [<JsonUnionCase("socks")>] Socks
+    | [<JsonUnionCase("dokodemo-door")>] DokodemoDoor
 
 type SocksAuth =
-    | NoAuth
-    | Password
+    | [<JsonUnionCase("noauth")>] NoAuth
+    | [<JsonUnionCase("password")>] Password
 
 type AccountObject = { User: string; Pass: string }
 
