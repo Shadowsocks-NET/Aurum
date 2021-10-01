@@ -1,4 +1,4 @@
-namespace Aurum.Configurator.Outbound
+module Aurum.Configurator.Outbound
 
 open FSharp.Json
 open Aurum.Configurator.Transport
@@ -32,15 +32,15 @@ type VMessEncryption =
 
 type UserObject =
     { ID: string
-      Encryption: VLESSEncryption
-      Level: int
+      Encryption: VLESSEncryption option
+      Level: int option
       AlterId: int
-      Security: VMessEncryption }
+      Security: VMessEncryption option }
 
 // v2ray-go specific implementation, removed VLESS components.
 type GoUserObject =
     { ID: string
-      Level: int
+      Level: int option
       Security: VMessEncryption }
 
 type ServerObject =
@@ -57,7 +57,7 @@ type OutboundConfigurationObject =
     { Vnext: ServerObject list
       Servers: ServerObject list }
 
- // v2ray-go specific implementation, removed vnext layer.
+// v2ray-go specific implementation, removed vnext layer.
 type GoOutboundConfigurationObject =
     { Address: string
       Port: int
@@ -77,4 +77,12 @@ type GenericOutboundObject<'T> =
 type OutboundObject = GenericOutboundObject<OutboundConfigurationObject>
 // v2ray-go specific implementation, removed vnext and VLESS.
 type GoOutboundObject = GenericOutboundObject<GoOutboundConfigurationObject>
+
+
+let createVMessUserObject uuid security level alterId =
+    { UserObject.ID = uuid
+      Security = security
+      Level = level
+      AlterId = Option.defaultValue 0 alterId
+      Encryption = None }
 
