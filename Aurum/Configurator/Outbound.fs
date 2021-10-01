@@ -46,16 +46,16 @@ type GoUserObject =
 type ServerObject =
     { Address: string
       Port: int
-      Password: string
+      Password: string option
       Email: string option
-      Level: int
-      Method: ShadowsocksEncryption
-      IvCheck: bool
+      Level: int option
+      Method: ShadowsocksEncryption option
+      IvCheck: bool option
       Users: UserObject list }
 
 type OutboundConfigurationObject =
-    { Vnext: ServerObject list
-      Servers: ServerObject list }
+    { Vnext: ServerObject list option
+      Servers: ServerObject list option }
 
 // v2ray-go specific implementation, removed vnext layer.
 type GoOutboundConfigurationObject =
@@ -86,3 +86,12 @@ let createVMessUserObject uuid security level alterId =
       AlterId = Option.defaultValue 0 alterId
       Encryption = None }
 
+let createVMessServerObject host port users =
+    { ServerObject.Address = host
+      Port = port
+      Users = users
+      Password = None
+      Email = None
+      Level = None
+      Method = None
+      IvCheck = None }
