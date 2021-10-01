@@ -1,7 +1,8 @@
 namespace Aurum.Configurator
 
 open System.Collections.Generic
-open Aurum
+open Aurum.Exceptions
+open Aurum.Helpers
 
 module ShareLink =
     let placeholder = ""
@@ -24,11 +25,11 @@ module ShareLink =
             Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery uriObject.Query
 
         let retrieveFromShareLink =
-            Helpers.getFirstQuerystringEntry queryParams
+            getFirstQuerystringEntry queryParams
 
         let tryRetrieveFromShareLink key =
-            Helpers.tryGetFirstQuerystringEntry queryParams key
-            |> Helpers.blankStringToNone
+            tryGetFirstQuerystringEntry queryParams key
+            |> blankStringToNone
 
         let transportType = retrieveFromShareLink "type"
 
@@ -67,7 +68,7 @@ module ShareLink =
                     (tryRetrieveFromShareLink "headerType")
                     (tryRetrieveFromShareLink "seed")
             | "tcp" -> Transport.createTCPObject None
-            | _ -> raise (Exceptions.ConfigurationParameterError "unknown transport protocol")
+            | _ -> raise (ConfigurationParameterError "unknown transport protocol")
 
         ()
 
@@ -82,5 +83,5 @@ module ShareLink =
 
             match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
             | true -> ()
-            | false -> raise (Exceptions.ShareLinkFormatError "incorrect Shadowsocks link format")
-        | _ -> raise (Exceptions.ShareLinkFormatError "unknown share link type")
+            | false -> raise (ShareLinkFormatError "incorrect Shadowsocks link format")
+        | _ -> raise (ShareLinkFormatError "unknown share link type")
