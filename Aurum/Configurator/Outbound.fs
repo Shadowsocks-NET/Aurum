@@ -3,6 +3,7 @@ namespace Aurum.Configurator.Outbound
 open FSharp.Json
 open Aurum.Configurator.Transport
 
+[<RequireQualifiedAccessAttribute>]
 type ShadowsocksEncryption =
     | [<JsonUnionCase("none")>] None
     | [<JsonUnionCase("plain")>] Plain
@@ -11,6 +12,7 @@ type ShadowsocksEncryption =
     | [<JsonUnionCase("aes-128-gcm")>] AES128
     | [<JsonUnionCase("aes-256-gcm")>] AES256
 
+[<RequireQualifiedAccessAttribute>]
 // VLESS is removed in v2ray-go, so this is subject to removal too (may happen in any time).
 type VLESSEncryption = | [<JsonUnionCase("none")>] None
 
@@ -20,6 +22,7 @@ type Protocols =
     | [<JsonUnionCase("shadowsocks")>] Shadowsocks
     | [<JsonUnionCase("trojan")>] Trojan
 
+[<RequireQualifiedAccessAttribute>]
 type VMessEncryption =
     | [<JsonUnionCase("none")>] None
     | [<JsonUnionCase("zero")>] Zero
