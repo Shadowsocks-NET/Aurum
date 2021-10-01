@@ -1,7 +1,6 @@
 namespace Aurum.Configurator
 
 open System.Collections.Generic
-open Aurum.Helpers
 open Aurum.Exceptions
 open FSharp.Json
 
