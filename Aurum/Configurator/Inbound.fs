@@ -42,3 +42,7 @@ type InboundObject =
       Settings: InboundConfigurationObject
       Tag: string
       Sniffing: SniffingObject }
+
+let createSocksAccount user pass =
+    { AccountObject.User = user
+      Pass = pass }
