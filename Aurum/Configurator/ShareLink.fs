@@ -16,6 +16,7 @@ module ShareLink =
         System.Text.Encoding.UTF8.GetString encodedBytes
 
     let createV2FlyObjectFromUri (uriObject: System.Uri) =
+        let protocol = uriObject.Scheme
         let uuid = uriObject.UserInfo
         let host = uriObject.Host
         let port = uriObject.Port
@@ -24,8 +25,7 @@ module ShareLink =
         let queryParams =
             Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery uriObject.Query
 
-        let retrieveFromShareLink =
-            getFirstQuerystringEntry queryParams
+        let retrieveFromShareLink = getFirstQuerystringEntry queryParams
 
         let tryRetrieveFromShareLink key =
             tryGetFirstQuerystringEntry queryParams key
@@ -68,7 +68,24 @@ module ShareLink =
                     (tryRetrieveFromShareLink "headerType")
                     (tryRetrieveFromShareLink "seed")
             | "tcp" -> Transport.createTCPObject None
-            | _ -> raise (ConfigurationParameterError "unknown transport protocol")
+            | _ -> raise (ConfigurationParameterException "unknown transport protocol")
+
+        let user =
+            match protocol with
+            | "vmess" ->
+                Outbound.createVMessUserObject
+                    uuid
+                    (tryRetrieveFromShareLink "encryption"
+                    |> Outbound.parseVMessSecurity)
+                    None
+                    None
+            | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
+
+        let server =
+            match protocol with
+            | "vmess" ->
+                Outbound.createVMessServerObject host port [user]
+            | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
 
         ()
 
@@ -83,5 +100,5 @@ module ShareLink =
 
             match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
             | true -> ()
-            | false -> raise (ShareLinkFormatError "incorrect Shadowsocks link format")
-        | _ -> raise (ShareLinkFormatError "unknown share link type")
+            | false -> raise (ShareLinkFormatException "incorrect Shadowsocks link format")
+        | _ -> raise (ShareLinkFormatException "unknown share link type")
