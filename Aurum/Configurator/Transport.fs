@@ -186,9 +186,9 @@ module Transport =
         | Some "chacha20-poly1305" ->
             match key with
             | Some ""
-            | None -> raise (ConfigurationParameterError "no QUIC key specified")
+            | None -> raise (ConfigurationParameterException "no QUIC key specified")
             | _ -> ()
-        | _ -> raise (ConfigurationParameterError "unknown QUIC security type")
+        | _ -> raise (ConfigurationParameterException "unknown QUIC security type")
 
         let header =
             { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
