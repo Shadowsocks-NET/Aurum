@@ -2,6 +2,7 @@ namespace Aurum.Configurator
 
 open FSharp.Json
 open Aurum.Configurator.Transport
+open Aurum.Exceptions
 
 module Outbound =
     [<RequireQualifiedAccessAttribute>]
@@ -82,7 +83,7 @@ module Outbound =
 
     let createVMessUserObject uuid security level alterId =
         { UserObject.ID = uuid
-          Security = security
+          Security = Some(security)
           Level = level
           AlterId = Option.defaultValue 0 alterId
           Encryption = None }
@@ -96,3 +97,13 @@ module Outbound =
           Level = None
           Method = None
           IvCheck = None }
+
+    let parseVMessSecurity security =
+        let security = Option.defaultValue "auto" security
+        match security with
+        | "none" -> VMessEncryption.None
+        | "zero" -> VMessEncryption.Zero
+        | "auto" -> VMessEncryption.Auto
+        | "aes-128-gcm" -> VMessEncryption.AES
+        | "chacha20-poly1305" -> VMessEncryption.ChaCha20
+        | _ -> raise (ConfigurationParameterException "unknown security type")
