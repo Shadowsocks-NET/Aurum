@@ -68,7 +68,7 @@ module ShareLink =
                     (tryRetrieveFromShareLink "headerType")
                     (tryRetrieveFromShareLink "seed")
             | "tcp" -> Transport.createTCPObject None
-            | _ -> raise (ConfigurationParameterException "unknown transport protocol")
+            | unknown -> raise (ConfigurationParameterException $"unknown transport protocol {unknown}")
 
         let user =
             match protocol with
@@ -79,13 +79,13 @@ module ShareLink =
                     |> Outbound.parseVMessSecurity)
                     None
                     None
-            | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
+            | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
         let server =
             match protocol with
             | "vmess" ->
                 Outbound.createVMessServerObject host port [user]
-            | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
+            | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
         ()
 
@@ -101,4 +101,4 @@ module ShareLink =
             match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
             | true -> ()
             | false -> raise (ShareLinkFormatException "incorrect Shadowsocks link format")
-        | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
+        | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
