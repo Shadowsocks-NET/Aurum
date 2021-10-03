@@ -101,4 +101,4 @@ module ShareLink =
             match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
             | true -> ()
             | false -> raise (ShareLinkFormatException "incorrect Shadowsocks link format")
-        | _ -> raise (ShareLinkFormatException "unknown share link type")
+        | _ -> raise (ShareLinkFormatException "unknown sharelink protocol")
