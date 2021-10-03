@@ -1,9 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum", "Aurum\Aurum.fsproj", "{EE9DC233-2D04-449D-9B35-108AC1945F25}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Configurator", "Aurum.Configurator\Aurum.Configurator.fsproj", "{EE9DC233-2D04-449D-9B35-108AC1945F25}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Micro", "Aurum.Micro\Aurum.Micro.fsproj", "{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum", "Aurum/Aurum.fsproj", "{3559AFD9-7176-4BFB-8E7F-0688EABD0B53}"
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
