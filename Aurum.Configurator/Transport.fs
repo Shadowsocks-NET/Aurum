@@ -105,10 +105,10 @@ module Transport =
     type GrpcObject = { ServiceName: string; Mode: string }
 
     type TLSObject =
-        { ServerName: string
-          AllowInsecure: bool
-          Alpn: string list
-          DisableSystemRoot: bool }
+        { ServerName: string option
+          AllowInsecure: bool option
+          Alpn: string list option
+          DisableSystemRoot: bool option }
 
     [<RequireQualifiedAccess>]
     type TProxyType =
@@ -238,3 +238,9 @@ module Transport =
         let config = { TcpObject.Header = tcpHeader }
 
         TCP config
+
+    let createTLSObject serverName alpn disableSystemRoot =
+        { TLSObject.ServerName = serverName
+          Alpn = alpn
+          AllowInsecure = Some false
+          DisableSystemRoot = disableSystemRoot }

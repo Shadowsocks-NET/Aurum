@@ -107,3 +107,6 @@ module Outbound =
         | "aes-128-gcm" -> VMessEncryption.AES
         | "chacha20-poly1305" -> VMessEncryption.ChaCha20
         | _ -> raise (ConfigurationParameterException "unknown security type")
+
+    let createV2flyOutboundObject sendThrough protocol setting streamSetting mux =
+        ()
