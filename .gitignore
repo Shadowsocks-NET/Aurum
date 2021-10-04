@@ -8,3 +8,7 @@ riderModule.iml
 
 .fake
 .ionide
+
+#Paket dependency manager
+.paket/
+paket-files/
