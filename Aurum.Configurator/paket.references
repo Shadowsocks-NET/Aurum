@@ -1,0 +1,5 @@
+FSharp.Core
+FSharp.Json
+Microsoft.AspNetCore.WebUtilities
+Serilog
+Shadowsocks
