@@ -1,0 +1,18 @@
+source https://api.nuget.org/v3/index.json
+
+storage: none
+framework: net5.0
+
+nuget sqlite-net-pcl
+nuget JaggerJo.Avalonia.FuncUI
+nuget JaggerJo.Avalonia.FuncUI.DSL
+nuget JaggerJo.Avalonia.FuncUI.Elmish
+nuget Serilog
+nuget Avalonia.Desktop
+nuget Microsoft.AspNetCore.WebUtilities
+nuget Nanoid
+nuget FSharp.Json
+nuget FSharp.Core
+nuget Shadowsocks
+nuget Shadowsocks.OnlineConfig
+nuget Microsoft.Extensions.Primitives
