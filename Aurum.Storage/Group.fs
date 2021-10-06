@@ -6,54 +6,54 @@ open SQLitePCL
 
 module Group =
     type ConnectionRecordObject =
-        { id: string
-          name: string
-          tags: string list }
+        { Id: string
+          Name: string
+          Tags: string list }
 
     type SubscriptionType =
-        | None
-        | Base64 // not suggested
-        | SIP008
-        | OOCv1
+        | [<JsonUnionCase("none")>] None
+        | [<JsonUnionCase("base64")>] Base64 // not suggested
+        | [<JsonUnionCase("sip008")>] SIP008
+        | [<JsonUnionCase("oocv1")>] OOCv1
 
     type SubscriptionObject =
         { [<JsonField("type")>]
-          subscriptionType: SubscriptionType
-          source: string option }
+          SubscriptionType: SubscriptionType
+          Source: string option }
 
     type GroupObject =
-        { id: string
-          name: string
-          subscription: SubscriptionType
-          subscriptionSource: string option
-          connections: string list (* stores id of connections belong to this group *)  }
+        { Id: string
+          Name: string
+          Subscription: SubscriptionType
+          SubscriptionSource: string option
+          Connections: string list (* stores id of connections belong to this group *)  }
 
     [<Table("Tags")>]
     type Tags(tag: string, nodeId: string) =
         [<PrimaryKey>]
         [<Column("tag")>]
-        member this.tag = tag
+        member this.Tag = tag
 
         [<Column("nodeId")>]
-        member this.nodeId = nodeId
+        member this.NodeId = nodeId
 
     [<Table("Connections")>]
     type Connections(name: string, id: string, configuration: string, connType: string, host: string, port: string) =
         [<PrimaryKey>]
         [<Column("id")>]
-        member this.id = id
+        member this.Id = id
 
         [<Column("name")>]
-        member this.name = name
+        member this.Name = name
 
         [<Column("configuration")>]
-        member this.configuration = configuration
+        member this.Configuration = configuration
 
         [<Column("type")>]
-        member this.connType = connType
+        member this.ConnType = connType
 
         [<Column("host")>]
-        member this.host = host
+        member this.Host = host
 
         [<Column("port")>]
-        member this.port = port
+        member this.Port = port
