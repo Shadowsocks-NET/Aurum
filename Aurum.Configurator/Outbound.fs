@@ -73,7 +73,7 @@ module Outbound =
           Protocol: Protocols
           Settings: 'T
           Tag: string
-          StreamSettings: StreamSettingsObject
+          StreamSettings: StreamSettingsObject option
           Mux: MuxObject }
 
     type OutboundObject = GenericOutboundObject<OutboundConfigurationObject>
