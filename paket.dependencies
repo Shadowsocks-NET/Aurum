@@ -16,3 +16,4 @@ nuget FSharp.Core
 nuget Shadowsocks
 nuget Shadowsocks.OnlineConfig
 nuget Microsoft.Extensions.Primitives
+nuget Aether
