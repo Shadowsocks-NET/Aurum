@@ -131,6 +131,7 @@ module Transport =
 
     type StreamSettingsObject =
         { Network: Networks
+          Security: Security
           Tls: TLSObject option
           Tcp: TcpObject option
           Kcp: KcpObject option
