@@ -12,4 +12,9 @@ For more information of each subprojects, reference to their individual README f
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/Shadowsocks-NET/Aurum.svg)](https://starchart.cc/Shadowsocks-NET/Aurum)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum?ref=badge_shield)
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum?ref=badge_large)
