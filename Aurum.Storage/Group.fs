@@ -38,7 +38,15 @@ module Group =
         member this.NodeId = nodeId
 
     [<Table("Connections")>]
-    type Connections(name: string, id: string, configuration: string, connType: string, host: string, port: string) =
+    type Connections
+        (
+            name: string,
+            id: string,
+            configuration: string,
+            connectionType: string,
+            host: string,
+            port: string
+        ) =
         [<PrimaryKey>]
         [<Column("id")>]
         member this.Id = id
@@ -50,7 +58,7 @@ module Group =
         member this.Configuration = configuration
 
         [<Column("type")>]
-        member this.ConnType = connType
+        member this.Type = connectionType
 
         [<Column("host")>]
         member this.Host = host
