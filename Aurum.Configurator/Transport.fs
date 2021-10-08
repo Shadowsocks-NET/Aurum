@@ -7,19 +7,19 @@ open FSharp.Json
 module Transport =
     [<RequireQualifiedAccess>]
     type Networks =
-        | WS
-        | GRPC
-        | TCP
-        | KCP
-        | DomainSocket
-        | HTTP
-        | QUIC
+        | [<JsonUnionCase("ws")>] WS
+        | [<JsonUnionCase("grpc")>] GRPC
+        | [<JsonUnionCase("tcp")>] TCP
+        | [<JsonUnionCase("kcp")>] KCP
+        | [<JsonUnionCase("domainsocket")>] DomainSocket
+        | [<JsonUnionCase("http")>] HTTP
+        | [<JsonUnionCase("quic")>] QUIC
 
     [<RequireQualifiedAccess>]
     type Security =
-        | None
-        | TLS
-        | XTLS
+        | [<JsonUnionCase("none")>] None
+        | [<JsonUnionCase("tls")>] TLS
+        | [<JsonUnionCase("xtls")>] XTLS
 
     type WebSocketObject =
         { Path: string
@@ -50,12 +50,12 @@ module Transport =
 
     [<RequireQualifiedAccess>]
     type UdpHeaders =
-        | None
-        | SRTP
-        | UTP
-        | WechatVideo
-        | DTLS
-        | WireGuard
+        | [<JsonUnionCase("none")>] None
+        | [<JsonUnionCase("srtp")>] SRTP
+        | [<JsonUnionCase("utp")>] UTP
+        | [<JsonUnionCase("wechat-video")>] WechatVideo
+        | [<JsonUnionCase("dtls")>] DTLS
+        | [<JsonUnionCase("wireguard")>] WireGuard
 
     type UdpHeaderObject =
         { [<JsonField("type")>]
