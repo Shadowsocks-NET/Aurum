@@ -58,7 +58,7 @@ module Outbound =
 
     type OutboundConfigurationObject =
         { Vnext: ServerObject list option
-          Servers: ServerObject list option } with
+          Servers: ServerObject list option }
         member this.GetVnextServerInfo() =
             let server = (Option.get this.Vnext).[0]
             server.Address, server.Port
@@ -68,9 +68,8 @@ module Outbound =
         { Address: string
           Port: int
           Users: GoUserObject list
-          Servers: ServerObject list } with
-        member this.GetVnextServerInfo() =
-            this.Address, this.Port
+          Servers: ServerObject list }
+        member this.GetVnextServerInfo() = this.Address, this.Port
 
     type MuxObject = { Enabled: bool; Concurrency: int }
 
@@ -80,7 +79,7 @@ module Outbound =
           Settings: 'T
           Tag: string
           StreamSettings: StreamSettingsObject option
-          Mux: MuxObject } with
+          Mux: MuxObject }
         member this.GetConnectionType() =
             let protocol =
                 match this.Protocol with
@@ -148,4 +147,10 @@ module Outbound =
         | "chacha20-poly1305" -> VMessEncryption.ChaCha20
         | _ -> raise (ConfigurationParameterException "unknown security type")
 
-    let createV2flyOutboundObject sendThrough protocol setting streamSetting mux = ()
+    let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, tag, mux) =
+        { OutboundObject.SendThrough = Option.defaultValue "0.0.0.0" sendThrough
+          Protocol = protocol
+          Settings = setting
+          StreamSettings = streamSetting
+          Mux = Option.defaultValue { MuxObject.Enabled = false; Concurrency = 1 } mux
+          Tag = tag }
