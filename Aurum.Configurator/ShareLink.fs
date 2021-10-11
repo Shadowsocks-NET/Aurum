@@ -33,7 +33,9 @@ module ShareLink =
 
         let transportType = retrieveFromShareLink "type"
 
-        let securityType = tryRetrieveFromShareLink "security" |> Option.defaultValue "none"
+        let securityType =
+            tryRetrieveFromShareLink "security"
+            |> Option.defaultValue "none"
 
         let transport =
             match transportType with
@@ -75,18 +77,18 @@ module ShareLink =
         let user =
             match protocol with
             | "vmess" ->
-                Outbound.createVMessUserObject
-                    uuid
+                Outbound.createVMessUserObject (
+                    uuid,
                     (tryRetrieveFromShareLink "encryption"
-                    |> Outbound.parseVMessSecurity)
+                     |> Outbound.parseVMessSecurity),
+                    None,
                     None
-                    None
+                )
             | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
         let server =
             match protocol with
-            | "vmess" ->
-                Outbound.createVMessServerObject host port [user]
+            | "vmess" -> Outbound.createVMessServerObject (host, port, [ user ])
             | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
         let security =
@@ -94,7 +96,8 @@ module ShareLink =
             | "tls" ->
                 Transport.createTLSObject
                     (tryRetrieveFromShareLink "sni")
-                    (tryRetrieveFromShareLink "alpn" |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList) )
+                    (tryRetrieveFromShareLink "alpn"
+                     |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList))
             | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
         ()

@@ -1,5 +1,6 @@
 namespace Aurum.Configurator
 
+open System
 open FSharp.Json
 open Aurum.Configurator.Transport
 open Aurum.Exceptions
@@ -119,14 +120,14 @@ module Outbound =
     type GoOutboundObject = GenericOutboundObject<GoOutboundConfigurationObject>
 
 
-    let createVMessUserObject uuid security level alterId =
+    let createVMessUserObject (uuid, security, level, alterId) =
         { UserObject.ID = uuid
           Security = Some(security)
           Level = level
           AlterId = Option.defaultValue 0 alterId
           Encryption = None }
 
-    let createVMessServerObject host port users =
+    let createVMessServerObject (host, port, users) =
         { ServerObject.Address = host
           Port = port
           Users = users
@@ -146,5 +147,5 @@ module Outbound =
         | "aes-128-gcm" -> VMessEncryption.AES
         | "chacha20-poly1305" -> VMessEncryption.ChaCha20
         | _ -> raise (ConfigurationParameterException "unknown security type")
-    let createV2flyOutboundObject sendThrough protocol setting streamSetting mux =
-        ()
+
+    let createV2flyOutboundObject sendThrough protocol setting streamSetting mux = ()
