@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,8 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Transport.fs" />
-    <Compile Include="Outbound.fs" />
     <Compile Include="Inbound.fs" />
+    <Compile Include="Outbound.fs" />
+    <Compile Include="Intermediate.fs" />
     <Compile Include="ShareLink.fs" />
   </ItemGroup>
   <ItemGroup>

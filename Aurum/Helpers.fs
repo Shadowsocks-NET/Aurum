@@ -2,6 +2,7 @@ namespace Aurum
 
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
+open FSharp.Json
 
 module Helpers =
     let nullableToOption value =
@@ -36,3 +37,10 @@ module Helpers =
 
     let blankStringToNone (string: string option) =
         Option.filter (fun x -> x.Equals("")) string
+
+    let jsonOption =
+        JsonConfig.create (unformatted = true, serializeNone = Omit, jsonFieldNaming = Json.lowerCamelCase)
+
+    let serializeJson object = Json.serializeEx jsonOption object
+
+    let deserializeJson<'T> string = Json.deserializeEx<'T> jsonOption string

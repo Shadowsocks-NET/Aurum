@@ -57,14 +57,19 @@ module Outbound =
 
     type OutboundConfigurationObject =
         { Vnext: ServerObject list option
-          Servers: ServerObject list option }
+          Servers: ServerObject list option } with
+        member this.GetVnextServerInfo() =
+            let server = (Option.get this.Vnext).[0]
+            server.Address, server.Port
 
     // v2ray-go specific implementation, removed vnext layer.
     type GoOutboundConfigurationObject =
         { Address: string
           Port: int
           Users: GoUserObject list
-          Servers: ServerObject list }
+          Servers: ServerObject list } with
+        member this.GetVnextServerInfo() =
+            this.Address, this.Port
 
     type MuxObject = { Enabled: bool; Concurrency: int }
 
@@ -74,7 +79,40 @@ module Outbound =
           Settings: 'T
           Tag: string
           StreamSettings: StreamSettingsObject option
-          Mux: MuxObject }
+          Mux: MuxObject } with
+        member this.GetConnectionType() =
+            let protocol =
+                match this.Protocol with
+                | VMess -> "VMess"
+                | VLESS -> "VLESS"
+                | Shadowsocks -> "Shadowsocks"
+                | Trojan -> "Trojan"
+
+            let network =
+                Option.map
+                    (fun streamSetting ->
+                        match streamSetting.Network with
+                        | Networks.GRPC -> "+gRPC"
+                        | Networks.HTTP -> "+HTTP2"
+                        | Networks.KCP -> "+mKCP"
+                        | Networks.QUIC -> "+QUIC"
+                        | Networks.TCP -> "+TCP"
+                        | Networks.WS -> "+WS"
+                        | Networks.DomainSocket -> "+DomainSocket")
+                    this.StreamSettings
+                |> Option.defaultValue ""
+
+            let tlsFlag =
+                Option.map
+                    (fun (streamSetting: StreamSettingsObject) ->
+                        match streamSetting.Security with
+                        | Security.None -> ""
+                        | Security.TLS -> "+TLS"
+                        | Security.XTLS -> "+XTLS")
+                    this.StreamSettings
+                |> Option.defaultValue ""
+
+            protocol + network + tlsFlag
 
     type OutboundObject = GenericOutboundObject<OutboundConfigurationObject>
     // v2ray-go specific implementation, removed vnext and VLESS.
@@ -100,6 +138,7 @@ module Outbound =
 
     let parseVMessSecurity security =
         let security = Option.defaultValue "auto" security
+
         match security with
         | "none" -> VMessEncryption.None
         | "zero" -> VMessEncryption.Zero
@@ -107,6 +146,5 @@ module Outbound =
         | "aes-128-gcm" -> VMessEncryption.AES
         | "chacha20-poly1305" -> VMessEncryption.ChaCha20
         | _ -> raise (ConfigurationParameterException "unknown security type")
-
     let createV2flyOutboundObject sendThrough protocol setting streamSetting mux =
         ()
