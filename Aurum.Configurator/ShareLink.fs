@@ -40,37 +40,41 @@ module ShareLink =
         let transport =
             match transportType with
             | "ws" ->
-                Transport.createWebSocketObject
-                    (tryRetrieveFromShareLink "path")
+                Transport.createWebSocketObject (
+                    (tryRetrieveFromShareLink "path"),
+                    None,
+                    None,
+                    None,
+                    (tryRetrieveFromShareLink "host"),
                     None
-                    None
-                    None
-                    (tryRetrieveFromShareLink "host")
-                    None
+                )
             | "grpc" ->
                 retrieveFromShareLink "serviceName"
                 |> Transport.createGrpcObject
             | "http" ->
-                Transport.createHttpObject
-                    (tryRetrieveFromShareLink "path")
-                    (tryRetrieveFromShareLink "host")
-                    (Dictionary())
+                Transport.createHttpObject (
+                    tryRetrieveFromShareLink "path",
+                    tryRetrieveFromShareLink "host",
+                    Dictionary()
+                )
             | "quic" ->
-                Transport.createQUICObject
-                    (tryRetrieveFromShareLink "quicSecurity")
-                    (tryRetrieveFromShareLink "key")
+                Transport.createQUICObject (
+                    (tryRetrieveFromShareLink "quicSecurity"),
+                    (tryRetrieveFromShareLink "key"),
                     (tryRetrieveFromShareLink "headerType")
+                )
             | "kcp" ->
-                Transport.createKCPObject
-                    None
-                    None
-                    None
-                    None
-                    None
-                    None
-                    None
-                    (tryRetrieveFromShareLink "headerType")
+                Transport.createKCPObject (
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    (tryRetrieveFromShareLink "headerType"),
                     (tryRetrieveFromShareLink "seed")
+                )
             | "tcp" -> Transport.createTCPObject None
             | unknown -> raise (ConfigurationParameterException $"unknown transport protocol {unknown}")
 
@@ -94,10 +98,12 @@ module ShareLink =
         let security =
             match securityType with
             | "tls" ->
-                Transport.createTLSObject
-                    (tryRetrieveFromShareLink "sni")
-                    (tryRetrieveFromShareLink "alpn"
-                     |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList))
+                Transport.createTLSObject (
+                    tryRetrieveFromShareLink "sni",
+                    tryRetrieveFromShareLink "alpn"
+                    |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList),
+                    Some(true)
+                )
             | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
         ()

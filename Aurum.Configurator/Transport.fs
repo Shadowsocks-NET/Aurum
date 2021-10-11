@@ -141,7 +141,7 @@ module Transport =
           Grpc: GrpcObject option
           Sockopt: SockoptObject option }
 
-    let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
+    let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
         let constructedHeaders =
             Option.defaultValue (Dictionary()) headers
 
@@ -158,18 +158,17 @@ module Transport =
 
         WebSocket config
 
-    let createGrpcObject serviceName =
+    let createGrpcObject (serviceName) =
         let config =
             { ServiceName = serviceName
               Mode = "gun" }
 
         GRPC config
 
-    let createHttpObject path (host: string option) headers =
+    let createHttpObject (path, host: string option, headers) =
         let parsedHost =
-            match host with
-            | Some host -> host.Split "," |> Seq.toList
-            | None -> []
+            Option.map (fun (host: string) -> host.Split "," |> Seq.toList) host
+            |> Option.defaultValue []
 
         let config =
             { HttpObject.Path = Option.defaultValue "/" path
@@ -179,7 +178,7 @@ module Transport =
 
         HTTP config
 
-    let createQUICObject security key headerType =
+    let createQUICObject (security, key, headerType) =
         match security with
         | Some "none"
         | None -> ()
@@ -202,16 +201,17 @@ module Transport =
         QUIC config
 
     let createKCPObject
-        mtu
-        tti
-        uplinkCapacity
-        downlinkCapacity
-        congestion
-        readBufferSize
-        writeBufferSize
-        seed
-        headerType
-        =
+        (
+            mtu,
+            tti,
+            uplinkCapacity,
+            downlinkCapacity,
+            congestion,
+            readBufferSize,
+            writeBufferSize,
+            seed,
+            headerType
+        ) =
         let header =
             { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
 
@@ -228,7 +228,7 @@ module Transport =
 
         KCP config
 
-    let createTCPObject headerObject =
+    let createTCPObject (headerObject) =
         let tcpHeader =
             Option.defaultValue
                 { TcpHeaderObject.HeaderType = "none"
@@ -240,7 +240,7 @@ module Transport =
 
         TCP config
 
-    let createTLSObject serverName alpn disableSystemRoot =
+    let createTLSObject (serverName, alpn, disableSystemRoot) =
         { TLSObject.ServerName = serverName
           Alpn = alpn
           AllowInsecure = Some false
