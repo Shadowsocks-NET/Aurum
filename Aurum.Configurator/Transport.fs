@@ -245,3 +245,72 @@ module Transport =
           Alpn = alpn
           AllowInsecure = Some false
           DisableSystemRoot = disableSystemRoot }
+
+    let createStreamSettingsObject (transport, security, tls) =
+        match transport with
+        | TCP transport ->
+            { StreamSettingsObject.Network = Networks.TCP
+              Tcp = Some transport
+              Tls = tls
+              Security = security
+              Kcp = None
+              Quic = None
+              Ws = None
+              Http = None
+              Grpc = None
+              Sockopt = None }
+        | GRPC transport ->
+            { StreamSettingsObject.Network = Networks.GRPC
+              Tcp = None
+              Tls = tls
+              Security = security
+              Kcp = None
+              Quic = None
+              Ws = None
+              Http = None
+              Grpc = Some transport
+              Sockopt = None }
+        | HTTP transport ->
+            { StreamSettingsObject.Network = Networks.HTTP
+              Tcp = None
+              Tls = tls
+              Security = security
+              Kcp = None
+              Quic = None
+              Ws = None
+              Http = Some transport
+              Grpc = None
+              Sockopt = None }
+        | KCP transport ->
+            { StreamSettingsObject.Network = Networks.KCP
+              Tcp = None
+              Tls = tls
+              Security = security
+              Kcp = Some transport
+              Quic = None
+              Ws = None
+              Http = None
+              Grpc = None
+              Sockopt = None }
+        | QUIC transport ->
+            { StreamSettingsObject.Network = Networks.QUIC
+              Tcp = None
+              Tls = tls
+              Security = security
+              Kcp = None
+              Quic = Some transport
+              Ws = None
+              Http = None
+              Grpc = None
+              Sockopt = None }
+        | WebSocket transport ->
+            { StreamSettingsObject.Network = Networks.WS
+              Tcp = None
+              Tls = tls
+              Security = security
+              Kcp = None
+              Quic = None
+              Ws = Some transport
+              Http = None
+              Grpc = None
+              Sockopt = None }
