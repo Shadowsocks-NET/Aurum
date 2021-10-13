@@ -78,35 +78,43 @@ module ShareLink =
             | "tcp" -> Transport.createTCPObject None
             | unknown -> raise (ConfigurationParameterException $"unknown transport protocol {unknown}")
 
-        let user =
+        let user, server, protocol =
             match protocol with
             | "vmess" ->
-                Outbound.createVMessUserObject (
-                    uuid,
-                    (tryRetrieveFromShareLink "encryption"
-                     |> Outbound.parseVMessSecurity),
-                    None,
-                    None
-                )
+                let user =
+                    Outbound.createVMessUserObject (
+                        uuid,
+                        (tryRetrieveFromShareLink "encryption"
+                         |> Outbound.parseVMessSecurity),
+                        None,
+                        None
+                    )
+
+                user, Outbound.createVMessServerObject (host, port, [ user ]), Outbound.Protocols.VMess
             | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
-        let server =
-            match protocol with
-            | "vmess" -> Outbound.createVMessServerObject (host, port, [ user ])
-            | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
-
-        let security =
+        let tls, security =
             match securityType with
             | "tls" ->
-                Transport.createTLSObject (
-                    tryRetrieveFromShareLink "sni",
-                    tryRetrieveFromShareLink "alpn"
-                    |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList),
-                    Some(true)
-                )
+                Some(
+                    Transport.createTLSObject (
+                        tryRetrieveFromShareLink "sni",
+                        tryRetrieveFromShareLink "alpn"
+                        |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList),
+                        Some false
+                    )
+                ),
+                Transport.Security.TLS
+            | "none" -> None, Transport.Security.None
             | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
-        ()
+        let streamSetting =
+            Transport.createStreamSettingsObject (transport, security, tls)
+
+        let outbound =
+            Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None)
+
+        Intermediate.serializeServerConfiguration (description, outbound)
 
     let decodeShareLink link =
         let uriObject = System.Uri link

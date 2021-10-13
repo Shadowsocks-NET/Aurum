@@ -10,7 +10,11 @@ module Intermediate =
           Configuration: string
           Type: string }
 
-    let serializeServerConfiguration (name, server: Outbound.OutboundObject) =
+    let serializeServerConfiguration
+        (
+            name,
+            server: Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>
+        ) =
         let host, port = server.Settings.GetVnextServerInfo()
         let serverType = server.GetConnectionType()
         let configuration = Helpers.serializeJson server
