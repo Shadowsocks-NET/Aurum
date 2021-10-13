@@ -114,7 +114,7 @@ module ShareLink =
         let outbound =
             Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None)
 
-        Intermediate.serializeServerConfiguration (description, outbound)
+        Intermediate.serializeServerConfiguration (description, outbound) |> ignore
 
     let decodeShareLink link =
         let uriObject = System.Uri link
