@@ -5,11 +5,11 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Application.fs" />
     <Compile Include="Counter.fs" />
     <Compile Include="About.fs" />
     <Compile Include="Shell.fs" />
     <Compile Include="ShellControl.fs" />
+    <Compile Include="Application.fs" />
     <Compile Include="Program.fs" />
     <AvaloniaResource Include="**\*.xaml" />
   </ItemGroup>
