@@ -11,6 +11,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.DataProtection", "Aur
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Storage", "Aurum.Storage\Aurum.Storage.fsproj", "{970DEACE-7337-4780-9F91-12442674406D}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Interop", "Aurum.Interop\Aurum.Interop.fsproj", "{D7F8C1C8-29E9-459A-B068-03E6FB89D721}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,5 +37,9 @@ Global
 		{970DEACE-7337-4780-9F91-12442674406D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{970DEACE-7337-4780-9F91-12442674406D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{970DEACE-7337-4780-9F91-12442674406D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
