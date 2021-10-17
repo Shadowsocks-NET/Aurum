@@ -1,4 +1,6 @@
 # Aurum
+![build status](https://badgen.net/github/status/Shadowsocks-NET/Aurum?icon=github&label=Github+Actions)
+
 Aurum is a cross-platform GUI for the v2ray family of anti-censorship applications.
 
 `Aurum.Micro` is the experimental, minimal GUI of this project, written in F# and Avalonia.FuncUI
