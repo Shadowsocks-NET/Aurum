@@ -30,7 +30,7 @@ jobs:
         run: dotnet tool restore
 
       - name: Install dependencies
-        run: dotnet paket install && dotnet restore
+        run: dotnet paket restore && dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
