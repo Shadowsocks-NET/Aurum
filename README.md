@@ -1,5 +1,5 @@
 # Aurum
-![build status](https://badgen.net/github/status/Shadowsocks-NET/Aurum?icon=github&label=Github+Actions)
+![build status](https://badgen.net/github/status/Shadowsocks-NET/Aurum?icon=github&label=Github+Actions&cache=300)
 
 Aurum is a cross-platform GUI for the v2ray family of anti-censorship applications.
 
