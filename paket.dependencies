@@ -17,3 +17,4 @@ nuget Shadowsocks
 nuget Shadowsocks.OnlineConfig
 nuget Microsoft.Extensions.Primitives
 nuget Aether
+nuget System.Security.Cryptography.ProtectedData ~> 5.0.0

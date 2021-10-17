@@ -103,6 +103,7 @@ NUGET
     System.Reactive (5.0)
     System.Reflection.Emit (4.7)
     System.Runtime.CompilerServices.Unsafe (5.0)
+    System.Security.Cryptography.ProtectedData (5.0)
     System.Security.Principal.Windows (5.0)
     System.Text.Encodings.Web (5.0.1)
     System.ValueTuple (4.5)
