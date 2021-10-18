@@ -3,6 +3,8 @@ source https://api.nuget.org/v3/index.json
 storage: none
 framework: net5.0
 
+cache ./paket-cache versions: current
+
 nuget sqlite-net-pcl
 nuget JaggerJo.Avalonia.FuncUI
 nuget JaggerJo.Avalonia.FuncUI.DSL

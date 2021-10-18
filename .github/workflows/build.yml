@@ -21,10 +21,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: paket-cache
+          key: ${{ runner.os }}-paket-${{ hashFiles('paket.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-paket-
 
       - name: Install buildtools
         run: dotnet tool restore

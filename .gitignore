@@ -13,3 +13,4 @@ riderModule.iml
 #Paket dependency manager
 .paket/
 paket-files/
+paket-cache/
