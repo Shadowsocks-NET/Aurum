@@ -15,20 +15,39 @@ module Inbound =
     type AccountObject = { User: string; Pass: string }
 
     type InboundConfigurationObject =
-        { Accounts: AccountObject list
-          UserLevel: int
-          Timeout: int
+        { Accounts: AccountObject list option
+          UserLevel: int option
+          Timeout: int option
           (*HTTP specific*)
-          AllowTransparent: bool
+          AllowTransparent: bool option
           (*SOCKS specific*)
-          Auth: SocksAuth
-          UDP: bool
-          IP: string
+          Auth: SocksAuth option
+          UDP: bool option
+          IP: string option
           (*Dokodemo-door specific*)
           Address: string option
-          Port: int
-          Network: string
-          FollowRedirect: bool }
+          Port: int option
+          Network: string option
+          FollowRedirect: bool option }
+
+    // stub object (reserved)
+    type SocksInboundConfigurationObject =
+        { Accounts: AccountObject list option
+          UserLevel: int option
+          Timeout: int option
+          Auth: SocksAuth option
+          UDP: bool option
+          IP: string option }
+
+    // stub object (reserved)
+    type DokodemoDoorInboundConfigurationObject =
+        { Accounts: AccountObject list option
+          UserLevel: int option
+          Timeout: int option
+          Address: string option
+          Port: int option
+          Network: string option
+          FollowRedirect: bool option }
 
     type SniffingObject =
         { Enabled: bool
