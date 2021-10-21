@@ -12,6 +12,12 @@ module Inbound =
         | [<JsonUnionCase("noauth")>] NoAuth
         | [<JsonUnionCase("password")>] Password
 
+    type DestinationOverride =
+        | [<JsonUnionCase("http")>] HTTP
+        | [<JsonUnionCase("tls")>] TLS
+        | [<JsonUnionCase("fakedns")>] FakeDNS
+        | [<JsonUnionCase("fakedns+others")>] FakeDNSOthers
+
     type AccountObject = { User: string; Pass: string }
 
     type InboundConfigurationObject =
@@ -51,7 +57,7 @@ module Inbound =
 
     type SniffingObject =
         { Enabled: bool
-          DestOverride: string list
+          DestOverride: DestinationOverride list
           MetadataOnly: bool }
 
     type InboundObject =
@@ -104,3 +110,8 @@ module Inbound =
           Port = port
           Network = network
           FollowRedirect = followRedirect }
+
+    let createSniffingObject (enabled, destnationOverride, metadataOnly) =
+        { SniffingObject.Enabled = enabled
+          DestOverride = destnationOverride
+          MetadataOnly = metadataOnly }
