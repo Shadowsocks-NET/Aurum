@@ -54,7 +54,7 @@ module Outbound =
           Level: int option
           Method: ShadowsocksEncryption option
           IvCheck: bool option
-          Users: UserObject list }
+          Users: UserObject list option }
 
     type OutboundConfigurationObject =
         { Vnext: ServerObject list option
@@ -129,7 +129,7 @@ module Outbound =
     let createVMessServerObject (host, port, users) =
         { ServerObject.Address = host
           Port = port
-          Users = users
+          Users = Some users
           Password = None
           Email = None
           Level = None
@@ -164,3 +164,13 @@ module Outbound =
                     Concurrency = 1 }
                   mux
           Tag = tag }
+
+    let createShadowsocksServerObject (email, address, port, method, password, level, ivCheck) =
+        { ServerObject.Email = email
+          Address = address
+          Port = port
+          Method = method
+          Password = password
+          Level = level
+          IvCheck = ivCheck
+          Users = None }
