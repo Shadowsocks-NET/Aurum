@@ -147,10 +147,20 @@ module Outbound =
         | "chacha20-poly1305" -> VMessEncryption.ChaCha20
         | _ -> raise (ConfigurationParameterException "unknown security type")
 
-    let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, tag, mux): OutboundObject =
+    let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, tag, mux, vnext) : OutboundObject =
         { OutboundObject.SendThrough = Option.defaultValue "0.0.0.0" sendThrough
           Protocol = protocol
-          Settings = { OutboundConfigurationObject.Vnext = Some [ setting ]; Servers = None }
+          Settings =
+              if vnext then
+                  { OutboundConfigurationObject.Vnext = Some [ setting ]
+                    Servers = None }
+              else
+                  { OutboundConfigurationObject.Vnext = None
+                    Servers = Some [ setting ] }
           StreamSettings = streamSetting
-          Mux = Option.defaultValue { MuxObject.Enabled = false; Concurrency = 1 } mux
+          Mux =
+              Option.defaultValue
+                  { MuxObject.Enabled = false
+                    Concurrency = 1 }
+                  mux
           Tag = tag }
