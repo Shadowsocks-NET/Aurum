@@ -63,7 +63,7 @@ module Inbound =
     type InboundObject =
         { Listen: string
           Port: int
-          Protocol: string
+          Protocol: Protocols
           Settings: InboundConfigurationObject
           Tag: string
           Sniffing: SniffingObject }
@@ -115,3 +115,11 @@ module Inbound =
         { SniffingObject.Enabled = enabled
           DestOverride = destnationOverride
           MetadataOnly = metadataOnly }
+
+    let createInboundObject (allowLocalConnection, port, protocol, settings, sniffing, tag) =
+        { InboundObject.Listen = if allowLocalConnection then "0.0.0.0" else "127.0.0.1"
+          Port = port
+          Protocol = protocol
+          Settings = settings
+          Sniffing = sniffing
+          Tag = Option.defaultValue "Default" tag }
