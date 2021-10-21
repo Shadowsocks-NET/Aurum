@@ -62,11 +62,11 @@ module Inbound =
           Tag: string
           Sniffing: SniffingObject }
 
-    let createSocksAccount user pass =
+    let createSocksAccount (user, pass) =
         { AccountObject.User = user
           Pass = pass }
 
-    let createSocksInboundObject auth accounts udp ip userLevel =
+    let createSocksInboundObject (auth, accounts, udp, ip, userLevel) =
         { InboundConfigurationObject.Auth = auth
           Accounts = accounts
           UserLevel = userLevel
@@ -79,7 +79,7 @@ module Inbound =
           Network = None
           FollowRedirect = None }
 
-    let createHttpInoundObject timeout accounts allowTransparent userLevel =
+    let createHttpInoundObject (timeout, accounts, allowTransparent, userLevel) =
         { InboundConfigurationObject.Auth = None
           Accounts = accounts
           UserLevel = userLevel
@@ -92,7 +92,7 @@ module Inbound =
           Network = None
           FollowRedirect = None }
 
-    let createDokodemoDoorInboundObject address port network timeout followRedirect userLevel =
+    let createDokodemoDoorInboundObject (address, port, network, timeout, followRedirect, userLevel) =
         { InboundConfigurationObject.Auth = None
           Accounts = None
           UserLevel = userLevel
