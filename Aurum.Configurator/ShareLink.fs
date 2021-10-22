@@ -112,7 +112,7 @@ module ShareLink =
             Transport.createStreamSettingsObject (transport, security, tls)
 
         let outbound =
-            Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None)
+            Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None, true)
 
         Intermediate.serializeServerConfiguration (description, outbound) |> ignore
 
