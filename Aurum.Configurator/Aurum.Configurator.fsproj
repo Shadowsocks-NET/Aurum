@@ -9,7 +9,7 @@
     <Compile Include="Inbound.fs" />
     <Compile Include="Outbound.fs" />
     <Compile Include="Intermediate.fs" />
-    <Compile Include="ShareLink.fs" />
+    <Compile Include="Share.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aurum\Aurum.fsproj" />
