@@ -10,6 +10,8 @@ nuget JaggerJo.Avalonia.FuncUI
 nuget JaggerJo.Avalonia.FuncUI.DSL
 nuget JaggerJo.Avalonia.FuncUI.Elmish
 nuget Serilog
+nuget Serilog.Sinks.Console
+nuget Serilog.Sinks.File
 nuget Avalonia.Desktop
 nuget Microsoft.AspNetCore.WebUtilities
 nuget Nanoid
@@ -20,3 +22,5 @@ nuget Shadowsocks.OnlineConfig
 nuget Microsoft.Extensions.Primitives
 nuget Aether
 nuget System.Security.Cryptography.ProtectedData ~> 5.0.0
+nuget ProtoBuf.FSharp
+nuget FSharp.Control.Reactive
