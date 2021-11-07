@@ -31,3 +31,5 @@ type LogEvent() =
     member this.Event = event.Publish
 
     member this.Trigger(log) = event.Trigger(matchLog log)
+
+let logStream = LogEvent()
