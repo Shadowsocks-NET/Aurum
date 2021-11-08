@@ -16,7 +16,7 @@ nuget Avalonia.Desktop
 nuget Microsoft.AspNetCore.WebUtilities
 nuget Nanoid
 nuget FSharp.Json
-nuget FSharp.Core
+nuget FSharp.Core >= 6.0
 nuget Shadowsocks
 nuget Shadowsocks.OnlineConfig
 nuget Microsoft.Extensions.Primitives
