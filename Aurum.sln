@@ -13,6 +13,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Storage", "Aurum.Stor
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Interop", "Aurum.Interop\Aurum.Interop.fsproj", "{D7F8C1C8-29E9-459A-B068-03E6FB89D721}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Routing", "Aurum.Routing\Aurum.Routing.fsproj", "{76D30124-0D8F-45FC-BC15-0B42098C0530}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.AssetManagement", "Aurum.AssetManagement\Aurum.AssetManagement.fsproj", "{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,5 +45,13 @@ Global
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
