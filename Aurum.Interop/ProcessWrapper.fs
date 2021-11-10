@@ -4,13 +4,13 @@ module Aurum.Interop.ProcessWrapper
 open System.Diagnostics
 open System.Threading
 
-type V2rayProcess
+type CoreProcess
     (
-        v2rayProcessInfo: ProcessStartInfo,
+        coreProcessInfo: ProcessStartInfo,
         loggerTaskBuilder: System.IO.StreamReader -> CancellationToken -> Tasks.Task<unit>
     ) =
     let disposed = false
-    let v2rayProcessInfo = v2rayProcessInfo
+    let coreProcessInfo = coreProcessInfo
     let cancelLogging = new CancellationTokenSource()
 
     interface System.IDisposable with
@@ -24,7 +24,7 @@ type V2rayProcess
     member this.Process = new Process()
 
     member this.Start() =
-        (this.Process = Process.Start(v2rayProcessInfo))
+        (this.Process = Process.Start(coreProcessInfo))
         |> ignore
 
         let loggerTask =
@@ -37,24 +37,24 @@ type V2rayProcess
         cancelLogging.Cancel()
         this.Process.Kill(true)
 
-let startV2rayProcess executablePath (configPath: string) =
-    let v2rayProcessInfo =
+let startCoreProcess executablePath (configPath: string) =
+    let coreProcessInfo =
         ProcessStartInfo(executablePath, $"-config={configPath} -format=json")
 
-    v2rayProcessInfo.UseShellExecute = false |> ignore
-    v2rayProcessInfo.CreateNoWindow = false |> ignore
+    coreProcessInfo.UseShellExecute = false |> ignore
+    coreProcessInfo.CreateNoWindow = false |> ignore
 
-    v2rayProcessInfo.RedirectStandardError = true
+    coreProcessInfo.RedirectStandardError = true
     |> ignore
 
-    v2rayProcessInfo.RedirectStandardOutput = true
+    coreProcessInfo.RedirectStandardOutput = true
     |> ignore
 
-    let createV2rayLoggerTask (stdout: System.IO.StreamReader) (cancellationToken: CancellationToken) =
+    let createCoreLoggerTask (stdout: System.IO.StreamReader) (cancellationToken: CancellationToken) =
         backgroundTask {
             while (not cancellationToken.IsCancellationRequested) do
                 let! logLine = stdout.ReadLineAsync()
                 LogStream.logStream.Trigger logLine
         }
 
-    new V2rayProcess(v2rayProcessInfo, createV2rayLoggerTask)
+    new CoreProcess(coreProcessInfo, createCoreLoggerTask)
