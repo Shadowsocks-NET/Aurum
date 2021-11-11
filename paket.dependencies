@@ -6,20 +6,15 @@ framework: net6.0, net5.0
 cache ./paket-cache versions: current
 
 nuget sqlite-net-pcl
-nuget JaggerJo.Avalonia.FuncUI
 nuget JaggerJo.Avalonia.FuncUI.DSL
 nuget JaggerJo.Avalonia.FuncUI.Elmish
-nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Sinks.File
-nuget Avalonia.Desktop
 nuget Microsoft.AspNetCore.WebUtilities
 nuget Nanoid
 nuget FSharp.Json
 nuget FSharp.Core >= 6.0
-nuget Shadowsocks
 nuget Shadowsocks.OnlineConfig
-nuget Microsoft.Extensions.Primitives
 nuget Aether
 nuget System.Security.Cryptography.ProtectedData
 nuget ProtoBuf.FSharp

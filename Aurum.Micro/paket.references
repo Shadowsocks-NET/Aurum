@@ -1,8 +1,5 @@
-Avalonia.Desktop
-JaggerJo.Avalonia.FuncUI
 JaggerJo.Avalonia.FuncUI.DSL
 JaggerJo.Avalonia.FuncUI.Elmish
 Nanoid
-FSharp.Core
 Serilog
 sqlite-net-pcl
