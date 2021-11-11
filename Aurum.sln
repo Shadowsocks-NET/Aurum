@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Configuration", "Aurum.Configuration\Aurum.Configuration.fsproj", "{EE9DC233-2D04-449D-9B35-108AC1945F25}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Micro", "Aurum.Micro\Aurum.Micro.fsproj", "{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum", "Aurum\Aurum.fsproj", "{3559AFD9-7176-4BFB-8E7F-0688EABD0B53}"
@@ -13,8 +11,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Storage", "Aurum.Stor
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Interop", "Aurum.Interop\Aurum.Interop.fsproj", "{D7F8C1C8-29E9-459A-B068-03E6FB89D721}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Routing", "Aurum.Routing\Aurum.Routing.fsproj", "{76D30124-0D8F-45FC-BC15-0B42098C0530}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.AssetManagement", "Aurum.AssetManagement\Aurum.AssetManagement.fsproj", "{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}"
 EndProject
 Global
@@ -23,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE9DC233-2D04-449D-9B35-108AC1945F25}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95C4AD6C-5A4E-4AF4-8DA9-EEE80C3EEA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,10 +37,6 @@ Global
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F8C1C8-29E9-459A-B068-03E6FB89D721}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76D30124-0D8F-45FC-BC15-0B42098C0530}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}.Release|Any CPU.ActiveCfg = Release|Any CPU
