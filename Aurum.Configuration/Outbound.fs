@@ -2,7 +2,7 @@ module Aurum.Configuration.Outbound
 
 open System
 open FSharp.Json
-open Aurum.Configurator.Transport
+open Aurum.Configuration.Transport
 open Aurum.Exceptions
 
 [<RequireQualifiedAccessAttribute>]

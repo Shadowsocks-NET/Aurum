@@ -8,6 +8,7 @@
     <Compile Include="Transport.fs" />
     <Compile Include="Inbound.fs" />
     <Compile Include="Outbound.fs" />
+    <Compile Include="Routing.fs" />
     <Compile Include="Intermediate.fs" />
     <Compile Include="Share.fs" />
   </ItemGroup>
