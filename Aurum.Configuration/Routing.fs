@@ -41,3 +41,16 @@ type BalancerStrategy =
     | [<JsonUnionCase("leastPing")>] LeastPing
 
 type BalancerObject = { Tag: string; Selector: string list; Strategy: BalancerStrategy }
+type RoutingObject =
+    { DomainStrategy: DomainStrategy option
+      DomainMatcher: DomainMatcher option
+      Rules: RuleObject list option
+      Balancers: BalancerObject list option }
+type FullDomainListObject =
+    { Direct: string list
+      Proxy: string list
+      Block: string list }
+type DomainList =
+    | Full of FullDomainListObject
+    | GFWList of string list
+    | Greatfire of string list
