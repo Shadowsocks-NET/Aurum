@@ -37,7 +37,7 @@ type CoreProcess
         cancelLogging.Cancel()
         this.Process.Kill(true)
 
-let startCoreProcess executablePath (configPath: string) =
+let startCoreProcess (executablePath, configPath: string, assetPath) =
     let coreProcessInfo =
         ProcessStartInfo(executablePath, $"-config={configPath} -format=json")
 
@@ -49,6 +49,11 @@ let startCoreProcess executablePath (configPath: string) =
 
     coreProcessInfo.RedirectStandardOutput = true
     |> ignore
+
+    assetPath
+    |> Option.iter (fun a ->
+        coreProcessInfo.Environment.["v2ray.location.asset"] = a
+        |> ignore)
 
     let createCoreLoggerTask (stdout: System.IO.StreamReader) (cancellationToken: CancellationToken) =
         backgroundTask {
