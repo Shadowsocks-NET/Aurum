@@ -141,22 +141,6 @@ let constructRuleSet ruleSet proxyTag =
     List.map (fun rule -> constructSingleRule rule proxyTag) ruleSet
 
 let constructPreset constructionStrategy =
-    let directDomain =
-        if constructionStrategy.BypassMainland then
-            Some [ "geosite:cn" ]
-        else
-            None
-
-    let directIp =
-        if constructionStrategy.BypassMainland then
-            Some [ "223.5.5.5/32"
-                   "119.29.29.29/32"
-                   "180.76.76.76/32"
-                   "114.114.114.114/32"
-                   "geoip:cn"
-                   "geoip:private" ]
-        else
-            None
 
     let directRule =
         if constructionStrategy.BypassMainland then
@@ -171,12 +155,6 @@ let constructPreset constructionStrategy =
             )
         else
             Direct(None, None)
-
-    let blockDomain =
-        if constructionStrategy.BlockAds then
-            Some [ "geosite:category-ads-all" ]
-        else
-            None
 
     let blockRule =
         if constructionStrategy.BlockAds then
