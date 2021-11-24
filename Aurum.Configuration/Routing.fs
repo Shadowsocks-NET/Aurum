@@ -61,12 +61,14 @@ type FullDomainListObject =
       Proxy: string list
       Block: string list }
 
-type DomainList =
-    | Full of FullDomainListObject
-    | GFWList of string list
-    | Greatfire of string list
+type DomainPresets =
+    | Full of FullDomainListObject // uses Loyalsoldier/v2ray-rules-dat's {direct,proxy,block}-list.txt
+    | GFWList of string list // uses Loyalsoldier/v2ray-rules-dat's gfw.txt
+    | Greatfire of string list // uses Loyalsoldier/v2ray-rules-dat's greatfire.txt
+    | Loyalsoldier // uses Loyalsoldier/v2ray-rules-dat's recommended v2ray setting in README
 
-type RuleConstructionStrategy = // when using full domain list, these options will be ignored
+// when using full domain list or the recommended setting, these options will be ignored
+type RuleConstructionStrategy =
     { BypassMainland: bool
       BlockAds: bool }
 
@@ -74,71 +76,138 @@ type ProxyTag =
     | Outbound of string
     | Balancer of string
 
+type DomainRuleList = string list
+type IpRuleList = string list
+
+type RuleType =
+    | Direct of DomainRuleList option * IpRuleList option
+    | Proxy of DomainRuleList option * IpRuleList option
+    | Block of DomainRuleList option * IpRuleList option
+
 let constructDomainEntry domain = $"domain:{domain}"
 
-let generateRoutingWithDomainList (domainList, constructionStrategy, proxyTag) =
+let constructSingleRule rule proxyTag =
+    match rule with
+    | Direct (domainRule, ipRule) ->
+        { DomainMatcher = None
+          Type = Field
+          Domains = domainRule
+          IP = ipRule
+          Port = None
+          SourcePort = None
+          Network = Some TCPAndUDP
+          Source = None
+          User = None
+          Protocol = None
+          Attrs = None
+          OutboundTag = Some "freedom"
+          BalancerTag = None }
+    | Proxy (domainRule, ipRule) ->
+        { DomainMatcher = None
+          Type = Field
+          Domains = domainRule
+          IP = ipRule
+          Port = None
+          SourcePort = None
+          Network = Some TCPAndUDP
+          Source = None
+          User = None
+          Protocol = None
+          Attrs = None
+          OutboundTag =
+            match proxyTag with
+            | Outbound tag -> Some tag
+            | Balancer _ -> None
+          BalancerTag =
+            match proxyTag with
+            | Balancer tag -> Some tag
+            | Outbound _ -> None }
+    | Block (domainRule, ipRule) ->
+        { DomainMatcher = None
+          Type = Field
+          Domains = domainRule
+          IP = ipRule
+          Port = None
+          SourcePort = None
+          Network = Some TCPAndUDP
+          Source = None
+          User = None
+          Protocol = None
+          Attrs = None
+          OutboundTag = Some "blackhole"
+          BalancerTag = None }
+
+let constructRuleSet ruleSet proxyTag =
+    List.map (fun rule -> constructSingleRule rule proxyTag) ruleSet
+
+let constructPreset constructionStrategy =
+    let directDomain =
+        if constructionStrategy.BypassMainland then
+            Some [ "geosite:cn" ]
+        else
+            None
+
+    let directIp =
+        if constructionStrategy.BypassMainland then
+            Some [ "223.5.5.5/32"
+                   "119.29.29.29/32"
+                   "180.76.76.76/32"
+                   "114.114.114.114/32"
+                   "geoip:cn"
+                   "geoip:private" ]
+        else
+            None
+
+    let directRule =
+        if constructionStrategy.BypassMainland then
+            Direct(
+                Some [ "geosite:cn" ],
+                Some [ "223.5.5.5/32"
+                       "119.29.29.29/32"
+                       "180.76.76.76/32"
+                       "114.114.114.114/32"
+                       "geoip:cn"
+                       "geoip:private" ]
+            )
+        else
+            Direct(None, None)
+
+    let blockDomain =
+        if constructionStrategy.BlockAds then
+            Some [ "geosite:category-ads-all" ]
+        else
+            None
+
+    let blockRule =
+        if constructionStrategy.BlockAds then
+            Block(Some [ "geosite:category-ads-all" ], None)
+        else
+            Block(None, None)
+
+    constructRuleSet [ directRule
+                       blockRule ]
+
+let generateRoutingWithDomainList (domainList, constructionStrategy) proxyTag =
     match domainList with
     | Full domainList ->
-        let proxyDomain =
-            domainList.Proxy |> List.map constructDomainEntry
-
-        let directDomain =
-            domainList.Direct |> List.map constructDomainEntry
-
-        let blockDomain =
-            domainList.Block |> List.map constructDomainEntry
-
         let proxyRule =
-            { DomainMatcher = None
-              Type = Field
-              Domains = Some proxyDomain
-              IP = None
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag =
-                match proxyTag with
-                | Outbound tag -> Some tag
-                | Balancer _ -> None
-              BalancerTag =
-                match proxyTag with
-                | Balancer tag -> Some tag
-                | Outbound _ -> None }
+            Proxy(Some(domainList.Proxy |> List.map constructDomainEntry), None)
 
         let directRule =
-            { DomainMatcher = None
-              Type = Field
-              Domains = Some directDomain
-              IP = None
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag = Some "freedom"
-              BalancerTag = None }
+            Direct(Some(domainList.Direct |> List.map constructDomainEntry), None)
 
         let blockRule =
-            { DomainMatcher = None
-              Type = Field
-              Domains = Some blockDomain
-              IP = None
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag = Some "blackhole"
-              BalancerTag = None }
+            Block(Some(domainList.Block |> List.map constructDomainEntry), None)
 
-        [ proxyRule; directRule; blockRule ]
-    | GFWList domainList ->
-        []
+        constructRuleSet [ blockRule; directRule; proxyRule ] proxyTag
+    | GFWList domainList
+    | Greatfire domainList ->
+        let proxyRules =
+            Proxy(Some(domainList |> List.map constructDomainEntry), None)
+
+        let proxyRuleObjects = constructRuleSet [ proxyRules ] proxyTag
+
+        let presetRuleObjects =
+            constructPreset constructionStrategy proxyTag
+
+        presetRuleObjects @ proxyRuleObjects
