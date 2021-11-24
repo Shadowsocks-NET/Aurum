@@ -69,11 +69,12 @@ type IpStringListObject =
       Proxy: IpRuleList
       Block: IpRuleList }
 
-type DomainPresets =
+type RulePresets =
     | Full of DomainStringListObject // uses Loyalsoldier/v2ray-rules-dat's {direct,proxy,block}-list.txt
     | GFWList of string list // uses Loyalsoldier/v2ray-rules-dat's gfw.txt
     | Greatfire of string list // uses Loyalsoldier/v2ray-rules-dat's greatfire.txt
     | Loyalsoldier // uses Loyalsoldier/v2ray-rules-dat's recommended v2ray setting in README
+    | Empty // no preset rules
 
 // when using full domain list or the recommended setting, these options will be ignored
 type RuleConstructionStrategy =
@@ -92,68 +93,78 @@ type RuleType =
 
 let constructDomainEntry domain = $"domain:{domain}"
 
+let constructDirect (domainRule, ipRule) : RuleObject =
+    { DomainMatcher = None
+      Type = Field
+      Domains = domainRule
+      IP = ipRule
+      Port = None
+      SourcePort = None
+      Network = Some TCPAndUDP
+      Source = None
+      User = None
+      Protocol = None
+      Attrs = None
+      OutboundTag = Some "freedom"
+      BalancerTag = None }
+
+let constructProxy (domainRule, ipRule) proxyTag : RuleObject =
+    { DomainMatcher = None
+      Type = Field
+      Domains = domainRule
+      IP = ipRule
+      Port = None
+      SourcePort = None
+      Network = Some TCPAndUDP
+      Source = None
+      User = None
+      Protocol = None
+      Attrs = None
+      OutboundTag =
+        match proxyTag with
+        | Outbound tag -> Some tag
+        | Balancer _ -> None
+      BalancerTag =
+        match proxyTag with
+        | Balancer tag -> Some tag
+        | Outbound _ -> None }
+
+let constructBlock (domainRule, ipRule) : RuleObject =
+    { DomainMatcher = None
+      Type = Field
+      Domains = domainRule
+      IP = ipRule
+      Port = None
+      SourcePort = None
+      Network = Some TCPAndUDP
+      Source = None
+      User = None
+      Protocol = None
+      Attrs = None
+      OutboundTag = Some "blackhole"
+      BalancerTag = None }
+
 let constructSingleRule rule proxyTag : RuleObject option =
     match rule with
-    | Direct (domainRule, ipRule) ->
-        Some(
-            { DomainMatcher = None
-              Type = Field
-              Domains = domainRule
-              IP = ipRule
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag = Some "freedom"
-              BalancerTag = None }
-        )
-    | Proxy (domainRule, ipRule) ->
-        Some(
-            { DomainMatcher = None
-              Type = Field
-              Domains = domainRule
-              IP = ipRule
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag =
-                match proxyTag with
-                | Outbound tag -> Some tag
-                | Balancer _ -> None
-              BalancerTag =
-                match proxyTag with
-                | Balancer tag -> Some tag
-                | Outbound _ -> None }
-        )
-    | Block (domainRule, ipRule) ->
-        Some(
-            { DomainMatcher = None
-              Type = Field
-              Domains = domainRule
-              IP = ipRule
-              Port = None
-              SourcePort = None
-              Network = Some TCPAndUDP
-              Source = None
-              User = None
-              Protocol = None
-              Attrs = None
-              OutboundTag = Some "blackhole"
-              BalancerTag = None }
-        )
+    | Direct (domainRule, ipRule) -> Some(constructDirect (domainRule, ipRule))
+    | Proxy (domainRule, ipRule) -> Some(constructProxy (domainRule, ipRule) proxyTag)
+    | Block (domainRule, ipRule) -> Some(constructBlock (domainRule, ipRule))
     | Skip -> None
 
 let constructRuleSet ruleSet proxyTag =
     List.map (fun rule -> constructSingleRule rule proxyTag) ruleSet
     |> List.filter Option.isSome
     |> List.map Option.get
+
+let mergeRules rule1 rule2 =
+    match rule1, rule2 with
+    | Direct (xDomain, xIP), Direct (yDomain, yIP) ->
+        Direct(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
+    | Proxy (xDomain, xIP), Proxy (yDomain, yIP) ->
+        Proxy(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
+    | Block (xDomain, xIP), Block (yDomain, yIP) ->
+        Block(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
+    | _ -> raise Exceptions.RuleTypeNotMatchException
 
 let constructPreset constructionStrategy =
 
@@ -177,10 +188,9 @@ let constructPreset constructionStrategy =
         else
             Skip
 
-    constructRuleSet [ directRule
-                       blockRule ]
+    (directRule, blockRule)
 
-let generateRoutingWithDomainList (domainList, constructionStrategy, extraDomainRules, extraIpRules) =
+let generateRoutingRules (domainList, constructionStrategy, extraDomainRules, extraIpRules) =
     match domainList with
     | Full domainList ->
         let proxyRule =
@@ -216,6 +226,8 @@ let generateRoutingWithDomainList (domainList, constructionStrategy, extraDomain
                            Direct(None, None) ]
     | GFWList domainList
     | Greatfire domainList ->
+        let (directPreset, blockPreset) = constructPreset constructionStrategy
+
         let proxyRule =
             Proxy(
                 Some(
@@ -232,10 +244,9 @@ let generateRoutingWithDomainList (domainList, constructionStrategy, extraDomain
             Block(Some extraDomainRules.Block, Some extraIpRules.Block)
 
         fun proxyTag ->
-            constructPreset constructionStrategy proxyTag
-            @ constructRuleSet
-                [ blockRule
-                  directRule
+            constructRuleSet
+                [ mergeRules blockRule blockPreset
+                  mergeRules directRule directPreset
                   proxyRule
                   Direct(None, None) ]
                 proxyTag
@@ -278,3 +289,9 @@ let generateRoutingWithDomainList (domainList, constructionStrategy, extraDomain
                            proxyRule
                            directRule2
                            Proxy(None, None) ]
+    | Empty ->
+        let (directPreset, blockPreset) = constructPreset constructionStrategy
+
+        constructRuleSet [ mergeRules blockPreset (Block(Some extraDomainRules.Block, Some extraIpRules.Block))
+                           mergeRules directPreset (Direct(Some extraDomainRules.Direct, Some extraIpRules.Direct))
+                           Proxy(Some extraDomainRules.Proxy, Some extraIpRules.Proxy) ]

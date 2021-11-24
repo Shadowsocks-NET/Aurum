@@ -38,6 +38,11 @@ module Helpers =
     let blankStringToNone (string: string option) =
         Option.filter (fun x -> x.Equals("")) string
 
+    let mergeOptionList op1 op2 =
+        match op1, op2 with
+        | Some x, Some y -> Some (x @ y)
+        | op1, op2 -> Option.orElse op1 op2
+
     let jsonOption =
         JsonConfig.create (unformatted = true, serializeNone = Omit, jsonFieldNaming = Json.lowerCamelCase)
 

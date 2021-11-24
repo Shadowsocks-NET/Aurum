@@ -1,5 +1,5 @@
-namespace Aurum
+module Aurum.Exceptions
 
-module Exceptions =
-    exception ShareLinkFormatException of string
-    exception ConfigurationParameterException of string
+exception ShareLinkFormatException of string
+exception ConfigurationParameterException of string
+exception RuleTypeNotMatchException
