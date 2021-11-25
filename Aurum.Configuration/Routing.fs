@@ -232,13 +232,10 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules, use
         let proxyRule =
             Proxy(Some((domainList |> List.map constructDomainEntry)), None)
 
-        fun proxyTag ->
-            constructRuleSet
-                [ mergeRules userBlockRule blockPreset
-                  userDirectRule
-                  mergeRules userProxyRule proxyRule
-                  Proxy(None, None) ]
-                proxyTag
+        constructRuleSet [ mergeRules userBlockRule blockPreset
+                           userDirectRule
+                           mergeRules userProxyRule proxyRule
+                           Proxy(None, None) ]
     | Loyalsoldier ->
         let userBlockRule =
             Block(Some userDomainRules.Block, Some userIpRules.Block)
