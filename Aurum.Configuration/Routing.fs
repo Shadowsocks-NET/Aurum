@@ -70,16 +70,14 @@ type IpStringListObject =
       Block: IpRuleList }
 
 type RulePresets =
-    | Full of DomainStringListObject // uses Loyalsoldier/v2ray-rules-dat's {direct,proxy,block}-list.txt
+    | BypassMainland // adopted from v2rayA's mainland whitelist mode
     | GFWList of string list // uses Loyalsoldier/v2ray-rules-dat's gfw.txt
     | Greatfire of string list // uses Loyalsoldier/v2ray-rules-dat's greatfire.txt
     | Loyalsoldier // uses Loyalsoldier/v2ray-rules-dat's recommended v2ray setting in README
     | Empty // no preset rules
 
 // when using full domain list or the recommended setting, these options will be ignored
-type RuleConstructionStrategy =
-    { BypassMainland: bool
-      BlockAds: bool }
+type RuleConstructionStrategy = { BlockAds: bool }
 
 type ProxyTag =
     | Outbound of string
@@ -165,97 +163,94 @@ let mergeRules rule1 rule2 =
 
 let constructPreset constructionStrategy =
 
-    let directRule =
-        if constructionStrategy.BypassMainland then
-            Direct(
-                Some [ "geosite:cn" ],
-                Some [ "223.5.5.5/32"
-                       "119.29.29.29/32"
-                       "180.76.76.76/32"
-                       "114.114.114.114/32"
-                       "geoip:cn"
-                       "geoip:private" ]
-            )
-        else
-            Skip
-
     let blockRule =
         if constructionStrategy.BlockAds then
             Block(Some [ "geosite:category-ads-all" ], None)
         else
             Skip
 
-    (directRule, blockRule)
+    blockRule
 
-let generateRoutingRules (domainList, constructionStrategy, extraDomainRules, extraIpRules) =
+let generateRoutingRules (domainList, constructionStrategy, userDomainRules, userIpRules) =
     match domainList with
-    | Full domainList ->
-        let proxyRule =
-            Proxy(
-                Some(
-                    (domainList.Proxy |> List.map constructDomainEntry)
-                    @ extraDomainRules.Proxy
-                ),
-                Some extraIpRules.Proxy
-            )
+    | BypassMainland ->
+        let blockPreset = constructPreset constructionStrategy
 
-        let directRule =
+        let userProxyRule =
+            Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
+
+        let userDirectRule =
+            Direct(Some userDomainRules.Direct, Some userIpRules.Direct)
+
+        let userBlockRule =
+            Block(Some userDomainRules.Block, Some userIpRules.Block)
+
+        let geolocationProxy =
+            Proxy(Some [ "geosite:geolocation-!cn" ], None)
+
+        let scholarProxy =
+            Proxy(Some [ "geosite:google-scholar" ], None)
+
+        let scholarDirect =
             Direct(
-                Some(
-                    (domainList.Direct |> List.map constructDomainEntry)
-                    @ extraDomainRules.Direct
-                ),
-                Some extraIpRules.Direct
+                Some [ "geosite:category-scholar-!cn"
+                       "geosite:category-scholar-cn" ],
+                None
             )
 
-        let blockRule =
-            Block(
-                Some(
-                    (domainList.Block |> List.map constructDomainEntry)
-                    @ extraDomainRules.Block
-                ),
-                Some extraIpRules.Block
-            )
+        let siteCNDirect = Direct(Some [ "geosite:cn" ], None)
 
-        constructRuleSet [ blockRule
-                           directRule
-                           proxyRule
-                           Direct(None, None) ]
+        let sarProxy =
+            Proxy(None, Some [ "geoip:hk"; "geoip:mo" ])
+
+        let ipDirect =
+            Direct(None, Some [ "geoip:private"; "geoip:cn" ])
+
+        constructRuleSet [ mergeRules userBlockRule blockPreset
+                           userDirectRule
+                           userProxyRule
+                           geolocationProxy
+                           scholarProxy
+                           scholarDirect
+                           siteCNDirect
+                           sarProxy
+                           ipDirect
+                           Proxy(None, None) ]
     | GFWList domainList
     | Greatfire domainList ->
-        let (directPreset, blockPreset) = constructPreset constructionStrategy
+        let blockPreset = constructPreset constructionStrategy
+
+        let userBlockRule =
+            Block(Some userDomainRules.Block, Some userIpRules.Block)
+
+        let userDirectRule =
+            Block(Some userDomainRules.Direct, Some userIpRules.Direct)
+
+        let userProxyRule =
+            Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
 
         let proxyRule =
-            Proxy(
-                Some(
-                    (domainList |> List.map constructDomainEntry)
-                    @ extraDomainRules.Proxy
-                ),
-                Some extraIpRules.Proxy
-            )
-
-        let directRule =
-            Direct(Some extraDomainRules.Direct, Some extraIpRules.Direct)
-
-        let blockRule =
-            Block(Some extraDomainRules.Block, Some extraIpRules.Block)
+            Proxy(Some((domainList |> List.map constructDomainEntry)), None)
 
         fun proxyTag ->
             constructRuleSet
-                [ mergeRules blockRule blockPreset
-                  mergeRules directRule directPreset
-                  proxyRule
-                  Direct(None, None) ]
+                [ mergeRules userBlockRule blockPreset
+                  userDirectRule
+                  mergeRules userProxyRule proxyRule
+                  Proxy(None, None) ]
                 proxyTag
     | Loyalsoldier ->
+        let userBlockRule =
+            Block(Some userDomainRules.Block, Some userIpRules.Block)
+
+        let userDirectRule =
+            Block(Some userDomainRules.Direct, Some userIpRules.Direct)
+
+        let userProxyRule =
+            Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
+
         let blockRule =
-            Block(
-                Some(
-                    [ "geosite:category-ads-all" ]
-                    @ extraDomainRules.Block
-                ),
-                Some extraIpRules.Block
-            )
+            Block(Some([ "geosite:category-ads-all" ]), None)
 
         let directRule1 =
             Direct(
@@ -265,30 +260,25 @@ let generateRoutingRules (domainList, constructionStrategy, extraDomainRules, ex
                       "geosite:google-cn"
                       "geosite:tld-cn"
                       "geosite:category-games@cn" ]
-                    @ extraDomainRules.Direct
                 ),
-                Some extraIpRules.Direct
+                None
             )
 
         let proxyRule =
-            Proxy(
-                Some(
-                    [ "geosite:geolocation-!cn" ]
-                    @ extraDomainRules.Proxy
-                ),
-                Some extraIpRules.Proxy
-            )
+            Proxy(Some([ "geosite:geolocation-!cn" ]), None)
 
         let directRule2 = Direct(Some([ "geosite:cn" ]), None)
 
-        constructRuleSet [ blockRule
+        constructRuleSet [ mergeRules userBlockRule blockRule
+                           userDirectRule
+                           userProxyRule
                            directRule1
                            proxyRule
                            directRule2
                            Proxy(None, None) ]
     | Empty ->
-        let (directPreset, blockPreset) = constructPreset constructionStrategy
+        let blockPreset = constructPreset constructionStrategy
 
-        constructRuleSet [ mergeRules blockPreset (Block(Some extraDomainRules.Block, Some extraIpRules.Block))
-                           mergeRules directPreset (Direct(Some extraDomainRules.Direct, Some extraIpRules.Direct))
-                           Proxy(Some extraDomainRules.Proxy, Some extraIpRules.Proxy) ]
+        constructRuleSet [ mergeRules blockPreset (Block(Some userDomainRules.Block, Some userIpRules.Block))
+                           Direct(Some userDomainRules.Direct, Some userIpRules.Direct)
+                           Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy) ]
