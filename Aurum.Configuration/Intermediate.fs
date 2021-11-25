@@ -10,14 +10,10 @@ type SerializedServerConfiguration =
       Configuration: string
       Type: string }
 
-let serializeServerConfiguration
-    (
-        name,
-        server: Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>
-    ) =
+let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>) =
     let host, port = server.Settings.GetVnextServerInfo()
     let serverType = server.GetConnectionType()
-    let configuration = Helpers.serializeJson server
+    let configuration = serializeJson server
 
     { SerializedServerConfiguration.Name = name
       Type = serverType

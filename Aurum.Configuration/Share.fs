@@ -1,11 +1,8 @@
 module Aurum.Configuration.Share
 
 open System.Collections.Generic
-open Aurum.Exceptions
-open Aurum.Helpers
+open Aurum
 open Aurum.Configuration
-
-let placeholder = ""
 
 let encodeBase64 (text: string) =
     let plainBytes = System.Text.Encoding.UTF8.GetBytes text
@@ -52,11 +49,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
             retrieveFromShareLink "serviceName"
             |> Transport.createGrpcObject
         | "http" ->
-            Transport.createHttpObject (
-                tryRetrieveFromShareLink "path",
-                tryRetrieveFromShareLink "host",
-                Dictionary()
-            )
+            Transport.createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
         | "quic" ->
             Transport.createQUICObject (
                 (tryRetrieveFromShareLink "quicSecurity"),
@@ -120,6 +113,7 @@ let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) 
     let name = ssServer.Name
     let host = ssServer.Host
     let port = ssServer.Port
+
     let method =
         match ssServer.Method with
         | "none" -> Outbound.ShadowsocksEncryption.None
@@ -129,27 +123,15 @@ let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) 
         | "aes-128-gcm" -> Outbound.ShadowsocksEncryption.AES128
         | "aes-256-gcm" -> Outbound.ShadowsocksEncryption.AES256
         | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
+
     let password = ssServer.Password
+
     let v2flySSServer =
-        Outbound.createShadowsocksServerObject (
-            None,
-            host,
-            port,
-            Some method,
-            Some password,
-            None,
-            Some true
-        )
+        Outbound.createShadowsocksServerObject (None, host, port, Some method, Some password, None, Some true)
+
     let v2flyOutbound =
-        Outbound.createV2flyOutboundObject (
-            None,
-            Outbound.Shadowsocks,
-            v2flySSServer,
-            None,
-            name,
-            None,
-            false
-        )
+        Outbound.createV2flyOutboundObject (None, Outbound.Shadowsocks, v2flySSServer, None, name, None, false)
+
     Intermediate.serializeServerConfiguration (name, v2flyOutbound)
 
 let decodeShareLink link =
@@ -164,5 +146,6 @@ let decodeShareLink link =
         match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
         | true -> ()
         | false -> raise (ShareLinkFormatException "incorrect Shadowsocks link format")
+
         createV2flyShadowsocksObjectFromSSNET ssServer
     | unknown -> raise (ShareLinkFormatException $"unsupported sharelink protocol {unknown}")

@@ -110,13 +110,17 @@ let createDokodemoDoorInboundObject (address, port, network, timeout, followRedi
       Network = network
       FollowRedirect = followRedirect }
 
-let createSniffingObject (enabled, destnationOverride, metadataOnly) =
+let createSniffingObject (enabled, destinationOverride, metadataOnly) =
     { SniffingObject.Enabled = enabled
-      DestOverride = destnationOverride
+      DestOverride = destinationOverride
       MetadataOnly = metadataOnly }
 
 let createInboundObject (allowLocalConnection, port, protocol, settings, sniffing, tag) =
-    { InboundObject.Listen = if allowLocalConnection then "0.0.0.0" else "127.0.0.1"
+    { InboundObject.Listen =
+          if allowLocalConnection then
+              "0.0.0.0"
+          else
+              "127.0.0.1"
       Port = port
       Protocol = protocol
       Settings = settings

@@ -3,7 +3,7 @@ module Aurum.Configuration.Outbound
 open System
 open FSharp.Json
 open Aurum.Configuration.Transport
-open Aurum.Exceptions
+open Aurum
 
 [<RequireQualifiedAccessAttribute>]
 type ShadowsocksEncryption =
@@ -150,18 +150,18 @@ let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, ta
     { OutboundObject.SendThrough = Option.defaultValue "0.0.0.0" sendThrough
       Protocol = protocol
       Settings =
-        if vnext then
-            { OutboundConfigurationObject.Vnext = Some [ setting ]
-              Servers = None }
-        else
-            { OutboundConfigurationObject.Vnext = None
-              Servers = Some [ setting ] }
+          if vnext then
+              { OutboundConfigurationObject.Vnext = Some [ setting ]
+                Servers = None }
+          else
+              { OutboundConfigurationObject.Vnext = None
+                Servers = Some [ setting ] }
       StreamSettings = streamSetting
       Mux =
-        Option.defaultValue
-            { MuxObject.Enabled = false
-              Concurrency = 1 }
-            mux
+          Option.defaultValue
+              { MuxObject.Enabled = false
+                Concurrency = 1 }
+              mux
       Tag = tag }
 
 let createShadowsocksServerObject (email, address, port, method, password, level, ivCheck) =

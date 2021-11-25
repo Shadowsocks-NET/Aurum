@@ -1,3 +1,4 @@
+[<AutoOpen>]
 module Aurum.Exceptions
 
 exception ShareLinkFormatException of string

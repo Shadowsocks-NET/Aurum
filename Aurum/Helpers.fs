@@ -4,6 +4,7 @@ open System.Collections.Generic
 open Microsoft.Extensions.Primitives
 open FSharp.Json
 
+[<AutoOpen>]
 module Helpers =
     let nullableToOption value =
         match value with
@@ -40,7 +41,7 @@ module Helpers =
 
     let mergeOptionList op1 op2 =
         match op1, op2 with
-        | Some x, Some y -> Some (x @ y)
+        | Some x, Some y -> Some(x @ y)
         | op1, op2 -> Option.orElse op1 op2
 
     let jsonOption =
@@ -48,4 +49,5 @@ module Helpers =
 
     let serializeJson object = Json.serializeEx jsonOption object
 
-    let deserializeJson<'T> string = Json.deserializeEx<'T> jsonOption string
+    let deserializeJson<'T> string =
+        Json.deserializeEx<'T> jsonOption string

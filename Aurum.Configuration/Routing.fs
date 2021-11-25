@@ -121,13 +121,13 @@ let constructProxy (domainRule, ipRule) proxyTag : RuleObject =
       Protocol = None
       Attrs = None
       OutboundTag =
-        match proxyTag with
-        | Outbound tag -> Some tag
-        | Balancer _ -> None
+          match proxyTag with
+          | Outbound tag -> Some tag
+          | Balancer _ -> None
       BalancerTag =
-        match proxyTag with
-        | Balancer tag -> Some tag
-        | Outbound _ -> None }
+          match proxyTag with
+          | Balancer tag -> Some tag
+          | Outbound _ -> None }
 
 let constructBlock (domainRule, ipRule) : RuleObject =
     { DomainMatcher = None
@@ -158,13 +158,10 @@ let constructRuleSet ruleSet proxyTag =
 
 let mergeRules rule1 rule2 =
     match rule1, rule2 with
-    | Direct (xDomain, xIP), Direct (yDomain, yIP) ->
-        Direct(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
-    | Proxy (xDomain, xIP), Proxy (yDomain, yIP) ->
-        Proxy(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
-    | Block (xDomain, xIP), Block (yDomain, yIP) ->
-        Block(Helpers.mergeOptionList xDomain yDomain, Helpers.mergeOptionList xIP yIP)
-    | _ -> raise Exceptions.RuleTypeNotMatchException
+    | Direct (xDomain, xIP), Direct (yDomain, yIP) -> Direct(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
+    | Proxy (xDomain, xIP), Proxy (yDomain, yIP) -> Proxy(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
+    | Block (xDomain, xIP), Block (yDomain, yIP) -> Block(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
+    | _ -> raise RuleTypeNotMatchException
 
 let constructPreset constructionStrategy =
 
