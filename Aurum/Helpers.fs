@@ -1,5 +1,7 @@
 namespace Aurum
 
+open System
+open System.IO
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
 open FSharp.Json
@@ -51,3 +53,25 @@ module Helpers =
 
     let deserializeJson<'T> string =
         Json.deserializeEx<'T> jsonOption string
+
+    let getDataDirectory appName =
+        let baseDirectory =
+            match Runtime.InteropServices.RuntimeInformation.IsOSPlatform(Runtime.InteropServices.OSPlatform.Windows) with
+            | true -> Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+            | false ->
+                match Runtime.InteropServices.RuntimeInformation.IsOSPlatform(Runtime.InteropServices.OSPlatform.OSX) with
+                | true ->
+                    Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                        "/Library/Application Support"
+                    )
+                | false ->
+                    let xdg =
+                        Option.ofObj (Environment.GetEnvironmentVariable("XDG_DATA_HOME"))
+
+                    match xdg with
+                    | Some xdg -> xdg
+                    | None ->
+                        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
+
+        Path.Combine(baseDirectory, appName)
