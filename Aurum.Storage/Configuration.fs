@@ -2,13 +2,11 @@
 
 open FSharp.Json
 open SQLite
-open SQLite
-open SQLitePCL
 
 type ConnectionRecordObject =
     { Id: string
       Name: string
-      Tags: string list }
+      Tags: string }
 
 type SubscriptionType =
     | None = 0
@@ -16,17 +14,12 @@ type SubscriptionType =
     | SIP008 = 2
     | OOCv1 = 3
 
-type SubscriptionObject =
-    { [<JsonField("type")>]
-      SubscriptionType: SubscriptionType
-      Source: string option }
-
 type GroupObject =
     { Id: string
       Name: string
       Subscription: SubscriptionType
-      SubscriptionSource: string option
-      Connections: string list (* stores id of connections belong to this group *)  }
+      SubscriptionSource: string
+      Connections: string (* stores id of connections belong to this group *)  }
 
 [<Table("Tags")>]
 type Tags(tag: string, nodeId: string) =
