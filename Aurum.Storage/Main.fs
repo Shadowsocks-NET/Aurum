@@ -25,3 +25,6 @@ type DatabaseHandler(databasePath) =
         |> ignore
 
         _db.CreateTable<Configuration.Groups>() |> ignore
+        _db.CreateTable<Configuration.DNS>() |> ignore
+
+        _db.CreateTable<Configuration.Routing>() |> ignore

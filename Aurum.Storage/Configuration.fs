@@ -78,3 +78,21 @@ type Groups(name: string, id: string, connectionId: string, subType: Subscriptio
 
     [<Column("subscriptionUrl")>]
     member this.Url = subUrl
+
+[<Table("Routing")>]
+type Routing(name: string, config: string) =
+    [<PrimaryKey>]
+    [<AutoIncrement>]
+    [<Column("name")>]
+    member this.Name = name
+
+    member this.Configuration = config
+
+[<Table("DNS")>]
+type DNS(name: string, config: string) =
+    [<PrimaryKey>]
+    [<AutoIncrement>]
+    [<Column("name")>]
+    member this.Name = name
+
+    member this.Configuration = config
