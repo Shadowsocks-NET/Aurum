@@ -1,10 +1,11 @@
 ﻿module Aurum.Storage
 
 open System.IO
+open Nanoid
 open SQLite
-open SQLitePCL
 open Aurum
-open Aurum.Storage
+open Aurum.Configuration
+open Aurum.Storage.Configuration
 
 type ApplicationName = string
 
@@ -19,12 +20,19 @@ type DatabaseHandler(databasePath) =
         | Custom path -> new SQLiteConnection(path)
 
     do
-        _db.CreateTable<Configuration.Tags>() |> ignore
+        _db.CreateTable<Tags>() |> ignore
 
-        _db.CreateTable<Configuration.Connections>()
-        |> ignore
+        _db.CreateTable<Connections>() |> ignore
 
-        _db.CreateTable<Configuration.Groups>() |> ignore
-        _db.CreateTable<Configuration.DNS>() |> ignore
+        _db.CreateTable<Groups>() |> ignore
+        _db.CreateTable<DNS>() |> ignore
 
-        _db.CreateTable<Configuration.Routing>() |> ignore
+        _db.CreateTable<Routing>() |> ignore
+
+    member this.insertServerConfiguration(config: Intermediate.SerializedServerConfiguration) =
+        let id = Nanoid.Generate()
+
+        let serverConfig =
+            new Connections(config.Name, id, config.Configuration, config.Type, config.Host, config.Port.ToString())
+
+        _db.Insert(serverConfig)
