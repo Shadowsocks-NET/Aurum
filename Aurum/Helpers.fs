@@ -8,6 +8,8 @@ open FSharp.Json
 
 [<AutoOpen>]
 module Helpers =
+    type identity<'a> = 'a -> 'a
+
     let nullableToOption value =
         match value with
         | null -> None
