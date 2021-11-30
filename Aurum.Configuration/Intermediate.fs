@@ -33,9 +33,35 @@ type SerializedServerConfiguration =
             { a with
                   SerializedServerConfiguration.Type = b })
 
-type SerializedRoutingConfiguration = { Name: string; Configuration: string }
+type SerializedRoutingConfiguration =
+    { Name: string
+      Configuration: string }
+    static member Name_ =
+        (fun a -> a.Name),
+        (fun b a ->
+            { a with
+                  SerializedRoutingConfiguration.Name = b })
 
-type SerializedDNSConfiguration = { Name: string; Configuration: string }
+    static member Configuration_ =
+        (fun a -> a.Configuration),
+        (fun b a ->
+            { a with
+                  SerializedRoutingConfiguration.Configuration = b })
+
+type SerializedDNSConfiguration =
+    { Name: string
+      Configuration: string }
+    static member Name_ =
+        (fun a -> a.Name),
+        (fun b a ->
+            { a with
+                  SerializedRoutingConfiguration.Name = b })
+
+    static member Configuration_ =
+        (fun a -> a.Configuration),
+        (fun b a ->
+            { a with
+                  SerializedRoutingConfiguration.Configuration = b })
 
 let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>) =
     let host, port = server.Settings.GetVnextServerInfo()
