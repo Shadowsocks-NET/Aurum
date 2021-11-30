@@ -7,6 +7,7 @@
     <ItemGroup>
         <Compile Include="Configuration.fs"/>
         <Compile Include="Main.fs"/>
+        <Compile Include="Action.fs"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj"/>
