@@ -12,6 +12,27 @@ type SerializedServerConfiguration =
       Configuration: string
       Type: string }
 
+    static member Name_ =
+        (fun a -> a.Name), (fun b a -> { a with Name = b })
+
+    static member Host_ =
+        (fun a -> a.Host), (fun b a -> { a with Host = b })
+
+    static member Port_ =
+        (fun a -> a.Port),
+        (fun b a ->
+            { a with
+                  SerializedServerConfiguration.Port = b })
+
+    static member Configuration_ =
+        (fun a -> a.Configuration), (fun b a -> { a with Configuration = b })
+
+    static member Type_ =
+        (fun a -> a.Type),
+        (fun b a ->
+            { a with
+                  SerializedServerConfiguration.Type = b })
+
 type SerializedRoutingConfiguration = { Name: string; Configuration: string }
 
 type SerializedDNSConfiguration = { Name: string; Configuration: string }
