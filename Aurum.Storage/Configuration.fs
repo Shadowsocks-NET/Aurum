@@ -25,6 +25,9 @@ type GroupObject =
 type Tags(tag: string, nodeId: string) =
     [<PrimaryKey>]
     [<AutoIncrement>]
+    [<Column("id")>]
+    member this.Id = id
+
     [<Column("tag")>]
     member this.Tag = tag
 
@@ -57,11 +60,11 @@ type Connections(name: string, id: string, configuration: string, connectionType
 type Groups(name: string, id: string, connectionId: string, subType: SubscriptionType, subUrl: string) =
     [<PrimaryKey>]
     [<AutoIncrement>]
-    [<Column("name")>]
-    member this.Name = name
-
     [<Column("id")>]
     member this.Id = id
+
+    [<Column("name")>]
+    member this.Name = name
 
     [<Column("connectionId")>]
     member this.connectionId = connectionId
@@ -73,18 +76,24 @@ type Groups(name: string, id: string, connectionId: string, subType: Subscriptio
     member this.Url = subUrl
 
 [<Table("Routing")>]
-type Routing(name: string, config: string) =
+type Routing(name: string, config: string, id: string) =
     [<PrimaryKey>]
     [<AutoIncrement>]
+    [<Column("id")>]
+    member this.Id = id
+
     [<Column("name")>]
     member this.Name = name
 
     member this.Configuration = config
 
 [<Table("DNS")>]
-type DNS(name: string, config: string) =
+type DNS(name: string, config: string, id: string) =
     [<PrimaryKey>]
     [<AutoIncrement>]
+    [<Column("id")>]
+    member this.Id = id
+
     [<Column("name")>]
     member this.Name = name
 
