@@ -51,6 +51,7 @@ type DatabaseHandler(databasePath) =
             query {
                 for config in table do
                     where (config.Id.Equals(id))
+                    select config
                     exactlyOne
             }
 
