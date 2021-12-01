@@ -32,6 +32,18 @@ type DatabaseHandler(databasePath) =
     member this.insertServerConfiguration(config: Intermediate.SerializedServerConfiguration) =
 
         let serverConfig =
-            new Connections(config.Name, config.Id, config.Configuration, config.Type, config.Host, config.Port.ToString())
+            new Connections(
+                config.Name,
+                config.Id,
+                config.Configuration,
+                config.Type,
+                config.Host,
+                config.Port.ToString()
+            )
 
         _db.Insert(serverConfig)
+
+    member this.updateServerConfiguration(config: Intermediate.SerializedServerConfiguration, actions) =
+        let serverConfig = Action.foldConfiguration config actions
+
+        _db.Update(serverConfig)

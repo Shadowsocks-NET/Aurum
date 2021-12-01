@@ -5,9 +5,9 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Action.fs"/>
         <Compile Include="Mapping.fs"/>
         <Compile Include="Handler.fs"/>
-        <Compile Include="Action.fs"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj"/>
