@@ -1,4 +1,5 @@
-﻿module Aurum.Storage.Mapping
+﻿[<AutoOpen>]
+module Aurum.Storage.Mapping
 
 open FSharp.Json
 open SQLite

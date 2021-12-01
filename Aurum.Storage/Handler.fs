@@ -5,7 +5,7 @@ open Nanoid
 open SQLite
 open Aurum
 open Aurum.Configuration
-open Aurum.Storage.Mapping
+open Aurum.Storage
 
 type ApplicationName = string
 
