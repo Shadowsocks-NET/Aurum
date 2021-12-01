@@ -2,3 +2,4 @@ FSharp.Json
 Microsoft.AspNetCore.WebUtilities
 Serilog
 Shadowsocks
+Nanoid

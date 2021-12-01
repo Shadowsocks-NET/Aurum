@@ -30,9 +30,8 @@ type DatabaseHandler(databasePath) =
         _db.CreateTable<Routing>() |> ignore
 
     member this.insertServerConfiguration(config: Intermediate.SerializedServerConfiguration) =
-        let id = Nanoid.Generate(size = 10)
 
         let serverConfig =
-            new Connections(config.Name, id, config.Configuration, config.Type, config.Host, config.Port.ToString())
+            new Connections(config.Name, config.Id, config.Configuration, config.Type, config.Host, config.Port.ToString())
 
         _db.Insert(serverConfig)

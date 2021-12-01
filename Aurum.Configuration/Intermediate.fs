@@ -4,9 +4,11 @@ open Aurum
 open Aurum.Configuration
 open Aurum.Configuration.DNS
 open Aurum.Configuration.Routing
+open Nanoid
 
 type SerializedServerConfiguration =
-    { Name: string
+    { Id: string
+      Name: string
       Host: string
       Port: int
       Configuration: string
@@ -67,8 +69,10 @@ let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<O
     let host, port = server.Settings.GetVnextServerInfo()
     let serverType = server.GetConnectionType()
     let configuration = serializeJson server
+    let id = Nanoid.Generate(size = 10)
 
     { SerializedServerConfiguration.Name = name
+      Id = id
       Type = serverType
       Host = host
       Port = port
