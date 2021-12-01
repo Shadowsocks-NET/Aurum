@@ -1,7 +1,7 @@
 ﻿[<AutoOpen>]
 module Aurum.Storage.Mapping
 
-open FSharp.Json
+open Aurum.Configuration.Intermediate
 open SQLite
 
 type ConnectionRecordObject =
@@ -56,6 +56,16 @@ type Connections(name: string, id: string, configuration: string, connectionType
 
     [<Column("port")>]
     member this.Port = port
+
+    member this.ToIntermediate() =
+        { SerializedServerConfiguration.Id = this.Id
+          Name = this.Name
+          Configuration = this.Configuration
+          Type = this.Type
+          Host = this.Host
+          Port = this.Port |> int }
+
+    new() = Connections("", "", "", "", "", "")
 
 [<Table("Groups")>]
 type Groups(name: string, id: string, connectionId: string, subType: SubscriptionType, subUrl: string) =
