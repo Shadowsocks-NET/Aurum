@@ -1,11 +1,11 @@
-﻿module Aurum.Storage
+﻿module Aurum.Storage.Handler
 
 open System.IO
 open Nanoid
 open SQLite
 open Aurum
 open Aurum.Configuration
-open Aurum.Storage.Configuration
+open Aurum.Storage.Mapping
 
 type ApplicationName = string
 

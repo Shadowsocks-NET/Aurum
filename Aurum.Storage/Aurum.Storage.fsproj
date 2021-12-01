@@ -6,7 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Mapping.fs"/>
-        <Compile Include="Main.fs"/>
+        <Compile Include="Handler.fs"/>
         <Compile Include="Action.fs"/>
     </ItemGroup>
     <ItemGroup>
