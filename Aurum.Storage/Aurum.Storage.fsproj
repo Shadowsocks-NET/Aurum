@@ -5,7 +5,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Configuration.fs"/>
+        <Compile Include="Mapping.fs"/>
         <Compile Include="Main.fs"/>
         <Compile Include="Action.fs"/>
     </ItemGroup>
