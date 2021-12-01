@@ -78,6 +78,3 @@ module Helpers =
                         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
 
         Path.Combine(baseDirectory, appName)
-
-    let applyOptics<'a, 'b> optic (f: 'a identity) (data: 'b) =
-        Optic.set optic (f <| Optic.get optic data) data

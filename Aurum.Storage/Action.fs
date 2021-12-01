@@ -14,8 +14,8 @@ type ConfigurationModificationActions =
 
 let applyConfiguration action configuration =
     match action with
-    | Name action -> applyOptics SerializedServerConfiguration.Name_ action configuration
-    | Host action -> applyOptics SerializedServerConfiguration.Host_ action configuration
-    | Port action -> applyOptics SerializedServerConfiguration.Port_ action configuration
-    | Configuration action -> applyOptics SerializedServerConfiguration.Configuration_ action configuration
-    | Type action -> applyOptics SerializedServerConfiguration.Type_ action configuration
+    | Name action -> Optic.map SerializedServerConfiguration.Name_ action configuration
+    | Host action -> Optic.map SerializedServerConfiguration.Host_ action configuration
+    | Port action -> Optic.map SerializedServerConfiguration.Port_ action configuration
+    | Configuration action -> Optic.map SerializedServerConfiguration.Configuration_ action configuration
+    | Type action -> Optic.map SerializedServerConfiguration.Type_ action configuration
