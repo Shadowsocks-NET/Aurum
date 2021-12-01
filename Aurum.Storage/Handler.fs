@@ -1,7 +1,6 @@
 ﻿module Aurum.Storage.Handler
 
 open System.IO
-open Nanoid
 open SQLite
 open Aurum
 open Aurum.Configuration
