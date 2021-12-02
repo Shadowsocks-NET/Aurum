@@ -182,15 +182,14 @@ type HttpObject =
     static member Headers_ =
         (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
-// reserved for future annotations.
 [<RequireQualifiedAccess>]
 type QuicSecurity =
     | None
-    | [<JsonField("aes-128-gcm")>] AES
-    | [<JsonField("chacha20-poly1305")>] ChaCha20
+    | [<JsonUnionCase("aes-128-gcm")>] AES
+    | [<JsonUnionCase("chacha20-poly1305")>] ChaCha20
 
 type QuicObject =
-    { Security: string
+    { Security: QuicSecurity
       Key: string option
       Header: UdpHeaderObject }
 
@@ -336,22 +335,11 @@ let createHttpObject (path, host: string option, headers) =
     HTTP config
 
 let createQUICObject (security, key, headerType) =
-    match security with
-    | Some "none"
-    | None -> ()
-    | Some "aes-128-gcm"
-    | Some "chacha20-poly1305" ->
-        match key with
-        | Some ""
-        | None -> raise (ConfigurationParameterException "no QUIC key specified")
-        | _ -> ()
-    | _ -> raise (ConfigurationParameterException "unknown QUIC security type")
-
     let header =
         { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
 
     let config =
-        { QuicObject.Security = Option.defaultValue "none" security
+        { QuicObject.Security = Option.defaultValue QuicSecurity.None security
           Key = key
           Header = header }
 
