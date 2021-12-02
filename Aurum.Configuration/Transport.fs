@@ -170,6 +170,18 @@ type HttpObject =
       Method: HTTPMethod
       Headers: Dictionary<string, string list> }
 
+    static member Path_ =
+        (fun a -> a.Path), (fun b a -> { a with Path = b })
+
+    static member Host_ =
+        (fun a -> a.Host), (fun b a -> { a with Host = b })
+
+    static member Method_ =
+        (fun a -> a.Method), (fun b a -> { a with Method = b })
+
+    static member Headers_ =
+        (fun a -> a.Headers), (fun b a -> { a with Headers = b })
+
 // reserved for future annotations.
 [<RequireQualifiedAccess>]
 type QuicSecurity =
@@ -182,13 +194,42 @@ type QuicObject =
       Key: string option
       Header: UdpHeaderObject }
 
-type GrpcObject = { ServiceName: string; Mode: string }
+    static member Security_ =
+        (fun a -> a.Security), (fun b a -> { a with Security = b })
+
+    static member Key_ =
+        (fun a -> a.Key), (fun b a -> { a with Key = b })
+
+    static member Header_ =
+        (fun a -> a.Header), (fun b a -> { a with QuicObject.Header = b })
+
+type GrpcObject =
+    { ServiceName: string
+      Mode: string }
+
+    static member ServiceName_ =
+        (fun a -> a.ServiceName), (fun b a -> { a with ServiceName = b })
+
+    static member Mode_ =
+        (fun a -> a.Mode), (fun b a -> { a with Mode = b })
 
 type TLSObject =
     { ServerName: string option
       AllowInsecure: bool option
-      Alpn: string list option
+      ALPN: string list option
       DisableSystemRoot: bool option }
+
+    static member ServerName_ =
+        (fun a -> a.ServerName), (fun b a -> { a with ServerName = b })
+
+    static member AllowInsecure_ =
+        (fun a -> a.AllowInsecure), (fun b a -> { a with AllowInsecure = b })
+
+    static member ALPN_ =
+        (fun a -> a.ALPN), (fun b a -> { a with ALPN = b })
+
+    static member DisableSystemRoot_ =
+        (fun a -> a.DisableSystemRoot), (fun b a -> { a with DisableSystemRoot = b })
 
 [<RequireQualifiedAccess>]
 type TProxyType =
@@ -198,8 +239,17 @@ type TProxyType =
 
 type SockoptObject =
     { Mark: int
-      TcpFastOpen: bool option
+      TCPFastOpen: bool option
       Tproxy: TProxyType }
+
+    static member Mark_ =
+        (fun a -> a.Mark), (fun b a -> { a with Mark = b })
+
+    static member TCPFastOpen_ =
+        (fun a -> a.TCPFastOpen), (fun b a -> { a with TCPFastOpen = b })
+
+    static member Tproxy_ =
+        (fun a -> a.Tproxy), (fun b a -> { a with Tproxy = b })
 
 type TransportConfigurationTypes =
     | TCP of TcpObject
@@ -212,7 +262,7 @@ type TransportConfigurationTypes =
 type StreamSettingsObject =
     { Network: Networks
       Security: Security
-      Tls: TLSObject option
+      TLS: TLSObject option
       Tcp: TcpObject option
       Kcp: KcpObject option
       Ws: WebSocketObject option
@@ -220,6 +270,33 @@ type StreamSettingsObject =
       Quic: QuicObject option
       Grpc: GrpcObject option
       Sockopt: SockoptObject option }
+
+    static member Network_ =
+        (fun a -> a.Network), (fun b a -> { a with Network = b })
+
+    static member Security_ =
+        (fun a -> a.Security), (fun b a -> { a with Security = b })
+
+    static member TLS_ =
+        (fun a -> a.TLS), (fun b a -> { a with TLS = b })
+
+    static member Tcp_ =
+        (fun a -> a.Tcp), (fun b a -> { a with Tcp = b })
+
+    static member Kcp_ =
+        (fun a -> a.Kcp), (fun b a -> { a with Kcp = b })
+
+    static member Ws_ =
+        (fun a -> a.Ws), (fun b a -> { a with Ws = b })
+
+    static member Http_ =
+        (fun a -> a.Http), (fun b a -> { a with Http = b })
+
+    static member Grpc_ =
+        (fun a -> a.Grpc), (fun b a -> { a with Grpc = b })
+
+    static member Sockopt_ =
+        (fun a -> a.Sockopt), (fun b a -> { a with Sockopt = b })
 
 let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
     let constructedHeaders =
@@ -322,7 +399,7 @@ let createTCPObject headerObject =
 
 let createTLSObject (serverName, alpn, disableSystemRoot) =
     { TLSObject.ServerName = serverName
-      Alpn = alpn
+      ALPN = alpn
       AllowInsecure = Some false
       DisableSystemRoot = disableSystemRoot }
 
@@ -331,7 +408,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | TCP transport ->
         { StreamSettingsObject.Network = Networks.TCP
           Tcp = Some transport
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = None
           Quic = None
@@ -342,7 +419,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | GRPC transport ->
         { StreamSettingsObject.Network = Networks.GRPC
           Tcp = None
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = None
           Quic = None
@@ -353,7 +430,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | HTTP transport ->
         { StreamSettingsObject.Network = Networks.HTTP
           Tcp = None
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = None
           Quic = None
@@ -364,7 +441,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | KCP transport ->
         { StreamSettingsObject.Network = Networks.KCP
           Tcp = None
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = Some transport
           Quic = None
@@ -375,7 +452,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | QUIC transport ->
         { StreamSettingsObject.Network = Networks.QUIC
           Tcp = None
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = None
           Quic = Some transport
@@ -386,7 +463,7 @@ let createStreamSettingsObject (transport, security, tls) =
     | WebSocket transport ->
         { StreamSettingsObject.Network = Networks.WS
           Tcp = None
-          Tls = tls
+          TLS = tls
           Security = security
           Kcp = None
           Quic = None
