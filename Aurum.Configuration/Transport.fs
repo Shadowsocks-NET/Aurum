@@ -27,11 +27,38 @@ type WebSocketObject =
       EarlyDataHeader: string
       Headers: Dictionary<string, string> option }
 
+    static member Path_ =
+        (fun a -> a.Path), (fun b a -> { a with Path = b })
+
+    static member MaxEarlyData_ =
+        (fun a -> a.MaxEarlyData), (fun b a -> { a with MaxEarlyData = b })
+
+    static member BrowserForwarding_ =
+        (fun a -> a.BrowserForwarding), (fun b a -> { a with BrowserForwarding = b })
+
+    static member EarlyDataHeader_ =
+        (fun a -> a.EarlyDataHeader), (fun b a -> { a with EarlyDataHeader = b })
+
+    static member Headers_ =
+        (fun a -> a.Headers), (fun b a -> { a with Headers = b })
+
 type HttpRequestObject =
     { Version: string
       Method: string
       Path: string list
       Headers: Dictionary<string, string list> }
+
+    static member Version_ =
+        (fun a -> a.Version), (fun b a -> { a with Version = b })
+
+    static member Method_ =
+        (fun a -> a.Method), (fun b a -> { a with Method = b })
+
+    static member Path_ =
+        (fun a -> a.Path), (fun b a -> { a with Path = b })
+
+    static member Headers_ =
+        (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
 type HttpResponseObject =
     { Version: string
@@ -39,13 +66,38 @@ type HttpResponseObject =
       Reason: string
       Headers: Dictionary<string, string list> }
 
+    static member Version_ =
+        (fun a -> a.Version), (fun b a -> { a with Version = b })
+
+    static member Status_ =
+        (fun a -> a.Status), (fun b a -> { a with Status = b })
+
+    static member Reason_ =
+        (fun a -> a.Reason), (fun b a -> { a with Reason = b })
+
+    static member Headers_ =
+        (fun a -> a.Headers), (fun b a -> { a with Headers = b })
+
 type TcpHeaderObject =
     { [<JsonField("type")>]
       HeaderType: string
       Request: HttpRequestObject option
       Response: HttpResponseObject option }
 
-type TcpObject = { Header: TcpHeaderObject }
+    static member HeaderType_ =
+        (fun a -> a.HeaderType), (fun b a -> { a with HeaderType = b })
+
+    static member Request_ =
+        (fun a -> a.Request), (fun b a -> { a with Request = b })
+
+    static member Response_ =
+        (fun a -> a.Response), (fun b a -> { a with Response = b })
+
+type TcpObject =
+    { Header: TcpHeaderObject }
+
+    static member Header_ =
+        (fun a -> a.Header), (fun b a -> { a with Header = b })
 
 [<RequireQualifiedAccess>]
 type UdpHeaders =
@@ -60,6 +112,9 @@ type UdpHeaderObject =
     { [<JsonField("type")>]
       HeaderType: string }
 
+    static member HeaderType_ =
+        (fun a -> a.HeaderType), (fun b a -> { a with HeaderType = b })
+
 type KcpObject =
     { MTU: int
       TTI: int
@@ -70,6 +125,32 @@ type KcpObject =
       WriteBufferSize: int
       Header: UdpHeaderObject
       Seed: string option }
+    static member MTU_ =
+        (fun a -> a.MTU), (fun b a -> { a with MTU = b })
+
+    static member TTI_ =
+        (fun a -> a.TTI), (fun b a -> { a with TTI = b })
+
+    static member UplinkCapacity_ =
+        (fun a -> a.UplinkCapacity), (fun b a -> { a with UplinkCapacity = b })
+
+    static member DownlinkCapacity_ =
+        (fun a -> a.DownlinkCapacity), (fun b a -> { a with DownlinkCapacity = b })
+
+    static member Congestion_ =
+        (fun a -> a.Congestion), (fun b a -> { a with Congestion = b })
+
+    static member ReadBufferSize_ =
+        (fun a -> a.ReadBufferSize), (fun b a -> { a with ReadBufferSize = b })
+
+    static member WriteBufferSize_ =
+        (fun a -> a.WriteBufferSize), (fun b a -> { a with WriteBufferSize = b })
+
+    static member Header_ =
+        (fun a -> a.Header), (fun b a -> { a with KcpObject.Header = b })
+
+    static member Seed_ =
+        (fun a -> a.Seed), (fun b a -> { a with Seed = b })
 
 [<RequireQualifiedAccess>]
 type HTTPMethod =
@@ -157,7 +238,7 @@ let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeade
 
     WebSocket config
 
-let createGrpcObject (serviceName) =
+let createGrpcObject serviceName =
     let config =
         { ServiceName = serviceName
           Mode = "gun" }
@@ -227,7 +308,7 @@ let createKCPObject
 
     KCP config
 
-let createTCPObject (headerObject) =
+let createTCPObject headerObject =
     let tcpHeader =
         Option.defaultValue
             { TcpHeaderObject.HeaderType = "none"
