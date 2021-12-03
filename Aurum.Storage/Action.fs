@@ -22,3 +22,15 @@ let mapConfiguration configuration action =
 
 let foldConfiguration configuration actions =
     List.fold mapConfiguration configuration actions
+
+type GenericAction =
+    | Name of string identity
+    | Configuration of string identity
+
+let mapGeneric configuration action =
+    match action with
+    | Name action -> Optic.map SerializedGenericConfiguration.Name_ action configuration
+    | Configuration action -> Optic.map SerializedGenericConfiguration.Configuration_ action configuration
+
+let foldGeneric configuration actions =
+    List.fold mapConfiguration configuration actions
