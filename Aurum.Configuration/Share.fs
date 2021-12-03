@@ -3,6 +3,7 @@ module Aurum.Configuration.Share
 open System.Collections.Generic
 open Aurum
 open Aurum.Configuration
+open Aurum.Configuration.Transport
 
 let encodeBase64 (text: string) =
     let plainBytes = System.Text.Encoding.UTF8.GetBytes text
@@ -11,6 +12,12 @@ let encodeBase64 (text: string) =
 let decodeBase64 (encoded: string) =
     let encodedBytes = System.Convert.FromBase64String encoded
     System.Text.Encoding.UTF8.GetString encodedBytes
+
+let parseQuicSecurity security =
+    match security with
+    | "aes-128-gcm" -> QuicSecurity.AES
+    | "chacha20-poly1305" -> QuicSecurity.ChaCha20
+    | unknown -> raise (ConfigurationParameterException $"unknown quic security {unknown}")
 
 let createV2FlyObjectFromUri (uriObject: System.Uri) =
     let protocol = uriObject.Scheme
@@ -52,7 +59,8 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
             Transport.createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
         | "quic" ->
             Transport.createQUICObject (
-                (tryRetrieveFromShareLink "quicSecurity"),
+                (tryRetrieveFromShareLink "quicSecurity"
+                 |> Option.map parseQuicSecurity),
                 (tryRetrieveFromShareLink "key"),
                 (tryRetrieveFromShareLink "headerType")
             )
