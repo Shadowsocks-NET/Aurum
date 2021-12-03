@@ -40,7 +40,8 @@ type GenericConfigurationType =
     | DNS
 
 type SerializedGenericConfiguration =
-    { Name: string
+    { Id: string
+      Name: string
       Type: GenericConfigurationType
       Configuration: string }
     static member Name_ =
@@ -73,14 +74,18 @@ let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<O
 
 let serializeRoutingConfiguration (name, routing: RuleObject list) =
     let configuration = serializeJson routing
+    let id = Nanoid.Generate(size = 10)
 
     { SerializedGenericConfiguration.Name = name
+      Id = id
       Type = Routing
       Configuration = configuration }
 
 let serializeDNSConfiguration (name, dns: DNSObject) =
     let configuration = serializeJson dns
+    let id = Nanoid.Generate(size = 10)
 
     { SerializedGenericConfiguration.Name = name
+      Id = id
       Type = DNS
       Configuration = configuration }

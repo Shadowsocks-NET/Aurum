@@ -4,6 +4,7 @@ open System.IO
 open SQLite
 open Aurum
 open Aurum.Configuration
+open Aurum.Configuration.Intermediate
 open Aurum.Storage
 
 type ApplicationName = string
@@ -25,21 +26,14 @@ type DatabaseHandler(databasePath) =
         _db.CreateTable<DNS>() |> ignore
         _db.CreateTable<Routing>() |> ignore
 
-    member this.insertServerConf(config: Intermediate.SerializedServerConfiguration) =
+    member this.insertServerConf(config: SerializedServerConfiguration) =
 
         let serverConfig =
-            new Connections(
-                config.Name,
-                config.Id,
-                config.Configuration,
-                config.Type,
-                config.Host,
-                config.Port.ToString()
-            )
+            Connections(config.Name, config.Id, config.Configuration, config.Type, config.Host, config.Port.ToString())
 
         _db.Insert(serverConfig)
 
-    member this.updateServerConf(config: Intermediate.SerializedServerConfiguration, actions) =
+    member this.updateServerConf(config: SerializedServerConfiguration, actions) =
         let serverConfig = Action.foldConfiguration config actions
 
         _db.Update(serverConfig)
@@ -68,3 +62,8 @@ type DatabaseHandler(databasePath) =
             }
 
         Seq.map (fun (x: Connections) -> x.ToIntermediate()) result
+
+    member this.insertGenericConf(config: SerializedGenericConfiguration) =
+        match config.Type with
+        | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
+        | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
