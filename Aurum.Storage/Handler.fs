@@ -67,3 +67,53 @@ type DatabaseHandler(databasePath) =
         match config.Type with
         | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
+
+    member this.selectRoutingConfById(id: string, confType: GenericConfigurationType) =
+        let table = _db.Table<Routing>()
+
+        let result =
+            query {
+                for config in table do
+                    where (config.Id.Equals(id))
+                    select config
+                    exactlyOne
+            }
+
+        result.ToIntermediate()
+
+    member this.selectDNSConfById(id: string, confType: GenericConfigurationType) =
+        let table = _db.Table<DNS>()
+
+        let result =
+            query {
+                for config in table do
+                    where (config.Id.Equals(id))
+                    select config
+                    exactlyOne
+            }
+
+        result.ToIntermediate()
+
+    member this.selectRoutingConfByName(name: string) =
+        let table = _db.Table<Routing>()
+
+        let result =
+            query {
+                for config in table do
+                    where (config.Name.Equals(name))
+                    select config
+            }
+
+        Seq.map (fun (x: Routing) -> x.ToIntermediate()) result
+
+    member this.selectDNSConfByName(name: string) =
+        let table = _db.Table<DNS>()
+
+        let result =
+            query {
+                for config in table do
+                    where (config.Name.Equals(name))
+                    select config
+            }
+
+        Seq.map (fun (x: DNS) -> x.ToIntermediate()) result

@@ -98,6 +98,14 @@ type Routing(name: string, config: string, id: string) =
 
     member this.Configuration = config
 
+    member this.ToIntermediate() =
+        { SerializedGenericConfiguration.Id = this.Id
+          Name = this.Name
+          Type = GenericConfigurationType.Routing
+          Configuration = this.Configuration }
+
+    new() = Routing("", "", "")
+
 [<Table("DNS")>]
 type DNS(name: string, config: string, id: string) =
     [<PrimaryKey>]
@@ -109,3 +117,11 @@ type DNS(name: string, config: string, id: string) =
     member this.Name = name
 
     member this.Configuration = config
+
+    member this.ToIntermediate() =
+        { SerializedGenericConfiguration.Id = this.Id
+          Name = this.Name
+          Type = GenericConfigurationType.DNS
+          Configuration = this.Configuration }
+
+    new() = DNS("", "", "")
