@@ -68,6 +68,11 @@ type DatabaseHandler(databasePath) =
         | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
 
+    member this.updateGenericConf(config: SerializedGenericConfiguration, actions) =
+        let serverConfig = Action.foldGeneric config actions
+
+        _db.Update(serverConfig)
+
     member this.selectRoutingConfById(id: string, confType: GenericConfigurationType) =
         let table = _db.Table<Routing>()
 
