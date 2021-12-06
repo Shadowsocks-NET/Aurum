@@ -48,4 +48,4 @@ let mapGeneric configuration action =
             configuration
 
 let foldGeneric configuration actions =
-    List.fold mapConfiguration configuration actions
+    List.fold mapGeneric configuration actions
