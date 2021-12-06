@@ -34,7 +34,17 @@ type DatabaseHandler(databasePath) =
         _db.Insert(serverConfig)
 
     member this.updateServerConf(config: SerializedServerConfiguration, actions) =
-        let serverConfig = Action.foldConfiguration config actions
+        let updatedConfig = Action.foldConfiguration config actions
+
+        let serverConfig =
+            Connections(
+                updatedConfig.Name,
+                updatedConfig.Id,
+                updatedConfig.Configuration,
+                updatedConfig.Type,
+                updatedConfig.Host,
+                updatedConfig.Port.ToString()
+            )
 
         _db.Update(serverConfig)
 
@@ -68,12 +78,17 @@ type DatabaseHandler(databasePath) =
         | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
 
-    member this.updateGenericConf(config: SerializedGenericConfiguration, actions) =
-        let serverConfig = Action.foldGeneric config actions
+    member this.updateRoutingConf(config: SerializedGenericConfiguration, actions) =
+        let updatedConfig = Action.foldGeneric config actions
 
-        _db.Update(serverConfig)
+        _db.Update(Routing(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
 
-    member this.selectRoutingConfById(id: string, confType: GenericConfigurationType) =
+    member this.updateDNSConf(config: SerializedGenericConfiguration, actions) =
+        let updatedConfig = Action.foldGeneric config actions
+
+        _db.Update(DNS(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
+
+    member this.selectRoutingConfById(id: string) =
         let table = _db.Table<Routing>()
 
         let result =
@@ -86,7 +101,7 @@ type DatabaseHandler(databasePath) =
 
         result.ToIntermediate()
 
-    member this.selectDNSConfById(id: string, confType: GenericConfigurationType) =
+    member this.selectDNSConfById(id: string) =
         let table = _db.Table<DNS>()
 
         let result =
