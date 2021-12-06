@@ -2,6 +2,7 @@
 module Aurum.Storage.Mapping
 
 open Aurum.Configuration.Intermediate
+open Aurum.Storage
 open SQLite
 
 type SubscriptionType =
@@ -16,6 +17,15 @@ type GroupObject =
       Subscription: SubscriptionType
       SubscriptionSource: string
       Connections: string list (* stores id of connections belong to this group *)  }
+
+    static member Name_ =
+        (fun a -> a.Name), (fun b a -> { a with Name = b })
+
+    static member Subscription_ =
+        (fun a -> a.Subscription), (fun b a -> { a with Subscription = b })
+
+    static member SubscriptionSource_ =
+        (fun a -> a.SubscriptionSource), (fun b a -> { a with SubscriptionSource = b })
 
 [<Table("Tags")>]
 type Tags(tag: string, nodeId: string) =
