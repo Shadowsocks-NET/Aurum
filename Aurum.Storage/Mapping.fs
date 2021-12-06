@@ -4,11 +4,6 @@ module Aurum.Storage.Mapping
 open Aurum.Configuration.Intermediate
 open SQLite
 
-type ConnectionRecordObject =
-    { Id: string
-      Name: string
-      Tags: string }
-
 type SubscriptionType =
     | None = 0
     | Base64 = 1 // not suggested
@@ -20,7 +15,7 @@ type GroupObject =
       Name: string
       Subscription: SubscriptionType
       SubscriptionSource: string
-      Connections: string (* stores id of connections belong to this group *)  }
+      Connections: string list (* stores id of connections belong to this group *)  }
 
 [<Table("Tags")>]
 type Tags(tag: string, nodeId: string) =
@@ -68,7 +63,7 @@ type Connections(name: string, id: string, configuration: string, connectionType
     new() = Connections("", "", "", "", "", "")
 
 [<Table("Groups")>]
-type Groups(name: string, id: string, connectionId: string, subType: SubscriptionType, subUrl: string) =
+type Groups(name: string, id: string, subType: SubscriptionType, subUrl: string) =
     [<PrimaryKey>]
     [<Column("id")>]
     member this.Id = id
@@ -76,14 +71,25 @@ type Groups(name: string, id: string, connectionId: string, subType: Subscriptio
     [<Column("name")>]
     member this.Name = name
 
-    [<Column("connectionId")>]
-    member this.connectionId = connectionId
-
     [<Column("subscriptionType")>]
     member this.Type = subType
 
     [<Column("subscriptionUrl")>]
     member this.Url = subUrl
+
+[<Table("ConnectionGroups")>]
+type ConnGroups(id: string, connId: string) =
+    [<PrimaryKey>]
+    [<AutoIncrement>]
+    [<Column("primary")>]
+    member this.primary = null
+
+    [<Column("id")>]
+    member this.Id = id
+
+    [<Column("connId")>]
+    member this.connId = connId
+
 
 [<Table("Routing")>]
 type Routing(name: string, config: string, id: string) =
