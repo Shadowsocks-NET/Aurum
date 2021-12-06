@@ -45,6 +45,7 @@ type Connections(name: string, id: string, configuration: string, connectionType
     member this.Name = name
 
     [<Column("configuration")>]
+    [<MaxLength(512)>]
     member this.Configuration = configuration
 
     [<Column("type")>]
@@ -93,6 +94,8 @@ type Routing(name: string, config: string, id: string) =
     [<Column("name")>]
     member this.Name = name
 
+    [<Column("configuration")>]
+    [<MaxLength(512)>]
     member this.Configuration = config
 
     member this.ToIntermediate() =
@@ -112,6 +115,8 @@ type DNS(name: string, config: string, id: string) =
     [<Column("name")>]
     member this.Name = name
 
+    [<Column("configuration")>]
+    [<MaxLength(512)>]
     member this.Configuration = config
 
     member this.ToIntermediate() =
