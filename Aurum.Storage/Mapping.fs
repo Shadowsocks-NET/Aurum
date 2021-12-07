@@ -2,7 +2,7 @@
 module Aurum.Storage.Mapping
 
 open Aurum.Configuration.Intermediate
-open Aurum.Storage.Intermediate
+open Aurum.Storage.Records
 open SQLite
 
 [<Table("Tags")>]

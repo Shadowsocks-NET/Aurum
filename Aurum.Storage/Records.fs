@@ -1,4 +1,4 @@
-﻿module Aurum.Storage.Intermediate
+﻿module Aurum.Storage.Records
 
 type SubscriptionType =
     | None = 0

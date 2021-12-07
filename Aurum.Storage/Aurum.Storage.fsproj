@@ -5,14 +5,14 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Intermediate.fs"/>
-        <Compile Include="Action.fs"/>
-        <Compile Include="Mapping.fs"/>
-        <Compile Include="Handler.fs"/>
+        <Compile Include="Records.fs" />
+        <Compile Include="Action.fs" />
+        <Compile Include="Mapping.fs" />
+        <Compile Include="Handler.fs" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj"/>
-        <ProjectReference Include="..\Aurum\Aurum.fsproj"/>
+        <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj" />
+        <ProjectReference Include="..\Aurum\Aurum.fsproj" />
     </ItemGroup>
-    <Import Project="..\.paket\Paket.Restore.targets"/>
+    <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

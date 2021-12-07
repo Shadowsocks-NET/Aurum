@@ -3,7 +3,7 @@
 open Aurum
 open Aurum.Configuration.Outbound
 open Aurum.Configuration.Intermediate
-open Aurum.Storage.Intermediate
+open Aurum.Storage.Records
 open Aether
 open Aether.Operators
 
