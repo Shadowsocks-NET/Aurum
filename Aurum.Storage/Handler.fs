@@ -6,6 +6,7 @@ open Aurum
 open Aurum.Configuration
 open Aurum.Configuration.Intermediate
 open Aurum.Storage
+open Aurum.Storage.Records
 
 type ApplicationName = string
 
@@ -33,7 +34,7 @@ type DatabaseHandler(databasePath) =
 
         _db.Insert(serverConfig)
 
-    member this.updateServerConf(config: SerializedServerConfiguration, actions) =
+    member this.updateServerConf(config, actions) =
         let updatedConfig = Action.foldConfiguration config actions
 
         let serverConfig =
@@ -48,7 +49,7 @@ type DatabaseHandler(databasePath) =
 
         _db.Update(serverConfig)
 
-    member this.selectServerConfById(id: string) =
+    member this.selectServerConfById(id) =
         let table = _db.Table<Connections>()
 
         let result =
@@ -61,7 +62,7 @@ type DatabaseHandler(databasePath) =
 
         result.ToIntermediate()
 
-    member this.selectServerConfByName(name: string) =
+    member this.selectServerConfByName(name) =
         let table = _db.Table<Connections>()
 
         let result =
@@ -73,22 +74,22 @@ type DatabaseHandler(databasePath) =
 
         Seq.map (fun (x: Connections) -> x.ToIntermediate()) result
 
-    member this.insertGenericConf(config: SerializedGenericConfiguration) =
+    member this.insertGenericConf(config) =
         match config.Type with
         | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
 
-    member this.updateRoutingConf(config: SerializedGenericConfiguration, actions) =
+    member this.updateRoutingConf(config, actions) =
         let updatedConfig = Action.foldGeneric config actions
 
         _db.Update(Routing(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
 
-    member this.updateDNSConf(config: SerializedGenericConfiguration, actions) =
+    member this.updateDNSConf(config, actions) =
         let updatedConfig = Action.foldGeneric config actions
 
         _db.Update(DNS(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
 
-    member this.selectRoutingConfById(id: string) =
+    member this.selectRoutingConfById(id) =
         let table = _db.Table<Routing>()
 
         let result =
@@ -101,7 +102,7 @@ type DatabaseHandler(databasePath) =
 
         result.ToIntermediate()
 
-    member this.selectDNSConfById(id: string) =
+    member this.selectDNSConfById(id) =
         let table = _db.Table<DNS>()
 
         let result =
@@ -114,7 +115,7 @@ type DatabaseHandler(databasePath) =
 
         result.ToIntermediate()
 
-    member this.selectRoutingConfByName(name: string) =
+    member this.selectRoutingConfByName(name) =
         let table = _db.Table<Routing>()
 
         let result =
@@ -126,7 +127,7 @@ type DatabaseHandler(databasePath) =
 
         Seq.map (fun (x: Routing) -> x.ToIntermediate()) result
 
-    member this.selectDNSConfByName(name: string) =
+    member this.selectDNSConfByName(name) =
         let table = _db.Table<DNS>()
 
         let result =
@@ -137,3 +138,18 @@ type DatabaseHandler(databasePath) =
             }
 
         Seq.map (fun (x: DNS) -> x.ToIntermediate()) result
+
+    member this.createGroup(group) =
+        let mapping =
+            Groups(group.Name, group.Name, group.Subscription, group.SubscriptionSource)
+
+        _db.Insert(mapping) |> ignore
+
+        List.map (fun x -> ConnGroups(group.Id, x)) group.Connections
+        |> List.iter (fun x -> _db.Insert(x) |> ignore)
+
+        ()
+
+    member this.updateGroup(group, actions) =
+        let updatedGroup =
+        ()
