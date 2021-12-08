@@ -4,6 +4,7 @@ module Aurum.Storage.Mapping
 open Aurum.Configuration.Intermediate
 open Aurum.Storage.Records
 open SQLite
+open Shadowsocks.Models
 
 [<Table("Tags")>]
 type Tags(tag: string, nodeId: string) =
@@ -65,6 +66,8 @@ type Groups(name: string, id: string, subType: SubscriptionType, subUrl: string)
     [<Column("subscriptionUrl")>]
     member this.Url = subUrl
 
+    new() = Groups("", "", SubscriptionType.None, "")
+
 [<Table("ConnectionGroups")>]
 type ConnGroups(id: string, connId: string) =
     [<Column("id")>]
@@ -72,7 +75,9 @@ type ConnGroups(id: string, connId: string) =
 
     [<PrimaryKey>]
     [<Column("connId")>]
-    member this.connId = connId
+    member this.ConnId = connId
+
+    new() = ConnGroups("", "")
 
 
 [<Table("Routing")>]

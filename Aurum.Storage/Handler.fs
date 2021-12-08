@@ -1,12 +1,15 @@
 ﻿module Aurum.Storage.Handler
 
 open System.IO
+open System.Text.RegularExpressions
 open SQLite
 open Aurum
 open Aurum.Configuration
 open Aurum.Configuration.Intermediate
 open Aurum.Storage
 open Aurum.Storage.Records
+open Aurum.Storage.Action
+open Shadowsocks.Models
 
 type ApplicationName = string
 
@@ -35,7 +38,7 @@ type DatabaseHandler(databasePath) =
         _db.Insert(serverConfig)
 
     member this.updateServerConf(config, actions) =
-        let updatedConfig = Action.foldConfiguration config actions
+        let updatedConfig = foldConfiguration config actions
 
         let serverConfig =
             Connections(
@@ -80,12 +83,12 @@ type DatabaseHandler(databasePath) =
         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
 
     member this.updateRoutingConf(config, actions) =
-        let updatedConfig = Action.foldGeneric config actions
+        let updatedConfig = foldGeneric config actions
 
         _db.Update(Routing(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
 
     member this.updateDNSConf(config, actions) =
-        let updatedConfig = Action.foldGeneric config actions
+        let updatedConfig = foldGeneric config actions
 
         _db.Update(DNS(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
 
@@ -151,5 +154,77 @@ type DatabaseHandler(databasePath) =
         ()
 
     member this.updateGroup(group, actions) =
-        let updatedGroup =
+        let updatedGroup = foldGroup group actions
+
+        let mapping =
+            Groups(updatedGroup.Name, updatedGroup.Name, updatedGroup.Subscription, updatedGroup.SubscriptionSource)
+
         ()
+
+    member this.insertGroupConn(groupId, connId) =
+        let mapping = ConnGroups(groupId, connId)
+
+        _db.Insert(mapping) |> ignore
+
+    member this.removeGroupConn(connId: string) =
+        _db.Delete<ConnGroups>(connId) |> ignore
+
+    member this.selectGroupByName(name: string) =
+        let groupTable = _db.Table<Groups>()
+        let connGroupTable = _db.Table<ConnGroups>()
+
+        let groups =
+            query {
+                for group in groupTable do
+                    where (group.Name.Equals(name))
+                    select group
+            }
+
+        let groupConnections =
+            Seq.map
+                (fun (x: Groups) ->
+                    query {
+                        for connGroup in connGroupTable do
+                            where (connGroup.Id.Equals(x.Id))
+                            select connGroup
+                    })
+                groups
+
+        Seq.map2
+            (fun (x: Groups) y ->
+                { GroupObject.Id = x.Id
+                  Name = x.Name
+                  Subscription = x.Type
+                  SubscriptionSource = x.Url
+                  Connections =
+                      Seq.map (fun (z: ConnGroups) -> z.ConnId) y
+                      |> Seq.toList })
+            groups
+            groupConnections
+
+    member this.selectGroupById(id: string) =
+        let groupTable = _db.Table<Groups>()
+        let connGroupTable = _db.Table<ConnGroups>()
+
+        let group =
+            query {
+                for group in groupTable do
+                    where (group.Id.Equals(id))
+                    select group
+                    exactlyOne
+            }
+
+        let groupConnections =
+            query {
+                for connGroup in connGroupTable do
+                    where (connGroup.Id.Equals(group.Id))
+                    select connGroup
+            }
+
+        { GroupObject.Id = group.Id
+          Name = group.Name
+          Subscription = group.Type
+          SubscriptionSource = group.Url
+          Connections =
+              Seq.map (fun (x: ConnGroups) -> x.ConnId) groupConnections
+              |> Seq.toList }
