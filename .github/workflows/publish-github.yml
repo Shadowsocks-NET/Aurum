@@ -5,6 +5,9 @@ on:
     tags:
       - 'github-v*'
 
+env:
+  DOTNET_VERSION: "6.0.100" # The .NET SDK version to use
+
 jobs:
   publish_upload:
     name: Publish Github Packages
@@ -12,6 +15,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install buildtools
+        run: dotnet tool restore
+
+      - name: Install dependencies
+        run: dotnet paket restore && dotnet restore
+
       - name: Pack and upload NuGet package
         run: |
           dotnet pack -c Release
