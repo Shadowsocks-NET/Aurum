@@ -1,0 +1,19 @@
+﻿name: Publish Github Packages
+
+on:
+  push:
+    tags:
+      - 'github-v*'
+
+jobs:
+  publish_upload:
+    name: Publish Github Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pack and upload NuGet package
+        run: |
+          dotnet pack -c Release
+          dotnet nuget push Aurum/bin/Release/*.nupkg -s https://nuget.pkg.github.com/Shadowsocks-NET/index.json -k ${{ secrets.HUB_PACKAGE_PAT }} --skip-duplicate
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg -s https://nuget.pkg.github.com/Shadowsocks-NET/index.json -k ${{ secrets.HUB_PACKAGE_PAT }} --skip-duplicate

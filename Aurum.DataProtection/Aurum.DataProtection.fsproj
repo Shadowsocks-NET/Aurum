@@ -3,14 +3,21 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageId>Aurum.DataProtection</PackageId>
+        <Version>0.1.0-alpha.1</Version>
+        <Authors>Shanoa Ice</Authors>
+        <PackageDescription>Data Protection Component for the Aurum project.</PackageDescription>
+        <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
+    </PropertyGroup>
+    <PropertyGroup>
         <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
         <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
         <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Windows.fs" Condition="'$(IsWindows)'=='true'" />
-        <Content Include="paket.references" />
-        <Content Include="paket.template" />
+        <Compile Include="Windows.fs" Condition="'$(IsWindows)'=='true'"/>
+        <Content Include="paket.references"/>
+        <Content Include="paket.template"/>
     </ItemGroup>
-    <Import Project="..\.paket\Paket.Restore.targets" />
+    <Import Project="..\.paket\Paket.Restore.targets"/>
 </Project>

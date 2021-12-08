@@ -3,6 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageId>Aurum.Storage</PackageId>
+        <Version>0.1.0-alpha.1</Version>
+        <Authors>Shanoa Ice</Authors>
+        <PackageDescription>SQLite Storage Component for the Aurum project.</PackageDescription>
+        <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Records.fs" />

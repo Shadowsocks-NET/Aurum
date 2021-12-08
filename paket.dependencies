@@ -1,5 +1,4 @@
 source https://api.nuget.org/v3/index.json
-source https://nuget.pkg.github.com/Shadowsocks-NET/index.json username: "%GITHUB_USER%" password: "%GITHUB_TOKEN%"
 
 storage: none
 framework: net6.0, net5.0
