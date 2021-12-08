@@ -1,7 +1,6 @@
 ﻿module Aurum.Storage.Handler
 
 open System.IO
-open System.Text.RegularExpressions
 open SQLite
 open Aurum
 open Aurum.Configuration
@@ -9,7 +8,6 @@ open Aurum.Configuration.Intermediate
 open Aurum.Storage
 open Aurum.Storage.Records
 open Aurum.Storage.Action
-open Shadowsocks.Models
 
 type ApplicationName = string
 
@@ -76,6 +74,7 @@ type DatabaseHandler(databasePath) =
             }
 
         Seq.map (fun (x: Connections) -> x.ToIntermediate()) result
+        |> Seq.toList
 
     member this.insertGenericConf(config) =
         match config.Type with
@@ -129,6 +128,7 @@ type DatabaseHandler(databasePath) =
             }
 
         Seq.map (fun (x: Routing) -> x.ToIntermediate()) result
+        |> Seq.toList
 
     member this.selectDNSConfByName(name) =
         let table = _db.Table<DNS>()
@@ -141,6 +141,7 @@ type DatabaseHandler(databasePath) =
             }
 
         Seq.map (fun (x: DNS) -> x.ToIntermediate()) result
+        |> Seq.toList
 
     member this.createGroup(group) =
         let mapping =
@@ -159,7 +160,7 @@ type DatabaseHandler(databasePath) =
         let mapping =
             Groups(updatedGroup.Name, updatedGroup.Name, updatedGroup.Subscription, updatedGroup.SubscriptionSource)
 
-        ()
+        _db.Update(mapping) |> ignore
 
     member this.insertGroupConn(groupId, connId) =
         let mapping = ConnGroups(groupId, connId)
@@ -201,6 +202,7 @@ type DatabaseHandler(databasePath) =
                       |> Seq.toList })
             groups
             groupConnections
+        |> Seq.toList
 
     member this.selectGroupById(id: string) =
         let groupTable = _db.Table<Groups>()
