@@ -1,0 +1,7 @@
+﻿type project
+id Aurum.DataProtection
+version 0.1.0-alpha.1
+authors Shanoa Ice
+description
+    Data protection component for the Aurum project.
+licenseExpression EPL-2.0

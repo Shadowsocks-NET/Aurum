@@ -1,0 +1,7 @@
+﻿type project
+id Aurum.Interop
+version 0.1.0-alpha.1
+authors Shanoa Ice
+description
+    Program interop component library for the Aurum project.
+licenseExpression EPL-2.0

@@ -9,6 +9,8 @@
         <Compile Include="Action.fs" />
         <Compile Include="Mapping.fs" />
         <Compile Include="Handler.fs" />
+        <Content Include="paket.references" />
+        <Content Include="paket.template" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj" />

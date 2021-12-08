@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Include="LogStream.fs" />
     <Compile Include="ProcessWrapper.fs" />
+    <Content Include="paket.references" />
+    <Content Include="paket.template" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
