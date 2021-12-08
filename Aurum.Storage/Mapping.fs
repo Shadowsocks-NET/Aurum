@@ -67,14 +67,10 @@ type Groups(name: string, id: string, subType: SubscriptionType, subUrl: string)
 
 [<Table("ConnectionGroups")>]
 type ConnGroups(id: string, connId: string) =
-    [<PrimaryKey>]
-    [<AutoIncrement>]
-    [<Column("primary")>]
-    member this.primary = null
-
     [<Column("id")>]
     member this.Id = id
 
+    [<PrimaryKey>]
     [<Column("connId")>]
     member this.connId = connId
 
