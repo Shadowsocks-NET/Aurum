@@ -14,3 +14,7 @@ riderModule.iml
 .paket/
 paket-files/
 paket-cache/
+
+#nuget files
+nuget/**/*
+!.gitkeep
