@@ -25,9 +25,9 @@ let matchLog logContent =
         | _ -> General logContent
 
 type LogEvent() =
-    let event = new Event<LogEntry>()
+    let event = Event<LogEntry>()
 
-    [<CLIEventAttribute>]
+    [<CLIEvent>]
     member this.Event = event.Publish
 
     member this.Trigger(log) = event.Trigger(matchLog log)
