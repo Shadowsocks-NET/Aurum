@@ -4,8 +4,8 @@ module Aurum.Storage.Mapping
 open Aurum.Configuration.Intermediate
 open Aurum.Storage.Records
 open SQLite
-open Shadowsocks.Models
 
+// preserved for future usage
 [<Table("Tags")>]
 type Tags(tag: string, nodeId: string) =
     [<PrimaryKey>]
