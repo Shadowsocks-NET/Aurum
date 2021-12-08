@@ -33,7 +33,7 @@ type DatabaseHandler(databasePath) =
         let serverConfig =
             Connections(config.Name, config.Id, config.Configuration, config.Type, config.Host, config.Port.ToString())
 
-        _db.Insert(serverConfig)
+        _db.Insert(serverConfig) |> ignore
 
     member this.updateServerConf(config, actions) =
         let updatedConfig = foldConfiguration config actions
@@ -48,7 +48,7 @@ type DatabaseHandler(databasePath) =
                 updatedConfig.Port.ToString()
             )
 
-        _db.Update(serverConfig)
+        _db.Update(serverConfig) |> ignore
 
     member this.selectServerConfById(id) =
         let table = _db.Table<Connections>()
@@ -77,19 +77,22 @@ type DatabaseHandler(databasePath) =
         |> Seq.toList
 
     member this.insertGenericConf(config) =
-        match config.Type with
-        | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
-        | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id))
+        (match config.Type with
+         | DNS -> _db.Insert(DNS(config.Name, config.Configuration, config.Id))
+         | Routing -> _db.Insert(Routing(config.Name, config.Configuration, config.Id)))
+        |> ignore
 
     member this.updateRoutingConf(config, actions) =
         let updatedConfig = foldGeneric config actions
 
         _db.Update(Routing(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
+        |> ignore
 
     member this.updateDNSConf(config, actions) =
         let updatedConfig = foldGeneric config actions
 
         _db.Update(DNS(updatedConfig.Name, updatedConfig.Configuration, updatedConfig.Id))
+        |> ignore
 
     member this.selectRoutingConfById(id) =
         let table = _db.Table<Routing>()
