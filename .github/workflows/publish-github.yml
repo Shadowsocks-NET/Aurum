@@ -20,15 +20,18 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: https://nuget.pkg.github.com/Shadowsocks-NET/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.HUB_PACKAGE_PAT }}
 
       - name: Install buildtools
         run: dotnet tool restore
 
       - name: Install dependencies
-        run: dotnet paket restore && dotnet restore
+        run: dotnet paket restore
 
       - name: Pack and upload NuGet package
         run: |
           dotnet pack -c Release
-          dotnet nuget push Aurum/bin/Release/*.nupkg -s https://nuget.pkg.github.com/Shadowsocks-NET/index.json -k ${{ secrets.HUB_PACKAGE_PAT }} --skip-duplicate
-          dotnet nuget push Aurum.*/bin/Release/*.nupkg -s https://nuget.pkg.github.com/Shadowsocks-NET/index.json -k ${{ secrets.HUB_PACKAGE_PAT }} --skip-duplicate
+          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols true
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols true
