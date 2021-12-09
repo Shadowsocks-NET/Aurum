@@ -1,0 +1,35 @@
+﻿name: Publish MyGet Packages
+
+on:
+  push:
+    tags:
+      - 'myget-v*'
+
+env:
+  DOTNET_VERSION: "6.0.100" # The .NET SDK version to use
+
+jobs:
+  publish_upload:
+    name: Publish Github Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          source-url: https://www.myget.org/F/aurum/api/v3/index.json
+
+      - name: Install buildtools
+        run: dotnet tool restore
+
+      - name: Install dependencies
+        run: dotnet paket restore
+
+      - name: Pack and upload NuGet package
+        run: |
+          dotnet pack -c Release
+          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }}
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }}
