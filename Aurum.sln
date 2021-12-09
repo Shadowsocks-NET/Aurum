@@ -13,12 +13,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.AssetManagement", "Au
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Configuration", "Aurum.Configuration\Aurum.Configuration.fsproj", "{7239D687-21A3-4014-879F-4BE110216A01}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItem", "SolutionItem", "{B8A29A61-BBD8-47CC-98E8-8C1DF40C79DB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Item", "Solution Item", "{B8A29A61-BBD8-47CC-98E8-8C1DF40C79DB}"
 	ProjectSection(SolutionItems) = preProject
 		build.fsx = build.fsx
 		LICENSE = LICENSE
 		paket.dependencies = paket.dependencies
 		README.md = README.md
+		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Global
