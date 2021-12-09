@@ -7,6 +7,7 @@
         <Version>0.1.0-alpha.1</Version>
         <Authors>Shanoa Ice</Authors>
         <PackageDescription>Configuration Component for the Aurum project.</PackageDescription>
+        <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
