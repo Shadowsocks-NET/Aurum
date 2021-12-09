@@ -21,6 +21,8 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           source-url: https://www.myget.org/F/aurum/api/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.MYGET_API_KEY }}
 
       - name: Install buildtools
         run: dotnet tool restore
