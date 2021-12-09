@@ -10,7 +10,7 @@ env:
 
 jobs:
   publish_upload:
-    name: Publish Github Packages
+    name: Publish MyGet Packages
     runs-on: ubuntu-latest
 
     steps:
@@ -20,9 +20,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          source-url: https://www.myget.org/F/aurum/api/v3/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.MYGET_API_KEY }}
 
       - name: Install buildtools
         run: dotnet tool restore
@@ -33,5 +30,5 @@ jobs:
       - name: Pack and upload NuGet package
         run: |
           dotnet pack -c Release
-          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }}
-          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }}
+          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }} -s https://www.myget.org/F/aurum/api/v3/index.json
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.MYGET_API_KEY }} -s https://www.myget.org/F/aurum/api/v3/index.json
