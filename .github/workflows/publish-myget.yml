@@ -29,7 +29,6 @@ jobs:
 
       - name: Pack and upload NuGet package
         run: |
-          echo ${{ secrets.MYGET_API_KEY }}
           dotnet pack -c Release
-          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols -k "${{ secrets.MYGET_API_KEY }}" -s https://www.myget.org/F/aurum/api/v3/index.json
-          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols -k "${{ secrets.MYGET_API_KEY }}" -s https://www.myget.org/F/aurum/api/v3/index.json
+          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols -k "${{ secrets.MYGET_API_KEY }}" -s https://www.myget.org/F/aurum/api/v2/package
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols -k "${{ secrets.MYGET_API_KEY }}" -s https://www.myget.org/F/aurum/api/v2/package
