@@ -31,9 +31,8 @@ jobs:
         run: |
           dotnet pack -c Release
           dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
-          echo "between"
-          dotnet nuget push Aurum.AssetManagement/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
-          dotnet nuget push Aurum.Configuration/bin/Release/*.nupkg --skip-duplicate --no-symbols -k ${{ secrets.MYGET_API_KEY }}
+          dotnet nuget push Aurum.AssetManagement/bin/Release/*.nupkg --skip-duplicate --no-symbols -k ${{ secrets.MYGET_API_KEY }}
+          dotnet nuget push Aurum.Configuration/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
           dotnet nuget push Aurum.DataProtection/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
           dotnet nuget push Aurum.Interop/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
           dotnet nuget push Aurum.Storage/bin/Release/*.nupkg --skip-duplicate --no-symbols -s myget -k ${{ secrets.MYGET_API_KEY }}
