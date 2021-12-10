@@ -15,5 +15,9 @@
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
     </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Aurum.Configuration\Aurum.Configuration.fsproj"/>
+        <ProjectReference Include="..\Aurum\Aurum.fsproj"/>
+    </ItemGroup>
     <Import Project="..\.paket\Paket.Restore.targets"/>
 </Project>
