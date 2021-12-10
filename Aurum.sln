@@ -9,7 +9,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Storage", "Aurum.Stor
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Interop", "Aurum.Interop\Aurum.Interop.fsproj", "{D7F8C1C8-29E9-459A-B068-03E6FB89D721}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.AssetManagement", "Aurum.AssetManagement\Aurum.AssetManagement.fsproj", "{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Filesystem", "Aurum.Filesystem\Aurum.Filesystem.fsproj", "{9943C3ED-1A4E-4F75-8C5B-AF6E678EB264}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aurum.Configuration", "Aurum.Configuration\Aurum.Configuration.fsproj", "{7239D687-21A3-4014-879F-4BE110216A01}"
 EndProject
