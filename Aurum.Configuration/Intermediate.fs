@@ -72,7 +72,7 @@ let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<O
       Port = port
       Configuration = Some configuration }
 
-let serializeRoutingConfiguration (name, routing: RuleObject list) =
+let serializeRoutingConfiguration (name, routing: RoutingObject) =
     let configuration = serializeJson routing
     let id = Nanoid.Generate(size = 10)
 
