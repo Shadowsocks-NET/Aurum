@@ -1,7 +1,6 @@
 module Aurum.Configuration.Routing
 
 open Aurum
-open Aurum.Configuration
 open FSharp.Json
 
 type DomainStrategy =
@@ -279,3 +278,9 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules, use
         constructRuleSet [ mergeRules blockPreset (Block(Some userDomainRules.Block, Some userIpRules.Block))
                            Direct(Some userDomainRules.Direct, Some userIpRules.Direct)
                            Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy) ]
+
+let createRoutingObject rules balancers domainStrategy =
+    { RoutingObject.Balancers = balancers
+      Rules = rules
+      DomainMatcher = Some MinimalPerfectHash
+      DomainStrategy = domainStrategy }
