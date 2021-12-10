@@ -30,9 +30,13 @@ type DatabaseHandler(databasePath) =
 
     member this.insertServerConf(config: SerializedServerConfiguration) =
 
-        let serverConfig =
-            Connections(config.Name, config.Id, config.Configuration, config.Type, config.Host, config.Port.ToString())
+        let serverRecord =
+            Connections(config.Name, config.Id, config.Type, config.Host, config.Port.ToString())
 
+        let serverConfig =
+            ConnectionConfig(config.Id, Option.get config.Configuration)
+
+        _db.Insert(serverRecord) |> ignore
         _db.Insert(serverConfig) |> ignore
 
     member this.updateServerConf(config, actions) =
@@ -42,7 +46,6 @@ type DatabaseHandler(databasePath) =
             Connections(
                 updatedConfig.Name,
                 updatedConfig.Id,
-                updatedConfig.Configuration,
                 updatedConfig.Type,
                 updatedConfig.Host,
                 updatedConfig.Port.ToString()
@@ -50,7 +53,7 @@ type DatabaseHandler(databasePath) =
 
         _db.Update(serverConfig) |> ignore
 
-    member this.selectServerConfById(id) =
+    member this.selectServerRecById(id) =
         let table = _db.Table<Connections>()
 
         let result =
@@ -63,7 +66,7 @@ type DatabaseHandler(databasePath) =
 
         result.ToIntermediate()
 
-    member this.selectServerConfByName(name) =
+    member this.selectServerRecByName(name) =
         let table = _db.Table<Connections>()
 
         let result =
@@ -75,6 +78,20 @@ type DatabaseHandler(databasePath) =
 
         Seq.map (fun (x: Connections) -> x.ToIntermediate()) result
         |> Seq.toList
+
+    member this.selectServerConfString(id) =
+        let table = _db.Table<ConnectionConfig>()
+
+        query {
+            for config in table do
+                where (config.Id.Equals(id))
+                select config.Configuration
+                exactlyOne
+        }
+
+    member this.selectServerConf(id) =
+        this.selectServerConfString id
+        |> deserializeJson<Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>>
 
     member this.insertGenericConf(config) =
         (match config.Type with
