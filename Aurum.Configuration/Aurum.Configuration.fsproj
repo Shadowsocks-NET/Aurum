@@ -20,6 +20,7 @@
         <Compile Include="Share.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
+        <Compile Include="TopLevel.fs"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Aurum\Aurum.fsproj"/>
