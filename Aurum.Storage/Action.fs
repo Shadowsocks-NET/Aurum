@@ -11,8 +11,6 @@ type ConfigurationModificationActions =
     | Name of string
     | Host of string
     | Port of int
-    | Configuration of string identity
-    | Record of GenericOutboundObject<OutboundConfigurationObject> identity
     | Type of string
 
 let mapConfiguration configuration action =
@@ -20,13 +18,6 @@ let mapConfiguration configuration action =
     | Name value -> Optic.set SerializedServerConfiguration.Name_ value configuration
     | Host value -> Optic.set SerializedServerConfiguration.Host_ value configuration
     | Port value -> Optic.set SerializedServerConfiguration.Port_ value configuration
-    | Configuration action -> Optic.map SerializedServerConfiguration.Configuration_ action configuration
-    | Record action ->
-        Optic.map
-            (SerializedServerConfiguration.Configuration_
-             >-> jsonconf_)
-            action
-            configuration
     | Type action -> Optic.set SerializedServerConfiguration.Type_ action configuration
 
 let foldConfiguration configuration actions =

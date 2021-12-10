@@ -20,17 +20,13 @@ type Tags(tag: string, nodeId: string) =
     member this.NodeId = nodeId
 
 [<Table("Connections")>]
-type Connections(name: string, id: string, configuration: string, connectionType: string, host: string, port: string) =
+type Connections(name: string, id: string, connectionType: string, host: string, port: string) =
     [<PrimaryKey>]
     [<Column("id")>]
     member this.Id = id
 
     [<Column("name")>]
     member this.Name = name
-
-    [<Column("configuration")>]
-    [<MaxLength(512)>]
-    member this.Configuration = configuration
 
     [<Column("type")>]
     member this.Type = connectionType
@@ -44,12 +40,24 @@ type Connections(name: string, id: string, configuration: string, connectionType
     member this.ToIntermediate() =
         { SerializedServerConfiguration.Id = this.Id
           Name = this.Name
-          Configuration = this.Configuration
+          Configuration = None
           Type = this.Type
           Host = this.Host
           Port = this.Port |> int }
 
-    new() = Connections("", "", "", "", "", "")
+    new() = Connections("", "", "", "", "")
+
+[<Table("ConnectionConfig")>]
+type ConnectionConfig(id: string, configuration: string) =
+    [<PrimaryKey>]
+    [<Column("id")>]
+    member this.Id = id
+
+    [<Column("configuration")>]
+    [<MaxLength(512)>]
+    member this.Configuration = configuration
+
+    new() = ConnectionConfig("", "")
 
 [<Table("Groups")>]
 type Groups(name: string, id: string, subType: SubscriptionType, subUrl: string) =

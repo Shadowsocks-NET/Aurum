@@ -11,7 +11,7 @@ type SerializedServerConfiguration =
       Name: string
       Host: string
       Port: int
-      Configuration: string
+      Configuration: string option
       Type: string }
 
     static member Name_ =
@@ -70,7 +70,7 @@ let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<O
       Type = serverType
       Host = host
       Port = port
-      Configuration = configuration }
+      Configuration = Some configuration }
 
 let serializeRoutingConfiguration (name, routing: RuleObject list) =
     let configuration = serializeJson routing
