@@ -18,9 +18,9 @@
         <Compile Include="DNS.fs"/>
         <Compile Include="Intermediate.fs"/>
         <Compile Include="Share.fs"/>
+        <Compile Include="TopLevel.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
-        <Compile Include="TopLevel.fs"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Aurum\Aurum.fsproj"/>

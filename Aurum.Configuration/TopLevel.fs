@@ -1,9 +1,5 @@
 ﻿module Aurum.Configuration.TopLevel
 
-open Aurum.Configuration.DNS
-open Aurum.Configuration.Inbound
-open Aurum.Configuration.Outbound
-open Aurum.Configuration.Routing
 
 [<RequireQualifiedAccess>]
 type LogLevel =
@@ -18,9 +14,14 @@ type LogObject =
       Error: string option
       Loglevel: LogLevel }
 
+type SerializedOutbound = string
+type SerializedInbound = string
+type SerializedDNSConf = string
+type SerializedRoutingConf = string
+
 type TopLevelObject =
     { Log: LogObject
-      DNS: DNSObject
-      Routing: RoutingObject
-      Inbounds: InboundObject list
-      Outbounds: OutboundObject list }
+      DNS: SerializedDNSConf
+      Routing: SerializedRoutingConf
+      Inbounds: SerializedInbound list
+      Outbounds: SerializedOutbound list }
