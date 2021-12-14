@@ -63,11 +63,9 @@ module Helpers =
                     "/Library/Application Support"
                 )
             else
-                let xdg =
-                    Option.ofObj (Environment.GetEnvironmentVariable("XDG_DATA_HOME"))
-
-                match xdg with
-                | Some xdg -> xdg
-                | None -> Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
+                Option.ofObj (Environment.GetEnvironmentVariable("XDG_DATA_HOME"))
+                |> Option.defaultValue (
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
+                )
 
         Path.Combine(baseDirectory, appName)
