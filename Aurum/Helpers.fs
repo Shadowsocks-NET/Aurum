@@ -1,6 +1,7 @@
 namespace Aurum
 
 open System
+open System.Runtime.InteropServices
 open System.IO
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
@@ -10,11 +11,6 @@ open Aether
 [<AutoOpen>]
 module Helpers =
     type identity<'a> = 'a -> 'a
-
-    let nullableToOption value =
-        match value with
-        | null -> None
-        | value -> Some(value)
 
     let retrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
         try
@@ -59,22 +55,19 @@ module Helpers =
 
     let getDataDirectory appName =
         let baseDirectory =
-            match Runtime.InteropServices.RuntimeInformation.IsOSPlatform(Runtime.InteropServices.OSPlatform.Windows) with
-            | true -> Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
-            | false ->
-                match Runtime.InteropServices.RuntimeInformation.IsOSPlatform(Runtime.InteropServices.OSPlatform.OSX) with
-                | true ->
-                    Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                        "/Library/Application Support"
-                    )
-                | false ->
-                    let xdg =
-                        Option.ofObj (Environment.GetEnvironmentVariable("XDG_DATA_HOME"))
+            if RuntimeInformation.IsOSPlatform(OSPlatform.Windows) then
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+            elif RuntimeInformation.IsOSPlatform(OSPlatform.OSX) then
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "/Library/Application Support"
+                )
+            else
+                let xdg =
+                    Option.ofObj (Environment.GetEnvironmentVariable("XDG_DATA_HOME"))
 
-                    match xdg with
-                    | Some xdg -> xdg
-                    | None ->
-                        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
+                match xdg with
+                | Some xdg -> xdg
+                | None -> Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local/share")
 
         Path.Combine(baseDirectory, appName)
