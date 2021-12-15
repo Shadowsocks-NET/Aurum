@@ -43,7 +43,7 @@ type UserObject =
 type GoUserObject =
     { ID: string
       Level: int option
-      Security: VMessEncryption }
+      Security: VMessEncryption option }
 
 type ServerObject =
     { Address: string
@@ -64,10 +64,10 @@ type OutboundConfigurationObject =
 
 // v2ray-go specific implementation, removed vnext layer.
 type GoOutboundConfigurationObject =
-    { Address: string
-      Port: int
-      Users: GoUserObject list
-      Servers: ServerObject list }
+    { Address: string option
+      Port: int option
+      Users: GoUserObject list option
+      Servers: ServerObject list option }
     member this.GetVnextServerInfo() = this.Address, this.Port
 
 type MuxObject = { Enabled: bool; Concurrency: int }
