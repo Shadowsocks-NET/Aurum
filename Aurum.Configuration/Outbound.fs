@@ -58,8 +58,9 @@ type ServerObject =
 type OutboundConfigurationObject =
     { Vnext: ServerObject list option
       Servers: ServerObject list option }
-    member this.GetVnextServerInfo() =
-        let server = (Option.get this.Vnext).[0]
+
+    member this.GetServerInfo() =
+        let server = ((Option.orElse this.Vnext this.Servers) |> Option.get).[0]
         server.Address, server.Port
 
 // v2ray-go specific implementation, removed vnext layer.
@@ -68,7 +69,11 @@ type GoOutboundConfigurationObject =
       Port: int option
       Users: GoUserObject list option
       Servers: ServerObject list option }
-    member this.GetVnextServerInfo() = this.Address, this.Port
+
+    member this.GetServerInfo() =
+        match this.Servers with
+        | Some x -> x.[0].Address, x.[0].Port
+        | None -> Option.get this.Address, Option.get this.Port
 
 type MuxObject = { Enabled: bool; Concurrency: int }
 
