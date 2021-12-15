@@ -19,8 +19,8 @@ type DatabaseHandler(databasePath) =
     let _db =
         match databasePath with
         | Standard name ->
-            let dataDirecotry = getDataDirectory name
-            Directory.CreateDirectory(dataDirectory)
+            let dataDirectory = getDataDirectory name
+            Directory.CreateDirectory(dataDirectory) |> ignore
             new SQLiteConnection(Path.Combine(dataDirectory, "database"))
         | Custom path -> new SQLiteConnection(path)
 
