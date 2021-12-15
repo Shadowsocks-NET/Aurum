@@ -78,7 +78,7 @@ type GoOutboundConfigurationObject =
 type MuxObject = { Enabled: bool; Concurrency: int }
 
 type GenericOutboundObject<'T> =
-    { SendThrough: string
+    { SendThrough: string option
       Protocol: Protocols
       Settings: 'T
       Tag: string
