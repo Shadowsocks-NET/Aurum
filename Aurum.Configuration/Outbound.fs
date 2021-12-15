@@ -152,7 +152,7 @@ let parseVMessSecurity security =
     | _ -> raise (ConfigurationParameterException "unknown security type")
 
 let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, tag, mux, vnext) : OutboundObject =
-    { OutboundObject.SendThrough = Option.defaultValue "0.0.0.0" sendThrough
+    { OutboundObject.SendThrough = sendThrough
       Protocol = protocol
       Settings =
           if vnext then
