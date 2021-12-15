@@ -59,8 +59,8 @@ type SerializedGenericConfiguration =
 let jsonconf_: (string -> 'a) * ('a -> string) = // isomorphism for JSON <-> record conversion
     deserializeJson, serializeJson
 
-let serializeServerConfiguration (name, server: Outbound.GenericOutboundObject<Outbound.OutboundConfigurationObject>) =
-    let host, port = server.Settings.GetVnextServerInfo()
+let serializeServerConfiguration (name, server: Outbound.OutboundObject) =
+    let host, port = server.Settings.GetServerInfo()
     let serverType = server.GetConnectionType()
     let configuration = serializeJson server
     let id = Nanoid.Generate(size = 10)
