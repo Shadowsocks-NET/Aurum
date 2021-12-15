@@ -1,6 +1,5 @@
 module Aurum.Configuration.Outbound
 
-open System
 open FSharp.Json
 open Aurum.Configuration.Transport
 open Aurum
@@ -39,11 +38,35 @@ type UserObject =
       AlterId: int
       Security: VMessEncryption option }
 
+    static member ID_ =
+        (fun a -> a.ID), (fun b a -> { a with ID = b })
+
+    static member Encryption_ =
+        (fun a -> a.Encryption), (fun b a -> { a with Encryption = Some b })
+
+    static member Level_ =
+        (fun a -> a.Level), (fun b a -> { a with Level = Some b })
+
+    static member Security_ =
+        (fun a -> a.Security), (fun b a -> { a with UserObject.Security = Some b })
+
 // v2ray-go specific implementation, removed VLESS components.
 type GoUserObject =
     { ID: string
       Level: int option
       Security: VMessEncryption option }
+
+    static member ID_ =
+        (fun a -> a.ID), (fun b a -> { a with GoUserObject.ID = b })
+
+    static member Level_ =
+        (fun a -> a.Level), (fun b a -> { a with GoUserObject.Level = Some b })
+
+    static member Security_ =
+        (fun a -> a.Security),
+        (fun b a ->
+            { a with
+                  GoUserObject.Security = Some b })
 
 type ServerObject =
     { Address: string
@@ -55,13 +78,46 @@ type ServerObject =
       IvCheck: bool option
       Users: UserObject list option }
 
+    static member Address_ =
+        (fun a -> a.Address), (fun b a -> { a with Address = b })
+
+    static member Port_ =
+        (fun a -> a.Port), (fun b a -> { a with Port = b })
+
+    static member Password_ =
+        (fun a -> a.Password), (fun b a -> { a with Password = Some b })
+
+    static member Email_ =
+        (fun a -> a.Email), (fun b a -> { a with Email = Some b })
+
+    static member Level_ =
+        (fun a -> a.Level), (fun b a -> { a with ServerObject.Level = Some b })
+
+    static member Method_ =
+        (fun a -> a.Method), (fun b a -> { a with ServerObject.Method = Some b })
+
+    static member IvCheck_ =
+        (fun a -> a.IvCheck), (fun b a -> { a with IvCheck = Some b })
+
+    static member Users_ =
+        (fun a -> a.Users), (fun b a -> { a with Users = Some b })
+
 type OutboundConfigurationObject =
     { Vnext: ServerObject list option
       Servers: ServerObject list option }
 
     member this.GetServerInfo() =
-        let server = ((Option.orElse this.Vnext this.Servers) |> Option.get).[0]
+        let server =
+            ((((Option.orElse this.Vnext this.Servers)
+               |> Option.get))).[0]
+
         server.Address, server.Port
+
+    static member Vnext_ =
+        (fun a -> a.Vnext), (fun b a -> { a with Vnext = Some b })
+
+    static member Servers_ =
+        (fun a -> a.Servers), (fun b a -> { a with Servers = Some b })
 
 // v2ray-go specific implementation, removed vnext layer.
 type GoOutboundConfigurationObject =
@@ -75,7 +131,39 @@ type GoOutboundConfigurationObject =
         | Some x -> x.[0].Address, x.[0].Port
         | None -> Option.get this.Address, Option.get this.Port
 
-type MuxObject = { Enabled: bool; Concurrency: int }
+    static member Address_ =
+        (fun a -> a.Address),
+        (fun b a ->
+            { a with
+                  GoOutboundConfigurationObject.Address = Some b })
+
+    static member Port_ =
+        (fun a -> a.Port),
+        (fun b a ->
+            { a with
+                  GoOutboundConfigurationObject.Port = Some b })
+
+    static member Users_ =
+        (fun a -> a.Users),
+        (fun b a ->
+            { a with
+                  GoOutboundConfigurationObject.Users = Some b })
+
+    static member Servers_ =
+        (fun a -> a.Servers),
+        (fun b a ->
+            { a with
+                  GoOutboundConfigurationObject.Servers = Some b })
+
+type MuxObject =
+    { Enabled: bool
+      Concurrency: int option }
+
+    static member Enabled_ =
+        (fun a -> a.Enabled), (fun b a -> { a with Enabled = b })
+
+    static member Concurrency_ =
+        (fun a -> a.Concurrency), (fun b a -> { a with Concurrency = Some b })
 
 type GenericOutboundObject<'T> =
     { SendThrough: string option
@@ -84,6 +172,25 @@ type GenericOutboundObject<'T> =
       Tag: string
       StreamSettings: StreamSettingsObject option
       Mux: MuxObject }
+
+    static member SendThrough_ =
+        (fun a -> a.SendThrough), (fun b a -> { a with SendThrough = Some b })
+
+    static member Protocol_ =
+        (fun a -> a.Protocol), (fun b a -> { a with Protocol = b })
+
+    static member Settings_ =
+        (fun a -> a.Settings), (fun b a -> { a with Settings = b })
+
+    static member Tag_ =
+        (fun a -> a.Tag), (fun b a -> { a with Tag = b })
+
+    static member StreamSettings_ =
+        (fun a -> a.StreamSettings), (fun b a -> { a with StreamSettings = Some b })
+
+    static member Mux_ =
+        (fun a -> a.Mux), (fun b a -> { a with Mux = b })
+
     member this.GetConnectionType() =
         let protocol =
             match this.Protocol with
@@ -165,7 +272,7 @@ let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, ta
       Mux =
           Option.defaultValue
               { MuxObject.Enabled = false
-                Concurrency = 1 }
+                Concurrency = Some 1 }
               mux
       Tag = tag }
 
