@@ -1,6 +1,6 @@
 ﻿type project
 id Aurum.Configuration
-version 0.1.0-alpha.1
+version 0.1.0-alpha.3
 authors Shanoa Ice
 description
     Configuration generation component for the Aurum project.
