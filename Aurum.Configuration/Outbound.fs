@@ -4,7 +4,7 @@ open FSharp.Json
 open Aurum.Configuration.Transport
 open Aurum
 
-[<RequireQualifiedAccessAttribute>]
+[<RequireQualifiedAccess>]
 type ShadowsocksEncryption =
     | [<JsonUnionCase("none")>] None
     | [<JsonUnionCase("plain")>] Plain
@@ -17,7 +17,7 @@ type ShadowsocksEncryption =
     | [<JsonUnionCase("2022-blake3-chacha20-poly1305")>] ChaCha20_2022
     | [<JsonUnionCase("2022-blake3-chacha8-poly1305")>] ChaCha8_2022
 
-[<RequireQualifiedAccessAttribute>]
+[<RequireQualifiedAccess>]
 // VLESS is removed in v2ray-go, so this is subject to removal too (may happen in any time).
 type VLESSEncryption = | [<JsonUnionCase("none")>] None
 
@@ -27,7 +27,7 @@ type Protocols =
     | [<JsonUnionCase("shadowsocks")>] Shadowsocks
     | [<JsonUnionCase("trojan")>] Trojan
 
-[<RequireQualifiedAccessAttribute>]
+[<RequireQualifiedAccess>]
 type VMessEncryption =
     | [<JsonUnionCase("none")>] None
     | [<JsonUnionCase("zero")>] Zero
@@ -67,10 +67,7 @@ type GoUserObject =
         (fun a -> a.Level), (fun b a -> { a with GoUserObject.Level = Some b })
 
     static member Security_ =
-        (fun a -> a.Security),
-        (fun b a ->
-            { a with
-                  GoUserObject.Security = Some b })
+        (fun a -> a.Security), (fun b a -> { a with GoUserObject.Security = Some b })
 
 type ServerObject =
     { Address: string
@@ -112,8 +109,8 @@ type OutboundConfigurationObject =
 
     member this.GetServerInfo() =
         let server =
-            ((((Option.orElse this.Vnext this.Servers)
-               |> Option.get))).[0]
+            (((((((Option.orElse this.Vnext this.Servers)
+                  |> Option.get)))))).[0]
 
         server.Address, server.Port
 
@@ -136,28 +133,16 @@ type GoOutboundConfigurationObject =
         | None -> Option.get this.Address, Option.get this.Port
 
     static member Address_ =
-        (fun a -> a.Address),
-        (fun b a ->
-            { a with
-                  GoOutboundConfigurationObject.Address = Some b })
+        (fun a -> a.Address), (fun b a -> { a with GoOutboundConfigurationObject.Address = Some b })
 
     static member Port_ =
-        (fun a -> a.Port),
-        (fun b a ->
-            { a with
-                  GoOutboundConfigurationObject.Port = Some b })
+        (fun a -> a.Port), (fun b a -> { a with GoOutboundConfigurationObject.Port = Some b })
 
     static member Users_ =
-        (fun a -> a.Users),
-        (fun b a ->
-            { a with
-                  GoOutboundConfigurationObject.Users = Some b })
+        (fun a -> a.Users), (fun b a -> { a with GoOutboundConfigurationObject.Users = Some b })
 
     static member Servers_ =
-        (fun a -> a.Servers),
-        (fun b a ->
-            { a with
-                  GoOutboundConfigurationObject.Servers = Some b })
+        (fun a -> a.Servers), (fun b a -> { a with GoOutboundConfigurationObject.Servers = Some b })
 
 type MuxObject =
     { Enabled: bool
@@ -252,7 +237,8 @@ let createVMessServerObject (host, port, users) =
       IvCheck = None }
 
 let parseVMessSecurity security =
-    let security = Option.defaultValue "auto" security
+    let security =
+        Option.defaultValue "auto" security
 
     match security with
     | "none" -> VMessEncryption.None
@@ -266,18 +252,18 @@ let createV2flyOutboundObject (sendThrough, protocol, setting, streamSetting, ta
     { OutboundObject.SendThrough = sendThrough
       Protocol = protocol
       Settings =
-          if vnext then
-              { OutboundConfigurationObject.Vnext = Some [ setting ]
-                Servers = None }
-          else
-              { OutboundConfigurationObject.Vnext = None
-                Servers = Some [ setting ] }
+        if vnext then
+            { OutboundConfigurationObject.Vnext = Some [ setting ]
+              Servers = None }
+        else
+            { OutboundConfigurationObject.Vnext = None
+              Servers = Some [ setting ] }
       StreamSettings = streamSetting
       Mux =
-          Option.defaultValue
-              { MuxObject.Enabled = false
-                Concurrency = Some 1 }
-              mux
+        Option.defaultValue
+            { MuxObject.Enabled = false
+              Concurrency = Some 1 }
+            mux
       Tag = tag }
 
 let createShadowsocksServerObject (email, address, port, method, password, level, ivCheck) =
