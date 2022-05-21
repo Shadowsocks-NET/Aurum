@@ -12,6 +12,10 @@ type ShadowsocksEncryption =
     | [<JsonUnionCase("chacha20-ietf-poly1305")>] ChaCha20IETF
     | [<JsonUnionCase("aes-128-gcm")>] AES128
     | [<JsonUnionCase("aes-256-gcm")>] AES256
+    | [<JsonUnionCase("2022-blake3-aes-128-gcm")>] AES128_2022
+    | [<JsonUnionCase("2022-blake3-aes-256-gcm")>] AES256_2022
+    | [<JsonUnionCase("2022-blake3-chacha20-poly1305")>] ChaCha20_2022
+    | [<JsonUnionCase("2022-blake3-chacha8-poly1305")>] ChaCha8_2022
 
 [<RequireQualifiedAccessAttribute>]
 // VLESS is removed in v2ray-go, so this is subject to removal too (may happen in any time).
