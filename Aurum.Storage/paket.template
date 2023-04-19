@@ -1,8 +1,0 @@
-﻿type project
-id Aurum.Storage
-version 0.1.0-alpha.1
-authors Shanoa Ice
-description
-    SQL Storage component for the Aurum project.
-licenseExpression EPL-2.0
-repositoryUrl https://github.com/Shadowsocks-NET/Aurum
