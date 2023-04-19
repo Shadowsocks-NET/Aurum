@@ -1,6 +1,6 @@
-﻿module Sing.Generator.SubscriptionAdapter.V2rayNBase64
+﻿module Aurum.Configuration.SubscriptionAdapter.V2rayNBase64
 
-open Sing.Utils
+open Aurum
 
 let extractShareLinks content =
   let decodedBase64 = decodeBase64 content

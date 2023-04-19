@@ -11,6 +11,7 @@
         <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="SnakeCase.fs"/>
         <Compile Include="Exceptions.fs"/>
         <Compile Include="Helpers.fs"/>
         <Content Include="paket.references"/>

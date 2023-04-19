@@ -1,28 +1,27 @@
 module Aurum.Configuration.Routing
 
 open Aurum
-open FSharp.Json
 
 type DomainStrategy =
-    | [<JsonUnionCase("AsIs")>] AsIs
-    | [<JsonUnionCase("IPIfNonMatch")>] IPIfNonMatch
-    | [<JsonUnionCase("IPOnDemand")>] IPOnDemand
+    | [<JsonName("AsIs")>] AsIs
+    | [<JsonName("IPIfNonMatch")>] IPIfNonMatch
+    | [<JsonName("IPOnDemand")>] IPOnDemand
 
 type DomainMatcher =
-    | [<JsonUnionCase("mph")>] MinimalPerfectHash
-    | [<JsonUnionCase("linear")>] Original
+    | [<JsonName("mph")>] MinimalPerfectHash
+    | [<JsonName("linear")>] Original
 
-type RuleObjectType = | [<JsonUnionCase("field")>] Field
+type RuleObjectType = | [<JsonName("field")>] Field
 
 type RuleMatchProtocol =
-    | [<JsonUnionCase("http")>] HTTP
-    | [<JsonUnionCase("tls")>] TLS
-    | [<JsonUnionCase("bittorrent")>] BitTorrent
+    | [<JsonName("http")>] HTTP
+    | [<JsonName("tls")>] TLS
+    | [<JsonName("bittorrent")>] BitTorrent
 
 type RuleMatchNetwork =
-    | [<JsonUnionCase("tcp")>] TCP
-    | [<JsonUnionCase("udp")>] UDP
-    | [<JsonUnionCase("tcp,udp")>] TCPAndUDP
+    | [<JsonName("tcp")>] TCP
+    | [<JsonName("udp")>] UDP
+    | [<JsonName("tcp,udp")>] TCPAndUDP
 
 type RuleObject =
     { DomainMatcher: DomainMatcher option
@@ -39,10 +38,10 @@ type RuleObject =
       OutboundTag: string option
       BalancerTag: string option }
 
-[<JsonUnion(Mode = UnionMode.CaseKeyAsFieldValue, CaseKeyField = "type")>]
+[<JsonFSharpConverter(BaseUnionEncoding = JsonUnionEncoding.AdjacentTag, UnionTagName = "type")>]
 type BalancerStrategy =
-    | [<JsonUnionCase("random")>] Random
-    | [<JsonUnionCase("leastPing")>] LeastPing
+    | [<JsonName("random")>] Random
+    | [<JsonName("leastPing")>] LeastPing
 
 type BalancerObject =
     { Tag: string
@@ -229,7 +228,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules, use
             Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
 
         let proxyRule =
-            Proxy(Some((domainList |> List.map constructDomainEntry)), None)
+            Proxy(Some(domainList |> List.map constructDomainEntry), None)
 
         constructRuleSet [ mergeRules userBlockRule blockPreset
                            userDirectRule

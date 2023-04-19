@@ -1,7 +1,5 @@
-﻿module Sing.Configuration.Inbound
+﻿module Aurum.Configuration.Sing.Inbound
 
-open Sing.Configuration.Shared
-open System.Text.Json.Serialization
 
 type SOCKSRecord =
   { tag: string

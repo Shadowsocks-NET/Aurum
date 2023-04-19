@@ -1,6 +1,5 @@
-module Sing.Configuration.Shared
+module Aurum.Configuration.Sing.Shared
 
-open System.Text.Json.Serialization
 
 type TLSOutbound =
   { enabled: bool

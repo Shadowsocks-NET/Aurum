@@ -1,6 +1,6 @@
-module Sing.Generator.Configuration
+module Aurum.Configuration.Sing
 
-open Sing.Configuration.Outbound
+open Aurum.Configuration.Sing.Outbound
 
 type ConfigurationBase =
   { dns: obj
@@ -10,7 +10,7 @@ type ConfigurationBase =
     route: obj
     experimental: obj }
 
-type OOCAPIToken =
+type OocApiToken =
   { version: int
     baseUrl: string
     secret: string
@@ -24,8 +24,8 @@ type CachingPolicy =
 type Subscriptions =
   | Base64 of url: string
   | Clash of url: string // WIP
-  | OOCv1 of apiToken: OOCAPIToken // WIP
-  | OOCSing of apiToken: OOCAPIToken
+  | OocV1 of apiToken: OocApiToken // WIP
+  | OocSing of apiToken: OocApiToken
 
 type BaseConfiguration =
   { subscription: Subscriptions list

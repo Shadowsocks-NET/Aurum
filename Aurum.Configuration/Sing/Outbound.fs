@@ -1,4 +1,4 @@
-module Sing.Configuration.Outbound
+module Aurum.Configuration.Sing.Outbound
 
 open System.Text.Json.Serialization
 

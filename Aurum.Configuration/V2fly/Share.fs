@@ -1,9 +1,8 @@
 module Aurum.Configuration.Share
 
-open System.Collections.Generic
 open Aurum
 open Aurum.Configuration
-open Aurum.Configuration.Transport
+open Aurum.Configuration.V2fly.Transport
 
 let encodeBase64 (text: string) =
     let plainBytes = System.Text.Encoding.UTF8.GetBytes text

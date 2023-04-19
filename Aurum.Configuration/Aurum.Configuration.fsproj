@@ -11,23 +11,21 @@
         <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="SnakeCase.fs"/>
-        <Compile Include="Utils.fs"/>
-        <Compile Include="V2Fly.Configuration\Transport.fs"/>
-        <Compile Include="V2Fly.Configuration\Inbound.fs"/>
-        <Compile Include="V2Fly.Configuration\Outbound.fs"/>
-        <Compile Include="V2Fly.Configuration\Routing.fs"/>
-        <Compile Include="V2Fly.Configuration\DNS.fs"/>
-        <Compile Include="V2Fly.Configuration\Intermediate.fs"/>
-        <Compile Include="V2Fly.Configuration\Share.fs"/>
-        <Compile Include="Sing.Configuration\Shared.fs"/>
-        <Compile Include="Sing.Configuration\Outbound.fs"/>
-        <Compile Include="Sing.Configuration\Inbound.fs"/>
-        <Compile Include="ConfigurationBase.fs"/>
+        <Compile Include="Shared\VMess.fs"/>
+        <Compile Include="V2fly\Transport.fs"/>
+        <Compile Include="V2fly\Inbound.fs"/>
+        <Compile Include="V2fly\Outbound.fs"/>
+        <Compile Include="V2fly\Routing.fs"/>
+        <Compile Include="V2fly\DNS.fs"/>
+        <Compile Include="V2fly\Share.fs"/>
+        <Compile Include="V2fly\TopLevel.fs"/>
+        <Compile Include="Sing\Shared.fs"/>
+        <Compile Include="Sing\Outbound.fs"/>
+        <Compile Include="Sing\Inbound.fs"/>
+        <Compile Include="Sing\ConfigurationBase.fs"/>
         <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
         <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
         <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
-        <Compile Include="TopLevel.fs"/>
         <Compile Include="Remote.fs"/>
         <Compile Include="GenerateConfig.fs"/>
         <Content Include="paket.references"/>

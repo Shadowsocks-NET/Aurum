@@ -1,23 +1,23 @@
-module Aurum.Configuration.Transport
+module Aurum.Configuration.V2fly.Transport
 
 open System.Collections.Generic
-open FSharp.Json
+open System.Text.Json.Serialization
 
 [<RequireQualifiedAccess>]
 type Networks =
-    | [<JsonUnionCase("ws")>] WS
-    | [<JsonUnionCase("grpc")>] GRPC
-    | [<JsonUnionCase("tcp")>] TCP
-    | [<JsonUnionCase("kcp")>] KCP
-    | [<JsonUnionCase("domainsocket")>] DomainSocket
-    | [<JsonUnionCase("http")>] HTTP
-    | [<JsonUnionCase("quic")>] QUIC
+    | [<JsonName("ws")>] WS
+    | [<JsonName("grpc")>] GRPC
+    | [<JsonName("tcp")>] TCP
+    | [<JsonName("kcp")>] KCP
+    | [<JsonName("domainsocket")>] DomainSocket
+    | [<JsonName("http")>] HTTP
+    | [<JsonName("quic")>] QUIC
 
 [<RequireQualifiedAccess>]
 type Security =
-    | [<JsonUnionCase("none")>] None
-    | [<JsonUnionCase("tls")>] TLS
-    | [<JsonUnionCase("xtls")>] XTLS
+    | [<JsonName("none")>] None
+    | [<JsonName("tls")>] TLS
+    | [<JsonName("xtls")>] XTLS
 
 type WebSocketObject =
     { Path: string
@@ -78,7 +78,7 @@ type HttpResponseObject =
         (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
 type TcpHeaderObject =
-    { [<JsonField("type")>]
+    { [<JsonPropertyName("type")>]
       HeaderType: string
       Request: HttpRequestObject option
       Response: HttpResponseObject option }
@@ -100,15 +100,15 @@ type TcpObject =
 
 [<RequireQualifiedAccess>]
 type UdpHeaders =
-    | [<JsonUnionCase("none")>] None
-    | [<JsonUnionCase("srtp")>] SRTP
-    | [<JsonUnionCase("utp")>] UTP
-    | [<JsonUnionCase("wechat-video")>] WechatVideo
-    | [<JsonUnionCase("dtls")>] DTLS
-    | [<JsonUnionCase("wireguard")>] WireGuard
+    | [<JsonName("none")>] None
+    | [<JsonName("srtp")>] SRTP
+    | [<JsonName("utp")>] UTP
+    | [<JsonName("wechat-video")>] WechatVideo
+    | [<JsonName("dtls")>] DTLS
+    | [<JsonName("wireguard")>] WireGuard
 
 type UdpHeaderObject =
-    { [<JsonField("type")>]
+    { [<JsonPropertyName("type")>]
       HeaderType: string }
 
     static member HeaderType_ =
@@ -184,8 +184,8 @@ type HttpObject =
 [<RequireQualifiedAccess>]
 type QuicSecurity =
     | None
-    | [<JsonUnionCase("aes-128-gcm")>] AES
-    | [<JsonUnionCase("chacha20-poly1305")>] ChaCha20
+    | [<JsonName("aes-128-gcm")>] AES
+    | [<JsonName("chacha20-poly1305")>] ChaCha20
 
 type QuicObject =
     { Security: QuicSecurity

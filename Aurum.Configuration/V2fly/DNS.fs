@@ -1,7 +1,6 @@
 module Aurum.Configuration.DNS
 
 open System.Collections.Generic
-open FSharp.Json
 
 type DomainRules = string list
 type ExpectIpRules = string list
@@ -15,9 +14,9 @@ type ServerObject =
       ExpectIps: ExpectIpRules }
 
 type DNSQueryStrategy =
-    | [<JsonUnionCase("UseIP")>] UseIP
-    | [<JsonUnionCase("UseIPv4")>] UseIPv4
-    | [<JsonUnionCase("UseIPv6")>] UseIPv6
+    | [<JsonName("UseIP")>] UseIP
+    | [<JsonName("UseIPv4")>] UseIPv4
+    | [<JsonName("UseIPv6")>] UseIPv6
 
 type Domain = string
 type AddressList = string list

@@ -6,6 +6,8 @@ open System.IO
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
 open FSharp.Json
+open System.Text.Json
+open System.Text.Json.Serialization
 open Aether
 
 [<AutoOpen>]
@@ -44,6 +46,30 @@ module Helpers =
         match op1, op2 with
         | Some x, Some y -> Some(x @ y)
         | op1, op2 -> Option.orElse op1 op2
+
+    let systemTextJsonOptions =
+        JsonSerializerOptions(
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCase,
+            WriteIndented = true,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString
+        )
+
+    JsonFSharpOptions
+        .ThothLike()
+        .WithUnwrapOption()
+        .WithUnionUnwrapRecordCases()
+        .WithUnionTagName("type")
+        .WithUnionTagNamingPolicy(JsonNamingPolicy.SnakeCase)
+        .WithUnionFieldNamingPolicy(JsonNamingPolicy.SnakeCase)
+        .AddToJsonSerializerOptions(systemTextJsonOptions)
+
+    let decodeBase64 string =
+        let rawBytes = System.Convert.FromBase64String string
+        System.Text.Encoding.UTF8.GetString rawBytes
+
+    let decodeBase64Url string =
+        let rawBytes = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode string
+        System.Text.Encoding.UTF8.GetString rawBytes
 
     let jsonOption =
         JsonConfig.create (unformatted = true, serializeNone = Omit, jsonFieldNaming = Json.lowerCamelCase)

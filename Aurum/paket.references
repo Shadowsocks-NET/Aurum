@@ -1,3 +1,5 @@
 Microsoft.Extensions.Primitives
+Microsoft.AspNetCore.WebUtilities
 FSharp.Json
+FSharp.SystemTextJson
 Aether

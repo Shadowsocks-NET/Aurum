@@ -1,21 +1,20 @@
 module Aurum.Configuration.Inbound
 
-open FSharp.Json
 
 type Protocols =
-    | [<JsonUnionCase("http")>] HTTP
-    | [<JsonUnionCase("socks")>] Socks
-    | [<JsonUnionCase("dokodemo-door")>] DokodemoDoor
+    | [<JsonName("http")>] HTTP
+    | [<JsonName("socks")>] Socks
+    | [<JsonName("dokodemo-door")>] DokodemoDoor
 
 type SocksAuth =
-    | [<JsonUnionCase("noauth")>] NoAuth
-    | [<JsonUnionCase("password")>] Password
+    | [<JsonName("noauth")>] NoAuth
+    | [<JsonName("password")>] Password
 
 type DestinationOverride =
-    | [<JsonUnionCase("http")>] HTTP
-    | [<JsonUnionCase("tls")>] TLS
-    | [<JsonUnionCase("fakedns")>] FakeDNS
-    | [<JsonUnionCase("fakedns+others")>] FakeDNSOthers
+    | [<JsonName("http")>] HTTP
+    | [<JsonName("tls")>] TLS
+    | [<JsonName("fakedns")>] FakeDNS
+    | [<JsonName("fakedns+others")>] FakeDNSOthers
 
 type AccountObject = { User: string; Pass: string }
 
