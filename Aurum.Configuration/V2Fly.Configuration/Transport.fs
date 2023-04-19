@@ -1,7 +1,6 @@
 module Aurum.Configuration.Transport
 
 open System.Collections.Generic
-open Aurum
 open FSharp.Json
 
 [<RequireQualifiedAccess>]

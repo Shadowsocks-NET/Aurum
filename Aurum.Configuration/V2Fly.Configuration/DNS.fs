@@ -1,6 +1,5 @@
 module Aurum.Configuration.DNS
 
-open Aurum.Configuration
 open System.Collections.Generic
 open FSharp.Json
 

@@ -1,4 +1,5 @@
 FSharp.Json
+FSharp.SystemTextJson
 Microsoft.AspNetCore.WebUtilities
 Serilog
 Shadowsocks

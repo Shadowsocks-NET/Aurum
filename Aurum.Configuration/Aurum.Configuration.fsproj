@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageId>Aurum.Configuration</PackageId>
         <Version>0.1.0-alpha.3</Version>
@@ -11,14 +11,25 @@
         <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Transport.fs"/>
-        <Compile Include="Inbound.fs"/>
-        <Compile Include="Outbound.fs"/>
-        <Compile Include="Routing.fs"/>
-        <Compile Include="DNS.fs"/>
-        <Compile Include="Intermediate.fs"/>
-        <Compile Include="Share.fs"/>
+        <Compile Include="SnakeCase.fs"/>
+        <Compile Include="Utils.fs"/>
+        <Compile Include="V2Fly.Configuration\Transport.fs"/>
+        <Compile Include="V2Fly.Configuration\Inbound.fs"/>
+        <Compile Include="V2Fly.Configuration\Outbound.fs"/>
+        <Compile Include="V2Fly.Configuration\Routing.fs"/>
+        <Compile Include="V2Fly.Configuration\DNS.fs"/>
+        <Compile Include="V2Fly.Configuration\Intermediate.fs"/>
+        <Compile Include="V2Fly.Configuration\Share.fs"/>
+        <Compile Include="Sing.Configuration\Shared.fs"/>
+        <Compile Include="Sing.Configuration\Outbound.fs"/>
+        <Compile Include="Sing.Configuration\Inbound.fs"/>
+        <Compile Include="ConfigurationBase.fs"/>
+        <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
+        <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
+        <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
         <Compile Include="TopLevel.fs"/>
+        <Compile Include="Remote.fs"/>
+        <Compile Include="GenerateConfig.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
     </ItemGroup>
