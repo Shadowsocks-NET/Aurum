@@ -1,5 +1,6 @@
 ﻿module Aurum.Configuration.AdapterTypes.VMessLegacyShare
 
+open System.Text.Json.Serialization
 
 // this implementation disregards alterId, an obsolete feature
 // the only *disguise* method supported is HTTP host

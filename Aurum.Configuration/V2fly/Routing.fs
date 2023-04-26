@@ -1,6 +1,7 @@
 module Aurum.Configuration.Routing
 
 open Aurum
+open System.Text.Json.Serialization
 
 type DomainStrategy =
     | [<JsonName("AsIs")>] AsIs

@@ -1,5 +1,6 @@
 module Aurum.Configuration.Outbound
 
+open System.Text.Json.Serialization
 open Aurum.Configuration.V2fly.Transport
 open Aurum
 

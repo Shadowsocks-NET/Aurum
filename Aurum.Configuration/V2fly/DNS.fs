@@ -1,6 +1,7 @@
 module Aurum.Configuration.DNS
 
 open System.Collections.Generic
+open System.Text.Json.Serialization
 
 type DomainRules = string list
 type ExpectIpRules = string list
