@@ -19,3 +19,7 @@ this [MyGet Feed](https://www.myget.org/feed/Packages/aurum).
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/Shadowsocks-NET/Aurum.svg)](https://starchart.cc/Shadowsocks-NET/Aurum)
+
+## License
+
+The Aurum project is licensed under [LGPL-3.0-only](LICENSE)
