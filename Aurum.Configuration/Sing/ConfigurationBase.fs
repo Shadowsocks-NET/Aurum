@@ -1,4 +1,4 @@
-module Aurum.Configuration.Sing
+module Aurum.Configuration.Sing.Base
 
 open Aurum.Configuration.Sing.Outbound
 
