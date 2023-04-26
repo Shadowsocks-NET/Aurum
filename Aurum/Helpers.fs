@@ -5,7 +5,6 @@ open System.Runtime.InteropServices
 open System.IO
 open System.Collections.Generic
 open Microsoft.Extensions.Primitives
-open FSharp.Json
 open System.Text.Json
 open System.Text.Json.Serialization
 open Aether
@@ -79,6 +78,10 @@ module Helpers =
         .WithUnionFieldNamingPolicy(JsonNamingPolicy.CamelCase)
         .AddToJsonSerializerOptions(v2flySystemTextJsonOptions)
 
+    let encodeBase64 (text: string) =
+        let plainBytes = System.Text.Encoding.UTF8.GetBytes text
+        System.Convert.ToBase64String plainBytes
+
     let decodeBase64 string =
         let rawBytes = System.Convert.FromBase64String string
         System.Text.Encoding.UTF8.GetString rawBytes
@@ -86,14 +89,6 @@ module Helpers =
     let decodeBase64Url string =
         let rawBytes = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode string
         System.Text.Encoding.UTF8.GetString rawBytes
-
-    let jsonOption =
-        JsonConfig.create (unformatted = true, serializeNone = Omit, jsonFieldNaming = Json.lowerCamelCase)
-
-    let serializeJson object = Json.serializeEx jsonOption object
-
-    let deserializeJson<'T> string =
-        Json.deserializeEx<'T> jsonOption string
 
     let getDataDirectory appName =
         let baseDirectory =
