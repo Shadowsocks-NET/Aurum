@@ -1,8 +1,9 @@
 module Aurum.Configuration.Share
 
+open System.Collections.Generic
 open Aurum
 open Aurum.Configuration
-open Aurum.Configuration.V2fly.Transport
+open Aurum.Configuration.V2fly
 
 let encodeBase64 (text: string) =
     let plainBytes = System.Text.Encoding.UTF8.GetBytes text
@@ -14,8 +15,8 @@ let decodeBase64 (encoded: string) =
 
 let parseQuicSecurity security =
     match security with
-    | "aes-128-gcm" -> QuicSecurity.AES
-    | "chacha20-poly1305" -> QuicSecurity.ChaCha20
+    | "aes-128-gcm" -> Transport.QuicSecurity.AES
+    | "chacha20-poly1305" -> Transport.QuicSecurity.ChaCha20
     | unknown -> raise (ConfigurationParameterException $"unknown quic security {unknown}")
 
 let createV2FlyObjectFromUri (uriObject: System.Uri) =
@@ -114,7 +115,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
     let outbound =
         Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None, true)
 
-    Intermediate.serializeServerConfiguration (description, outbound)
+    (description, outbound)
 
 let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) =
     let name = ssServer.Name
@@ -139,7 +140,7 @@ let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) 
     let v2flyOutbound =
         Outbound.createV2flyOutboundObject (None, Outbound.Shadowsocks, v2flySSServer, None, name, None, false)
 
-    Intermediate.serializeServerConfiguration (name, v2flyOutbound)
+    (name, v2flyOutbound)
 
 let decodeShareLink link =
     let uriObject = System.Uri link

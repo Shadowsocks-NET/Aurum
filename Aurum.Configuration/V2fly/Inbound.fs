@@ -1,5 +1,6 @@
 module Aurum.Configuration.Inbound
 
+open System.Text.Json.Serialization
 
 type Protocols =
     | [<JsonName("http")>] HTTP
