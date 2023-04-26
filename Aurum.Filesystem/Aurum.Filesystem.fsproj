@@ -12,7 +12,6 @@
         <RootNamespace>Aurum.Filesystem</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Configuration.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
     </ItemGroup>
