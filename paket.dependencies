@@ -18,3 +18,4 @@ nuget System.Security.Cryptography.ProtectedData
 nuget ProtoBuf.FSharp
 nuget FSharp.Control.Reactive
 nuget FSharpPlus
+nuget Messerli.ChangeCase
