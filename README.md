@@ -1,6 +1,6 @@
 # Aurum
 
-[![build status](https://badgen.net/github/status/Shadowsocks-NET/Aurum?icon=github&label=Github+Actions&cache=300)](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/build.yml)
+[![build](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/build.yml/badge.svg)](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/build.yml) [![Publish Github Packages](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/publish-github.yml/badge.svg)](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/publish-github.yml) [![Publish MyGet Packages](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/publish-myget.yml/badge.svg)](https://github.com/Shadowsocks-NET/Aurum/actions/workflows/publish-myget.yml)
 
 Aurum is a cross-platform GUI for anti-censorship applications such as sing-box, v2ray, etc.
 
