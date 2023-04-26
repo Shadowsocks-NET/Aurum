@@ -1,4 +1,4 @@
-module Aurum.Configuration.V2Fly.Transport
+module Aurum.Configuration.V2fly.Transport
 
 open System.Collections.Generic
 open System.Text.Json.Serialization

@@ -1,17 +1,8 @@
-module Aurum.Configuration.Share
+module Aurum.Configuration.V2fly.Share
 
 open System.Collections.Generic
 open Aurum
-open Aurum.Configuration
 open Aurum.Configuration.V2fly
-
-let encodeBase64 (text: string) =
-    let plainBytes = System.Text.Encoding.UTF8.GetBytes text
-    System.Convert.ToBase64String plainBytes
-
-let decodeBase64 (encoded: string) =
-    let encodedBytes = System.Convert.FromBase64String encoded
-    System.Text.Encoding.UTF8.GetString encodedBytes
 
 let parseQuicSecurity security =
     match security with

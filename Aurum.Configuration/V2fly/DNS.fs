@@ -1,4 +1,4 @@
-module Aurum.Configuration.DNS
+module Aurum.Configuration.V2fly.DNS
 
 open System.Collections.Generic
 open System.Text.Json.Serialization

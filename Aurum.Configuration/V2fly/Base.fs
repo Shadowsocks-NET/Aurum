@@ -1,9 +1,9 @@
-﻿module Aurum.Configuration.V2Fly.Base
+﻿module Aurum.Configuration.V2fly.Base
 
-open Aurum.Configuration.DNS
-open Aurum.Configuration.Inbound
-open Aurum.Configuration.Outbound
-open Aurum.Configuration.Routing
+open Aurum.Configuration.V2fly.DNS
+open Aurum.Configuration.V2fly.Inbound
+open Aurum.Configuration.V2fly.Outbound
+open Aurum.Configuration.V2fly.Routing
 
 [<RequireQualifiedAccess>]
 type LogLevel =

@@ -1,4 +1,4 @@
-module Aurum.Configuration.Routing
+module Aurum.Configuration.V2fly.Routing
 
 open Aurum
 open System.Text.Json.Serialization
