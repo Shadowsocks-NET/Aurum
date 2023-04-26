@@ -11,7 +11,7 @@
         <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Shared\VMess.fs"/>
+        <Compile Include="Shared\VMess\Transport.fs"/>
         <Compile Include="V2fly\Transport.fs"/>
         <Compile Include="V2fly\Inbound.fs"/>
         <Compile Include="V2fly\Outbound.fs"/>
