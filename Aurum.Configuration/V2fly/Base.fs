@@ -27,7 +27,7 @@ type LogObject =
     static member Loglevel_ =
         (fun a -> a.Loglevel), (fun b a -> { a with Loglevel = b })
 
-type BaseConfiguration =
+type V2flyBaseConfiguration =
     { Log: LogObject
       DNS: DNSObject
       Routing: RoutingObject

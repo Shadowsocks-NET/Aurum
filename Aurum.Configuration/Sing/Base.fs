@@ -2,7 +2,7 @@ module Aurum.Configuration.Sing.Base
 
 open Aurum.Configuration.Sing.Outbound
 
-type ConfigurationBase =
+type SingBaseConfiguration =
   { dns: obj
     log: obj
     inbounds: obj list
