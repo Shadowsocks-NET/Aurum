@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.V2Fly.TopLevel
+﻿module Aurum.Configuration.V2Fly.Base
 
 open Aurum.Configuration.DNS
 open Aurum.Configuration.Inbound
@@ -27,12 +27,7 @@ type LogObject =
     static member Loglevel_ =
         (fun a -> a.Loglevel), (fun b a -> { a with Loglevel = b })
 
-type SerializedOutbound = string
-type SerializedInbound = string
-type SerializedDNSConf = string
-type SerializedRoutingConf = string
-
-type TopLevelObject =
+type BaseConfiguration =
     { Log: LogObject
       DNS: DNSObject
       Routing: RoutingObject

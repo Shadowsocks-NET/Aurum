@@ -1,4 +1,4 @@
-﻿module Sing.Generator.Remote
+﻿module Aurum.Configuration.Subscription
 
 open System.Net.Http
 

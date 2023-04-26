@@ -18,16 +18,15 @@
         <Compile Include="V2fly\Routing.fs"/>
         <Compile Include="V2fly\DNS.fs"/>
         <Compile Include="V2fly\Share.fs"/>
-        <Compile Include="V2fly\TopLevel.fs"/>
+        <Compile Include="V2fly\Base.fs"/>
         <Compile Include="Sing\Shared.fs"/>
         <Compile Include="Sing\Outbound.fs"/>
         <Compile Include="Sing\Inbound.fs"/>
-        <Compile Include="Sing\ConfigurationBase.fs"/>
+        <Compile Include="Sing\Base.fs"/>
         <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
         <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
         <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
-        <Compile Include="Remote.fs"/>
-        <Compile Include="GenerateConfig.fs"/>
+        <Compile Include="Subscription.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
     </ItemGroup>
