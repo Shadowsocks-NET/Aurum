@@ -27,6 +27,7 @@
         <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
         <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
         <Compile Include="Subscription.fs"/>
+        <Compile Include="Base.fs"/>
         <Content Include="paket.references"/>
         <Content Include="paket.template"/>
     </ItemGroup>
