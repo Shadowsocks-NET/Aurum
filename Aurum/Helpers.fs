@@ -47,7 +47,7 @@ module Helpers =
         | Some x, Some y -> Some(x @ y)
         | op1, op2 -> Option.orElse op1 op2
 
-    let systemTextJsonOptions =
+    let singSystemTextJsonOptions =
         JsonSerializerOptions(
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCase,
             WriteIndented = true,
@@ -61,7 +61,23 @@ module Helpers =
         .WithUnionTagName("type")
         .WithUnionTagNamingPolicy(JsonNamingPolicy.SnakeCase)
         .WithUnionFieldNamingPolicy(JsonNamingPolicy.SnakeCase)
-        .AddToJsonSerializerOptions(systemTextJsonOptions)
+        .AddToJsonSerializerOptions(singSystemTextJsonOptions)
+
+    let v2flySystemTextJsonOptions =
+        JsonSerializerOptions(
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString
+        )
+
+    JsonFSharpOptions
+        .ThothLike()
+        .WithUnwrapOption()
+        .WithUnionUnwrapRecordCases()
+        .WithUnionTagName("type")
+        .WithUnionTagNamingPolicy(JsonNamingPolicy.CamelCase)
+        .WithUnionFieldNamingPolicy(JsonNamingPolicy.CamelCase)
+        .AddToJsonSerializerOptions(v2flySystemTextJsonOptions)
 
     let decodeBase64 string =
         let rawBytes = System.Convert.FromBase64String string
