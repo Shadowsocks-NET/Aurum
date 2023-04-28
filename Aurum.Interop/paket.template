@@ -4,5 +4,5 @@ version 0.1.0-alpha.1
 authors Shanoa Ice
 description
     Program interop component library for the Aurum project.
-licenseExpression EPL-2.0
+licenseExpression LGPL-3.0-only
 repositoryUrl https://github.com/Shadowsocks-NET/Aurum
