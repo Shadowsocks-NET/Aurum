@@ -46,8 +46,8 @@ type VMessRecord =
 
     server: string
     serverPort: int16
+    security: string option Skippable
     uuid: string
-    password: string
     network: string option Skippable
     udpOverTcp: bool option Skippable
 

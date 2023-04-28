@@ -1,8 +1,21 @@
-module Aurum.Configuration.V2fly.Share
+﻿module Aurum.Configuration.Shared.Share
 
 open System.Collections.Generic
 open Aurum
-open Aurum.Configuration.V2fly
+open Aurum.Configuration.Shared
+open Aurum.Configuration.Shared.Shadowsocks
+
+type OocApiToken =
+  { version: int
+    baseUrl: string
+    secret: string
+    userId: string }
+
+type Subscriptions =
+  | Base64 of url: string
+  | Clash of url: string // WIP
+  | OocV1 of apiToken: OocApiToken // WIP
+  | OocSing of apiToken: OocApiToken
 
 let parseQuicSecurity security =
     match security with
@@ -115,12 +128,12 @@ let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) 
 
     let method =
         match ssServer.Method with
-        | "none" -> Outbound.ShadowsocksEncryption.None
-        | "plain" -> Outbound.ShadowsocksEncryption.Plain
-        | "chacha20-poly1305" -> Outbound.ShadowsocksEncryption.ChaCha20
-        | "chacha20-ietf-poly1305" -> Outbound.ShadowsocksEncryption.ChaCha20IETF
-        | "aes-128-gcm" -> Outbound.ShadowsocksEncryption.AES128
-        | "aes-256-gcm" -> Outbound.ShadowsocksEncryption.AES256
+        | "none" -> ShadowsocksEncryption.None
+        | "plain" -> ShadowsocksEncryption.Plain
+        | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20
+        | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF
+        | "aes-128-gcm" -> ShadowsocksEncryption.AES128
+        | "aes-256-gcm" -> ShadowsocksEncryption.AES256
         | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
 
     let password = ssServer.Password
@@ -148,3 +161,4 @@ let decodeShareLink link =
 
         createV2flyShadowsocksObjectFromSSNET ssServer
     | unknown -> raise (ShareLinkFormatException $"unsupported sharelink protocol {unknown}")
+

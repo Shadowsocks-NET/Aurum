@@ -1,38 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageId>Aurum.Configuration</PackageId>
-        <Version>0.1.0-alpha.3</Version>
-        <Authors>Shanoa Ice</Authors>
-        <PackageDescription>Configuration Component for the Aurum project.</PackageDescription>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="Shared\VMess\Transport.fs"/>
-        <Compile Include="V2fly\Transport.fs"/>
-        <Compile Include="V2fly\Inbound.fs"/>
-        <Compile Include="V2fly\Outbound.fs"/>
-        <Compile Include="V2fly\Routing.fs"/>
-        <Compile Include="V2fly\DNS.fs"/>
-        <Compile Include="V2fly\Share.fs"/>
-        <Compile Include="V2fly\Base.fs"/>
-        <Compile Include="Sing\Shared.fs"/>
-        <Compile Include="Sing\Outbound.fs"/>
-        <Compile Include="Sing\Inbound.fs"/>
-        <Compile Include="Sing\Base.fs"/>
-        <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
-        <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
-        <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
-        <Compile Include="Subscription.fs"/>
-        <Compile Include="Base.fs"/>
-        <Content Include="paket.references"/>
-        <Content Include="paket.template"/>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Aurum\Aurum.fsproj"/>
-    </ItemGroup>
-    <Import Project="..\.paket\Paket.Restore.targets"/>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>Aurum.Configuration</PackageId>
+    <Version>0.1.0-alpha.3</Version>
+    <Authors>Shanoa Ice</Authors>
+    <PackageDescription>Configuration Component for the Aurum project.</PackageDescription>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Shadowsocks-NET/Aurum</RepositoryUrl>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Shared\Transport.fs" />
+    <Compile Include="Shared\Shadowsocks.fs" />
+    <Compile Include="Shared\VMess\Outbound.fs" />
+    <Compile Include="V2fly\Inbound.fs" />
+    <Compile Include="V2fly\Routing.fs" />
+    <Compile Include="V2fly\DNS.fs" />
+    <Compile Include="V2fly\Base.fs" />
+    <Compile Include="Sing\Shared.fs" />
+    <Compile Include="Sing\Outbound.fs" />
+    <Compile Include="Sing\Inbound.fs" />
+    <Compile Include="Sing\Base.fs" />
+    <Compile Include="AdapterTypes\VMessLegacyShare.fs" />
+    <Compile Include="SubscriptionAdapter\V2rayNBase64.fs" />
+    <Compile Include="SubscriptionAdapter\OOCv1.fs" />
+    <Compile Include="Shared\Subscription.fs" />
+    <Compile Include="Share.fs" />
+    <Compile Include="Base.fs" />
+    <Content Include="paket.references" />
+    <Content Include="paket.template" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aurum\Aurum.fsproj" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
