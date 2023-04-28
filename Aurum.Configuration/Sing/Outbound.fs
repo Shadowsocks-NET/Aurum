@@ -9,15 +9,15 @@ type DirectRecord =
     overridePort: int16
     proxyProtocol: int
 
-    detour: string option Skippable
-    bindInterface: string option Skippable
-    bindAddress: string option Skippable
-    routingMark: int option Skippable
-    reuseAddr: bool option Skippable
-    connectTimeout: string option Skippable
-    tcpFastOpen: bool option Skippable
-    domainStrategy: string option Skippable
-    fallbackDelay: string option Skippable }
+    detour: string option
+    bindInterface: string option
+    bindAddress: string option
+    routingMark: int option
+    reuseAddr: bool option
+    connectTimeout: string option
+    tcpFastOpen: bool option
+    domainStrategy: string option
+    fallbackDelay: string option }
 
 type BlockRecord = { tag: string }
 
@@ -28,45 +28,45 @@ type ShadowsocksRecord =
     serverPort: int16
     method: string
     password: string
-    network: string option Skippable
-    udpOverTcp: bool option Skippable
+    network: string option
+    udpOverTcp: bool option
 
-    detour: string option Skippable
-    bindInterface: string option Skippable
-    bindAddress: string option Skippable
-    routingMark: int option Skippable
-    reuseAddr: bool option Skippable
-    connectTimeout: string option Skippable
-    tcpFastOpen: bool option Skippable
-    domainStrategy: string option Skippable
-    fallbackDelay: string option Skippable }
+    detour: string option
+    bindInterface: string option
+    bindAddress: string option
+    routingMark: int option
+    reuseAddr: bool option
+    connectTimeout: string option
+    tcpFastOpen: bool option
+    domainStrategy: string option
+    fallbackDelay: string option }
 
 type VMessRecord =
   { tag: string
 
     server: string
     serverPort: int16
-    security: string option Skippable
+    security: string option
     uuid: string
-    network: string option Skippable
-    udpOverTcp: bool option Skippable
+    network: string option
+    udpOverTcp: bool option
 
-    detour: string option Skippable
-    bindInterface: string option Skippable
-    bindAddress: string option Skippable
-    routingMark: int option Skippable
-    reuseAddr: bool option Skippable
-    connectTimeout: string option Skippable
-    tcpFastOpen: bool option Skippable
-    domainStrategy: string option Skippable
-    fallbackDelay: string option Skippable }
+    detour: string option
+    bindInterface: string option
+    bindAddress: string option
+    routingMark: int option
+    reuseAddr: bool option
+    connectTimeout: string option
+    tcpFastOpen: bool option
+    domainStrategy: string option
+    fallbackDelay: string option }
 
 type SelectorRecord =
   { tag: string
 
     outbounds: string list
     [<JsonPropertyName("default")>]
-    defaultOutbound: string option Skippable }
+    defaultOutbound: string option }
 
 type Outbounds =
   | Direct of DirectRecord

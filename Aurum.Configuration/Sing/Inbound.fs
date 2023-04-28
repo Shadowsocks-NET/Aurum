@@ -7,33 +7,33 @@ type SOCKSRecord =
   { tag: string
 
     listen: string
-    listenPort: int16 option Skippable
-    tcpFastOpen: bool option Skippable
-    udpFragment: bool option Skippable
-    sniff: bool option Skippable
-    sniffOverrideDestination: bool option Skippable
-    domainStrategy: string option Skippable
-    udpTimeout: int option Skippable
-    proxyProtocol: bool option Skippable
-    proxyProtocolAcceptNoHeader: bool option Skippable
-    detour: string option Skippable
+    listenPort: int16 option
+    tcpFastOpen: bool option
+    udpFragment: bool option
+    sniff: bool option
+    sniffOverrideDestination: bool option
+    domainStrategy: string option
+    udpTimeout: int option
+    proxyProtocol: bool option
+    proxyProtocolAcceptNoHeader: bool option
+    detour: string option
 
-    users: obj list Skippable }
+    users: obj list }
 
 type HTTPRecord =
   { tag: string
     listen: string
-    listenPort: int16 option Skippable
-    tcpFastOpen: bool option Skippable
-    udpFragment: bool option Skippable
-    sniff: bool option Skippable
-    sniffOverrideDestination: bool option Skippable
-    domainStrategy: string option Skippable
-    udpTimeout: int option Skippable
-    proxyProtocol: bool option Skippable
-    proxyProtocolAcceptNoHeader: bool option Skippable
-    detour: string option Skippable
+    listenPort: int16 option
+    tcpFastOpen: bool option
+    udpFragment: bool option
+    sniff: bool option
+    sniffOverrideDestination: bool option
+    domainStrategy: string option
+    udpTimeout: int option
+    proxyProtocol: bool option
+    proxyProtocolAcceptNoHeader: bool option
+    detour: string option
 
-    users: obj list option Skippable
-    tls: TLSInbound option Skippable
-    setSystemProxy: bool option Skippable }
+    users: obj list option
+    tls: TLSInbound option
+    setSystemProxy: bool option }
