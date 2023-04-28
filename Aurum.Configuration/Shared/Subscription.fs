@@ -1,6 +1,5 @@
 ﻿module Aurum.Configuration.Shared.Share
 
-open System.Collections.Generic
 open Aurum
 open Aurum.Configuration.Shared
 open Aurum.Configuration.Shared.Shadowsocks
@@ -87,15 +86,15 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
         match protocol with
         | "vmess" ->
             let user =
-                Outbound.createVMessUserObject (
+                V2fly.createVMessUserObject (
                     uuid,
                     (tryRetrieveFromShareLink "encryption"
-                     |> Outbound.parseVMessSecurity),
+                     |> V2fly.parseVMessSecurity),
                     None,
                     None
                 )
 
-            user, Outbound.createVMessServerObject (host, port, [ user ]), Outbound.Protocols.VMess
+            user, V2fly.createVMessServerObject (host, port, [ user ]), V2fly.Protocols.VMess
         | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
     let tls, security =
@@ -117,7 +116,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
         Transport.createStreamSettingsObject (transport, security, tls)
 
     let outbound =
-        Outbound.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None, true)
+        V2fly.createV2flyOutboundObject (None, protocol, server, Some streamSetting, description, None, true)
 
     (description, outbound)
 
@@ -139,10 +138,10 @@ let createV2flyShadowsocksObjectFromSSNET (ssServer: Shadowsocks.Models.Server) 
     let password = ssServer.Password
 
     let v2flySSServer =
-        Outbound.createShadowsocksServerObject (None, host, port, Some method, Some password, None, Some true)
+        V2fly.createShadowsocksServerObject (None, host, port, Some method, Some password, None, Some true)
 
     let v2flyOutbound =
-        Outbound.createV2flyOutboundObject (None, Outbound.Shadowsocks, v2flySSServer, None, name, None, false)
+        V2fly.createV2flyOutboundObject (None, V2fly.Shadowsocks, v2flySSServer, None, name, None, false)
 
     (name, v2flyOutbound)
 

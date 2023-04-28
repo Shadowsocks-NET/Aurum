@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -11,10 +11,10 @@
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Shared\Transport.fs" />
     <Compile Include="Shared\Shadowsocks.fs" />
-    <Compile Include="Shared\VMess\Outbound.fs" />
+    <Compile Include="Shared\V2fly.fs"/>
     <Compile Include="V2fly\Inbound.fs" />
+      <Compile Include="V2fly\Outbound.fs"/>
     <Compile Include="V2fly\Routing.fs" />
     <Compile Include="V2fly\DNS.fs" />
     <Compile Include="V2fly\Base.fs" />
