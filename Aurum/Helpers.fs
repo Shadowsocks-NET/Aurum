@@ -60,6 +60,7 @@ module Helpers =
         .WithUnionTagName("type")
         .WithUnionTagNamingPolicy(JsonNamingPolicy.SnakeCase)
         .WithUnionFieldNamingPolicy(JsonNamingPolicy.SnakeCase)
+        .WithSkippableOptionFields()
         .AddToJsonSerializerOptions(singSystemTextJsonOptions)
 
     let v2flySystemTextJsonOptions =
@@ -76,6 +77,7 @@ module Helpers =
         .WithUnionTagName("type")
         .WithUnionTagNamingPolicy(JsonNamingPolicy.CamelCase)
         .WithUnionFieldNamingPolicy(JsonNamingPolicy.CamelCase)
+        .WithSkippableOptionFields()
         .AddToJsonSerializerOptions(v2flySystemTextJsonOptions)
 
     let encodeBase64 (text: string) =
