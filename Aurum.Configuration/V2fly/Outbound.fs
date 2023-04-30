@@ -4,9 +4,10 @@ open Aurum.Configuration.Shared.V2fly
 
 type OutboundProtocols =
   | VMess of VMessSettingObject
-  | VLESS
-  | Shadowsocks
-  | Trojan
+  | VLESS of obj
+  | VLite of obj
+  | Shadowsocks of obj
+  | Trojan of obj
 
 type OutboundObject =
   { SendThrough: string option
@@ -15,8 +16,7 @@ type OutboundObject =
     StreamSettings: StreamSettings option
     Mux: MuxObject option }
 
-  static member SendThrough_ =
-    (fun a -> a.SendThrough), (fun b a -> { a with SendThrough = b })
+  static member SendThrough_ = (fun a -> a.SendThrough), (fun b a -> { a with SendThrough = b })
 
   static member Settings_ = (fun a -> a.Settings), (fun b a -> { a with Settings = b })
 
@@ -31,20 +31,21 @@ type OutboundObject =
     let protocol =
       match this.Settings with
       | VMess _ -> "VMess"
-      | VLESS -> "VLESS"
-      | Shadowsocks -> "Shadowsocks"
-      | Trojan -> "Trojan"
+      | VLESS _ -> "VLESS"
+      | VLite _ -> "VLite"
+      | Shadowsocks _ -> "Shadowsocks"
+      | Trojan _ -> "Trojan"
 
     let network =
       Option.map
         (fun streamSetting ->
           match streamSetting.TransportSettings with
-          | TransportProtocol.GRPC _ -> "+gRPC"
-          | TransportProtocol.HTTP _ -> "+HTTP2"
-          | TransportProtocol.KCP _ -> "+mKCP"
-          | TransportProtocol.QUIC -> "+QUIC"
-          | TransportProtocol.TCP _ -> "+TCP"
-          | TransportProtocol.WebSocket _ -> "+WS")
+          | GRPC _ -> "+gRPC"
+          | HTTP _ -> "+HTTP2"
+          | KCP _ -> "+mKCP"
+          | QUIC -> "+QUIC"
+          | TCP _ -> "+TCP"
+          | WebSocket _ -> "+WS")
         this.StreamSettings
       |> Option.defaultValue ""
 
@@ -60,9 +61,48 @@ type OutboundObject =
 
     protocol + network + tlsFlag
 
+type OutboundJsonObject =
+  { SendThrough: string option
+    Protocol: string
+    Settings: obj
+    Tag: string
+    StreamSettings: StreamSettings option
+    Mux: MuxObject option }
+  static member FromOutboundObject(outboundObject: OutboundObject) =
+    let protocol, (settings: obj) =
+      match outboundObject.Settings with
+      | VMess setting -> "vmess", setting
+      | VLESS setting -> "vless", setting
+      | VLite setting -> "vlite", setting
+      | Shadowsocks setting -> "shadowsocks", setting
+      | Trojan setting -> "trojan", setting
+
+    { SendThrough = outboundObject.SendThrough
+      Protocol = protocol
+      Settings = settings
+      Tag = outboundObject.Tag
+      StreamSettings = outboundObject.StreamSettings
+      Mux = outboundObject.Mux }
+
+  member this.ToOutboundObject() =
+    let settings =
+      match this.Protocol with
+      | "vmess" -> VMess (this.Settings :?> VMessSettingObject)
+      | "vless" -> VLESS (this.Settings :?> obj)
+      | "vlite" -> VLite (this.Settings :?> obj)
+      | "shadowsocks" -> Shadowsocks (this.Settings :?> obj)
+      | "trojan" -> Trojan (this.Settings :?> obj)
+
+    { OutboundObject.SendThrough = this.SendThrough
+      Settings = settings
+      Tag = this.Tag
+      StreamSettings = this.StreamSettings
+      Mux = this.Mux }
+
 let createV2flyOutboundObject (sendThrough, setting, streamSetting, tag, mux) : OutboundObject =
   { OutboundObject.SendThrough = sendThrough
     StreamSettings = streamSetting
     Settings = setting
     Mux = mux
     Tag = tag }
+
