@@ -4,16 +4,6 @@ open System.Text.Json.Serialization
 open Aurum
 open System.Collections.Generic
 
-[<RequireQualifiedAccess>]
-type TransportNetworks =
-  | [<JsonName("ws")>] WS
-  | [<JsonName("grpc")>] GRPC
-  | [<JsonName("tcp")>] TCP // merged into http for sing-box
-  | [<JsonName("kcp")>] KCP
-  | [<JsonName("domainsocket")>] DomainSocket
-  | [<JsonName("http")>] HTTP
-  | [<JsonName("quic")>] QUIC
-
 type WebSocketObject =
   { Path: string
     MaxEarlyData: int
@@ -102,7 +92,6 @@ type KcpObject =
     Congestion: bool
     ReadBufferSize: int
     WriteBufferSize: int
-    Header: UdpHeaderObject
     Seed: string option }
   static member MTU_ = (fun a -> a.MTU), (fun b a -> { a with MTU = b })
 
@@ -121,8 +110,6 @@ type KcpObject =
 
   static member WriteBufferSize_ =
     (fun a -> a.WriteBufferSize), (fun b a -> { a with WriteBufferSize = b })
-
-  static member Header_ = (fun a -> a.Header), (fun b a -> { a with KcpObject.Header = b })
 
   static member Seed_ = (fun a -> a.Seed), (fun b a -> { a with Seed = b })
 
@@ -238,19 +225,7 @@ let createHttpObject (path, host: string option, headers) =
 
   HTTP config
 
-let createKCPObject
-  (
-    mtu,
-    tti,
-    uplinkCapacity,
-    downlinkCapacity,
-    congestion,
-    readBufferSize,
-    writeBufferSize,
-    seed,
-    headerType
-  ) =
-  let header = { UdpHeaderObject.HeaderType = Option.defaultValue "none" headerType }
+let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, readBufferSize, writeBufferSize, seed) =
 
   let config =
     { KcpObject.MTU = Option.defaultValue 1350 mtu
@@ -260,8 +235,7 @@ let createKCPObject
       Congestion = Option.defaultValue false congestion
       ReadBufferSize = Option.defaultValue 2 readBufferSize
       WriteBufferSize = Option.defaultValue 2 writeBufferSize
-      Seed = seed
-      Header = header }
+      Seed = seed }
 
   KCP config
 
@@ -341,4 +315,3 @@ let parseVMessSecurity security =
   | "aes-128-gcm" -> VMessEncryption.AES
   | "chacha20-poly1305" -> VMessEncryption.ChaCha20
   | _ -> raise (ConfigurationParameterException "unknown security type")
-
