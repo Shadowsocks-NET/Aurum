@@ -5,7 +5,6 @@ open Aurum.Configuration.V2fly.Inbound
 open Aurum.Configuration.V2fly.Outbound
 open Aurum.Configuration.V2fly.Routing
 
-[<RequireQualifiedAccess>]
 type LogLevel =
     | Debug
     | Info
