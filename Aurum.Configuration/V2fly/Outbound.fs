@@ -1,5 +1,6 @@
 ﻿module Aurum.Configuration.V2fly.Outbound
 
+open Aurum
 open Aurum.Configuration.Shared.V2fly
 
 type OutboundProtocols =
@@ -92,6 +93,7 @@ type OutboundJsonObject =
       | "vlite" -> VLite (downcast this.Settings)
       | "shadowsocks" -> Shadowsocks (downcast this.Settings)
       | "trojan" -> Trojan (downcast this.Settings)
+      | _ -> raise (ConfigurationParameterException $"unknown protocol type '{this.Protocol}'")
 
     { OutboundObject.SendThrough = this.SendThrough
       Settings = settings
