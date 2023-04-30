@@ -87,11 +87,11 @@ type OutboundJsonObject =
   member this.ToOutboundObject() =
     let settings =
       match this.Protocol with
-      | "vmess" -> VMess (this.Settings :?> VMessSettingObject)
-      | "vless" -> VLESS (this.Settings :?> obj)
-      | "vlite" -> VLite (this.Settings :?> obj)
-      | "shadowsocks" -> Shadowsocks (this.Settings :?> obj)
-      | "trojan" -> Trojan (this.Settings :?> obj)
+      | "vmess" -> VMess (downcast this.Settings)
+      | "vless" -> VLESS (downcast this.Settings)
+      | "vlite" -> VLite (downcast this.Settings)
+      | "shadowsocks" -> Shadowsocks (downcast this.Settings)
+      | "trojan" -> Trojan (downcast this.Settings)
 
     { OutboundObject.SendThrough = this.SendThrough
       Settings = settings
