@@ -20,6 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Item", "Solution I
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5756B958-4D9E-4CE4-9E02-04E9072829E0}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Share-Links.md = docs\Share-Links.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +51,8 @@ Global
 		{7239D687-21A3-4014-879F-4BE110216A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7239D687-21A3-4014-879F-4BE110216A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7239D687-21A3-4014-879F-4BE110216A01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5756B958-4D9E-4CE4-9E02-04E9072829E0} = {B8A29A61-BBD8-47CC-98E8-8C1DF40C79DB}
 	EndGlobalSection
 EndGlobal
