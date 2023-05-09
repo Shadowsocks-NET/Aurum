@@ -184,6 +184,50 @@ type StreamSettings =
   { TransportSettings: TransportProtocol
     SecuritySettings: TransportSecurity }
 
+
+[<RequireQualifiedAccess>]
+// VLESS deprecated and subject to removal in v2fly/v2ray-core v5
+// It is not supported in sing-box
+type VLESSEncryption = | [<JsonName("none")>] None
+
+[<RequireQualifiedAccess>]
+type VMessEncryption =
+  | [<JsonName("none")>] None
+  | [<JsonName("zero")>] Zero
+  | [<JsonName("auto")>] Auto
+  | [<JsonName("aes-128-gcm")>] AES
+  | [<JsonName("chacha20-poly1305")>] ChaCha20
+
+type MuxObject =
+  { Enabled: bool
+    Concurrency: int option }
+
+  static member Enabled_ = (fun a -> a.Enabled), (fun b a -> { a with Enabled = b })
+
+  static member Concurrency_ =
+    (fun a -> a.Concurrency), (fun b a -> { a with Concurrency = Some b })
+
+type VMessObject =
+  { Address: string
+    Port: int
+    UUID: string }
+
+  static member Address_ = (fun a -> a.Address), (fun b a -> { a with Address = b })
+
+  static member Port_ = (fun a -> a.Port), (fun b a -> { a with Port = b })
+
+  static member UUID_ = (fun a -> a.UUID), (fun b a -> { a with UUID = b })
+
+  member this.GetServerInfo() = this.Address, this.Port
+
+type Protocols =
+  | [<JsonName("vless")>] VLESS
+  | [<JsonName("vmess")>] VMess of VMessObject
+
+type V2flyObject =
+  { Protocol: Protocols
+    StreamSettings: StreamSettings }
+
 let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
   let constructedHeaders = Option.defaultValue (Dictionary()) headers
 
@@ -254,49 +298,6 @@ let createTLSObject (serverName, alpn, disableSystemRoot) =
       AllowInsecure = Some false
       DisableSystemRoot = disableSystemRoot }
 
-[<RequireQualifiedAccess>]
-// VLESS deprecated and subject to removal in v2fly/v2ray-core v5
-// It is not supported in sing-box
-type VLESSEncryption = | [<JsonName("none")>] None
-
-[<RequireQualifiedAccess>]
-type VMessEncryption =
-  | [<JsonName("none")>] None
-  | [<JsonName("zero")>] Zero
-  | [<JsonName("auto")>] Auto
-  | [<JsonName("aes-128-gcm")>] AES
-  | [<JsonName("chacha20-poly1305")>] ChaCha20
-
-type MuxObject =
-  { Enabled: bool
-    Concurrency: int option }
-
-  static member Enabled_ = (fun a -> a.Enabled), (fun b a -> { a with Enabled = b })
-
-  static member Concurrency_ =
-    (fun a -> a.Concurrency), (fun b a -> { a with Concurrency = Some b })
-
-type VMessObject =
-  { Address: string
-    Port: int
-    UUID: string }
-
-  static member Address_ = (fun a -> a.Address), (fun b a -> { a with Address = b })
-
-  static member Port_ = (fun a -> a.Port), (fun b a -> { a with Port = b })
-
-  static member UUID_ = (fun a -> a.UUID), (fun b a -> { a with UUID = b })
-
-  member this.GetServerInfo() = this.Address, this.Port
-
-type Protocols =
-  | [<JsonName("vless")>] VLESS
-  | [<JsonName("vmess")>] VMess of VMessObject
-  | [<JsonName("shadowsocks")>] Shadowsocks
-  | [<JsonName("trojan")>] Trojan
-  | WireGuard
-  | Hysteria
-
 let createVMessObject (host, port, uuid) =
   VMess
     { VMessObject.Address = host
@@ -313,3 +314,7 @@ let parseVMessSecurity security =
   | "aes-128-gcm" -> VMessEncryption.AES
   | "chacha20-poly1305" -> VMessEncryption.ChaCha20
   | _ -> raise (ConfigurationParameterException "unknown security type")
+
+let createV2flyObject protocol streamSettings =
+  { Protocol =  protocol
+    StreamSettings = streamSettings }

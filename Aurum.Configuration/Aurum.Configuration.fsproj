@@ -11,18 +11,19 @@
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Shared\Shadowsocks.fs" />
-    <Compile Include="Shared\V2fly.fs"/>
-    <Compile Include="V2fly\Inbound.fs" />
+      <Compile Include="Shared\Shadowsocks.fs"/>
+      <Compile Include="Shared\V2fly.fs"/>
+      <Compile Include="Shared\Adapter.fs"/>
+      <Compile Include="V2fly\Inbound.fs"/>
       <Compile Include="V2fly\Outbound.fs"/>
-    <Compile Include="V2fly\Routing.fs" />
-    <Compile Include="V2fly\DNS.fs" />
-    <Compile Include="V2fly\Base.fs" />
-    <Compile Include="Sing\Shared.fs" />
-    <Compile Include="Sing\Outbound.fs" />
-    <Compile Include="Sing\Inbound.fs" />
-    <Compile Include="Sing\Base.fs" />
-    <Compile Include="AdapterTypes\VMessLegacyShare.fs" />
+      <Compile Include="V2fly\Routing.fs"/>
+      <Compile Include="V2fly\DNS.fs"/>
+      <Compile Include="V2fly\Base.fs"/>
+      <Compile Include="Sing\Shared.fs"/>
+      <Compile Include="Sing\Outbound.fs"/>
+      <Compile Include="Sing\Inbound.fs"/>
+      <Compile Include="Sing\Base.fs"/>
+      <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
     <Compile Include="SubscriptionAdapter\V2rayNBase64.fs" />
     <Compile Include="SubscriptionAdapter\OOCv1.fs" />
     <Compile Include="Shared\Subscription.fs" />

@@ -55,7 +55,7 @@ type OutboundObject =
         (fun streamSetting ->
           match streamSetting.SecuritySettings with
           | TransportSecurity.None -> ""
-          | TransportSecurity.TLS -> "+TLS"
+          | TransportSecurity.TLS _ -> "+TLS"
           | TransportSecurity.XTLS -> "+XTLS")
         this.StreamSettings
       |> Option.defaultValue ""
