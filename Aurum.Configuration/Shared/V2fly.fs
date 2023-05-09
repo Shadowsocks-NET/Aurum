@@ -124,12 +124,6 @@ type HttpObject =
 
   static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
-[<RequireQualifiedAccess>]
-type QuicSecurity =
-  | None
-  | [<JsonName("aes-128-gcm")>] AES
-  | [<JsonName("chacha20-poly1305")>] ChaCha20
-
 type GrpcObject =
   { ServiceName: string
     Mode: string }
@@ -173,10 +167,10 @@ type SockoptObject =
 
 [<RequireQualifiedAccess>]
 type TransportSecurity =
-  | [<JsonName("none")>] None
-  | [<JsonName("tls")>] TLS
+  | [<JsonName "none">] None
+  | [<JsonName "tls">] TLS of TLSObject
   // only for reservation. V2fly and Sing backend does not have XTLS support.
-  | [<JsonName("xtls")>] XTLS
+  | [<JsonName "xtls">] XTLS
 
 type TransportProtocol =
   | TCP of TcpObject
@@ -239,6 +233,8 @@ let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, rea
 
   KCP config
 
+let createQuicObject () = QUIC
+
 let createTCPObject headerObject =
   let tcpHeader =
     Option.defaultValue
@@ -252,23 +248,16 @@ let createTCPObject headerObject =
   TCP config
 
 let createTLSObject (serverName, alpn, disableSystemRoot) =
-  { TLSObject.ServerName = serverName
-    ALPN = alpn
-    AllowInsecure = Some false
-    DisableSystemRoot = disableSystemRoot }
+  TransportSecurity.TLS
+    { TLSObject.ServerName = serverName
+      ALPN = alpn
+      AllowInsecure = Some false
+      DisableSystemRoot = disableSystemRoot }
 
 [<RequireQualifiedAccess>]
 // VLESS deprecated and subject to removal in v2fly/v2ray-core v5
 // It is not supported in sing-box
 type VLESSEncryption = | [<JsonName("none")>] None
-
-type Protocols =
-  | [<JsonName("vless")>] VLESS
-  | [<JsonName("vmess")>] VMess
-  | [<JsonName("shadowsocks")>] Shadowsocks
-  | [<JsonName("trojan")>] Trojan
-  | WireGuard
-  | Hysteria
 
 [<RequireQualifiedAccess>]
 type VMessEncryption =
@@ -287,23 +276,32 @@ type MuxObject =
   static member Concurrency_ =
     (fun a -> a.Concurrency), (fun b a -> { a with Concurrency = Some b })
 
-type VMessSettingObject =
+type VMessObject =
   { Address: string
     Port: int
-    UUID: string option }
+    UUID: string }
 
   static member Address_ = (fun a -> a.Address), (fun b a -> { a with Address = b })
 
   static member Port_ = (fun a -> a.Port), (fun b a -> { a with Port = b })
 
-  static member UUID_ = (fun a -> a.UUID), (fun b a -> { a with UUID = Some b })
+  static member UUID_ = (fun a -> a.UUID), (fun b a -> { a with UUID = b })
 
   member this.GetServerInfo() = this.Address, this.Port
 
-let createVMessSettingObject (host, port, users) =
-  { VMessSettingObject.Address = host
-    Port = port
-    UUID = None }
+type Protocols =
+  | [<JsonName("vless")>] VLESS
+  | [<JsonName("vmess")>] VMess of VMessObject
+  | [<JsonName("shadowsocks")>] Shadowsocks
+  | [<JsonName("trojan")>] Trojan
+  | WireGuard
+  | Hysteria
+
+let createVMessObject (host, port, uuid) =
+  VMess
+    { VMessObject.Address = host
+      Port = port
+      UUID = uuid }
 
 let parseVMessSecurity security =
   let security = Option.defaultValue "auto" security

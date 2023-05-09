@@ -4,7 +4,7 @@ open Aurum
 open Aurum.Configuration.Shared.V2fly
 
 type OutboundProtocols =
-  | VMess of VMessSettingObject
+  | VMess of VMessObject
   | VLESS of obj
   | VLite of obj
   | Shadowsocks of obj

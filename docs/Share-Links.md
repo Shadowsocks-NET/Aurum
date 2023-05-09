@@ -20,8 +20,7 @@ links standard proposal:
 
 Xray support is undetermined, as XTLS and its successor Reality is a largely incompatible feature which requires VLESS,
 a protocol that is considered obsolete for most other implementations. Also, its developer and community had shown
-public hostility
-for some members of the original v2fly community.
+public hostility for some members of the original v2fly community.
 
 ## Legacy v2rayN base64 format
 
