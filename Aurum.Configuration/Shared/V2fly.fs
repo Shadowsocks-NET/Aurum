@@ -88,12 +88,9 @@ and HttpObject =
   static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
 and GrpcObject =
-  { ServiceName: string
-    Mode: string }
+  { ServiceName: string }
 
   static member ServiceName_ = (fun a -> a.ServiceName), (fun b a -> { a with ServiceName = b })
-
-  static member Mode_ = (fun a -> a.Mode), (fun b a -> { a with Mode = b })
 
 type TLSObject =
   { ServerName: string option
@@ -186,8 +183,7 @@ let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeade
 
 let createGrpcObject serviceName =
   let config =
-    { ServiceName = serviceName
-      Mode = "gun" }
+    { ServiceName = serviceName }
 
   GRPC config
 
