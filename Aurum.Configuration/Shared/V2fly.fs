@@ -4,7 +4,16 @@ open System.Text.Json.Serialization
 open Aurum
 open System.Collections.Generic
 
-type WebSocketObject =
+// obj is a stub object, so that the generated JSON will be an empty object instead of null or undefined or have an absent field
+type TransportProtocol =
+  | TCP of obj
+  | KCP of KcpObject
+  | WebSocket of WebSocketObject
+  | HTTP of HttpObject
+  | QUIC of obj
+  | GRPC of GrpcObject
+
+and WebSocketObject =
   { Path: string
     MaxEarlyData: int
     BrowserForwarding: bool
@@ -24,67 +33,21 @@ type WebSocketObject =
 
   static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
-type HttpRequestObject =
-  { Version: string
-    Method: string
-    Path: string list
-    Headers: Dictionary<string, string list> }
+  static member Create(path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
+    let constructedHeaders = Option.defaultValue (Dictionary()) headers
 
-  static member Version_ = (fun a -> a.Version), (fun b a -> { a with Version = b })
+    match host with
+    | Some host -> constructedHeaders.Add("Host", host)
+    | None -> ()
 
-  static member Method_ = (fun a -> a.Method), (fun b a -> { a with Method = b })
+    WebSocket
+      { WebSocketObject.Path = Option.defaultValue "/" path
+        MaxEarlyData = Option.defaultValue 0 maxEarlyData
+        BrowserForwarding = Option.defaultValue false browserForwarding
+        EarlyDataHeader = Option.defaultValue "" earlyDataHeader
+        Headers = Some(constructedHeaders) }
 
-  static member Path_ = (fun a -> a.Path), (fun b a -> { a with Path = b })
-
-  static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
-
-type HttpResponseObject =
-  { Version: string
-    Status: string
-    Reason: string
-    Headers: Dictionary<string, string list> }
-
-  static member Version_ = (fun a -> a.Version), (fun b a -> { a with Version = b })
-
-  static member Status_ = (fun a -> a.Status), (fun b a -> { a with Status = b })
-
-  static member Reason_ = (fun a -> a.Reason), (fun b a -> { a with Reason = b })
-
-  static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
-
-type TcpHeaderObject =
-  { [<JsonPropertyName("type")>]
-    HeaderType: string
-    Request: HttpRequestObject option
-    Response: HttpResponseObject option }
-
-  static member HeaderType_ = (fun a -> a.HeaderType), (fun b a -> { a with HeaderType = b })
-
-  static member Request_ = (fun a -> a.Request), (fun b a -> { a with Request = b })
-
-  static member Response_ = (fun a -> a.Response), (fun b a -> { a with Response = b })
-
-type TcpObject =
-  { Header: TcpHeaderObject }
-
-  static member Header_ = (fun a -> a.Header), (fun b a -> { a with Header = b })
-
-[<RequireQualifiedAccess>]
-type UdpHeaders =
-  | [<JsonName("none")>] None
-  | [<JsonName("srtp")>] SRTP
-  | [<JsonName("utp")>] UTP
-  | [<JsonName("wechat-video")>] WechatVideo
-  | [<JsonName("dtls")>] DTLS
-  | [<JsonName("wireguard")>] WireGuard
-
-type UdpHeaderObject =
-  { [<JsonPropertyName("type")>]
-    HeaderType: string }
-
-  static member HeaderType_ = (fun a -> a.HeaderType), (fun b a -> { a with HeaderType = b })
-
-type KcpObject =
+and KcpObject =
   { MTU: int
     TTI: int
     UplinkCapacity: int
@@ -113,7 +76,7 @@ type KcpObject =
 
   static member Seed_ = (fun a -> a.Seed), (fun b a -> { a with Seed = b })
 
-type HttpObject =
+and HttpObject =
   { Host: string list
     Path: string
     Headers: Dictionary<string, string list> }
@@ -124,7 +87,7 @@ type HttpObject =
 
   static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
-type GrpcObject =
+and GrpcObject =
   { ServiceName: string
     Mode: string }
 
@@ -154,31 +117,12 @@ type TProxyType =
   | TProxy
   | Off
 
-type SockoptObject =
-  { Mark: int
-    TCPFastOpen: bool option
-    Tproxy: TProxyType }
-
-  static member Mark_ = (fun a -> a.Mark), (fun b a -> { a with Mark = b })
-
-  static member TCPFastOpen_ = (fun a -> a.TCPFastOpen), (fun b a -> { a with TCPFastOpen = b })
-
-  static member Tproxy_ = (fun a -> a.Tproxy), (fun b a -> { a with Tproxy = b })
-
 [<RequireQualifiedAccess>]
 type TransportSecurity =
   | [<JsonName "none">] None
   | [<JsonName "tls">] TLS of TLSObject
   // only for reservation. V2fly and Sing backend does not have XTLS support.
   | [<JsonName "xtls">] XTLS
-
-type TransportProtocol =
-  | TCP of TcpObject
-  | KCP of KcpObject
-  | WebSocket of WebSocketObject
-  | HTTP of HttpObject
-  | QUIC
-  | GRPC of GrpcObject
 
 type StreamSettings =
   { TransportSettings: TransportProtocol
@@ -277,19 +221,9 @@ let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, rea
 
   KCP config
 
-let createQuicObject () = QUIC
+let createQuicObject () = QUIC {|  |}
 
-let createTCPObject headerObject =
-  let tcpHeader =
-    Option.defaultValue
-      { TcpHeaderObject.HeaderType = "none"
-        Request = None
-        Response = None }
-      headerObject
-
-  let config = { TcpObject.Header = tcpHeader }
-
-  TCP config
+let createTCPObject () = TCP {|  |}
 
 let createTLSObject (serverName, alpn, disableSystemRoot) =
   TransportSecurity.TLS
@@ -316,5 +250,5 @@ let parseVMessSecurity security =
   | _ -> raise (ConfigurationParameterException "unknown security type")
 
 let createV2flyObject protocol streamSettings =
-  { Protocol =  protocol
+  { Protocol = protocol
     StreamSettings = streamSettings }
