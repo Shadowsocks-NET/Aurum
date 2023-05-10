@@ -98,8 +98,7 @@ and GrpcObject =
 type TLSObject =
   { ServerName: string option
     AllowInsecure: bool option
-    ALPN: string list option
-    DisableSystemRoot: bool option }
+    ALPN: string list option }
 
   static member ServerName_ = (fun a -> a.ServerName), (fun b a -> { a with ServerName = b })
 
@@ -107,9 +106,6 @@ type TLSObject =
     (fun a -> a.AllowInsecure), (fun b a -> { a with AllowInsecure = b })
 
   static member ALPN_ = (fun a -> a.ALPN), (fun b a -> { a with ALPN = b })
-
-  static member DisableSystemRoot_ =
-    (fun a -> a.DisableSystemRoot), (fun b a -> { a with DisableSystemRoot = b })
 
 [<RequireQualifiedAccess>]
 type TProxyType =
@@ -229,8 +225,7 @@ let createTLSObject (serverName, alpn, disableSystemRoot) =
   TransportSecurity.TLS
     { TLSObject.ServerName = serverName
       ALPN = alpn
-      AllowInsecure = Some false
-      DisableSystemRoot = disableSystemRoot }
+      AllowInsecure = Some false }
 
 let createVMessObject (host, port, uuid) =
   VMess
