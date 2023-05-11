@@ -113,8 +113,10 @@ type StreamSettings =
 // It is not supported in sing-box
 type VLESSEncryption = | [<JsonName("none")>] None
 
+// V2fly v5 config does not support it yet
+// The core retains its support, though, and sing-box also supports it
 [<RequireQualifiedAccess>]
-type VMessEncryption =
+type VMessSecurity =
   | [<JsonName("none")>] None
   | [<JsonName("zero")>] Zero
   | [<JsonName("auto")>] Auto
@@ -133,13 +135,16 @@ type MuxObject =
 type VMessObject =
   { Address: string
     Port: int
-    UUID: string }
+    UUID: string
+    Security: VMessSecurity }
 
   static member Address_ = (fun a -> a.Address), (fun b a -> { a with Address = b })
 
   static member Port_ = (fun a -> a.Port), (fun b a -> { a with Port = b })
 
   static member UUID_ = (fun a -> a.UUID), (fun b a -> { a with UUID = b })
+
+  static member Security_ = (fun a -> a.Security), (fun b a -> { a with Security = b })
 
   member this.GetServerInfo() = this.Address, this.Port
 
@@ -168,8 +173,7 @@ let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeade
   WebSocket config
 
 let createGrpcObject serviceName =
-  let config =
-    { ServiceName = serviceName }
+  let config = { ServiceName = serviceName }
 
   GRPC config
 
@@ -209,21 +213,22 @@ let createTLSObject (serverName, alpn, disableSystemRoot) =
       ALPN = alpn
       AllowInsecure = Some false }
 
-let createVMessObject (host, port, uuid) =
+let createVMessObject (host, port, uuid, security) =
   VMess
     { VMessObject.Address = host
       Port = port
-      UUID = uuid }
+      UUID = uuid
+      Security = security }
 
 let parseVMessSecurity security =
   let security = Option.defaultValue "auto" security
 
   match security with
-  | "none" -> VMessEncryption.None
-  | "zero" -> VMessEncryption.Zero
-  | "auto" -> VMessEncryption.Auto
-  | "aes-128-gcm" -> VMessEncryption.AES
-  | "chacha20-poly1305" -> VMessEncryption.ChaCha20
+  | "none" -> VMessSecurity.None
+  | "zero" -> VMessSecurity.Zero
+  | "auto" -> VMessSecurity.Auto
+  | "aes-128-gcm" -> VMessSecurity.AES
+  | "chacha20-poly1305" -> VMessSecurity.ChaCha20
   | _ -> raise (ConfigurationParameterException "unknown security type")
 
 let createV2flyObject protocol streamSettings =
