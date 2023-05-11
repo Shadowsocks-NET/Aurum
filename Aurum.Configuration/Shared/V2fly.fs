@@ -225,6 +225,8 @@ let parseVMessSecurity security =
   | "chacha20-poly1305" -> VMessSecurity.ChaCha20
   | _ -> raise (ConfigurationParameterException "unknown security type")
 
-let createV2flyObject protocol streamSettings =
+let createV2flyObject protocol transportSettings securitySettings =
   { Protocol = protocol
-    StreamSettings = streamSettings }
+    StreamSettings =
+      { TransportSettings = transportSettings
+        SecuritySettings = securitySettings } }

@@ -2,6 +2,7 @@
 
 open System.Collections.Generic
 open Aurum
+open Aurum.Configuration.Shared.Adapter
 open Aurum.Configuration.Shared.Shadowsocks
 open Aurum.Configuration.Shared.V2fly
 
@@ -22,7 +23,12 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
   let uuid = uriObject.UserInfo
   let host = uriObject.Host
   let port = uriObject.Port
-  let description = uriObject.Fragment
+
+  let description =
+    if uriObject.Fragment.Length = 0 then
+      ""
+    else
+      uriObject.Fragment.Substring(1)
 
   let queryParams =
     Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery uriObject.Query
@@ -76,15 +82,26 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
     | "none" -> TransportSecurity.None
     | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
-  (description, protocolSetting, transportSetting, securitySetting)
+  (description, V2fly(createV2flyObject protocolSetting transportSetting securitySetting))
 
 let createShadowsocksObjectFromUri (uriObject: System.Uri) =
   let host = uriObject.Host
   let port = uriObject.Port
 
+  let description =
+    if uriObject.Fragment.Length = 0 then
+      ""
+    else
+      uriObject.Fragment.Substring(1)
+
   let protocolString :: encryptionInfo =
     if uriObject.UserInfo.IndexOf(":") <> -1 then
-      Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
+      Array.toList (
+        System
+          .Uri
+          .UnescapeDataString(uriObject.UserInfo)
+          .Split(":")
+      )
     else
       Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":"))
 
@@ -102,7 +119,7 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
     | "2022-blake3-chacha8-poly1305" -> ShadowsocksEncryption.ChaCha8_2022 encryptionInfo
     | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
 
-  createShadowsocksObject (host, port, method)
+  (description, Shadowsocks(createShadowsocksObject (host, port, method)))
 
 let decodeShareLink link =
   let uriObject = System.Uri link
@@ -110,12 +127,5 @@ let decodeShareLink link =
   match uriObject.Scheme with
   | "vmess"
   | "vless" -> createV2FlyObjectFromUri uriObject
-  //| "ss" ->
-  //  let mutable ssServer = Shadowsocks.Models.Server()
-  //
-  //  match Shadowsocks.Models.Server.TryParse(uriObject, &ssServer) with
-  //  | true -> ()
-  //  | false -> raise (ShareLinkFormatException "incorrect Shadowsocks link format")
-  //
-  //  createV2flyShadowsocksObjectFromSsNET ssServer
+  | "ss" -> createShadowsocksObjectFromUri uriObject
   | unknown -> raise (ShareLinkFormatException $"unsupported sharelink protocol {unknown}")
