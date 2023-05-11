@@ -4,6 +4,7 @@ open System.Collections.Generic
 open Aurum
 open Aurum.Configuration.Shared
 open Aurum.Configuration.Shared.Shadowsocks
+open Aurum.Configuration.Shared.V2fly
 
 type OocApiToken =
   { version: int
@@ -42,7 +43,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
   let transportSetting =
     match transportType with
     | "ws" ->
-      V2fly.createWebSocketObject (
+      createWebSocketObject (
         (tryRetrieveFromShareLink "path"),
         None,
         None,
@@ -52,28 +53,28 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
       )
     | "grpc" ->
       retrieveFromShareLink "serviceName"
-      |> V2fly.createGrpcObject
-    | "http" -> V2fly.createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
-    | "quic" -> V2fly.createQuicObject ()
-    | "kcp" -> V2fly.createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
-    | "tcp" -> V2fly.createTCPObject None
+      |> createGrpcObject
+    | "http" -> createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
+    | "quic" -> createQuicObject ()
+    | "kcp" -> createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
+    | "tcp" -> createTCPObject ()
     | unknown -> raise (ConfigurationParameterException $"unknown transport protocol {unknown}")
 
   let protocolSetting =
     match protocol with
-    | "vmess" -> V2fly.createVMessObject (host, port, uuid)
+    | "vmess" -> createVMessObject (host, port, uuid, VMessSecurity.Auto)
     | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
   let securitySetting =
     match securityType with
     | "tls" ->
-      V2fly.createTLSObject (
+      createTLSObject (
         tryRetrieveFromShareLink "sni",
         tryRetrieveFromShareLink "alpn"
         |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList),
         Some false
       )
-    | "none" -> V2fly.TransportSecurity.None
+    | "none" -> TransportSecurity.None
     | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
   (description, protocolSetting, transportSetting, securitySetting)
@@ -83,17 +84,17 @@ let createV2flyShadowsocksObjectFromSsNET (ssServer: Shadowsocks.Models.Server) 
   let host = ssServer.Host
   let port = ssServer.Port
 
+  let password = ssServer.Password
+
   let method =
     match ssServer.Method with
     | "none" -> ShadowsocksEncryption.None
     | "plain" -> ShadowsocksEncryption.Plain
-    | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20
-    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF
-    | "aes-128-gcm" -> ShadowsocksEncryption.AES128
-    | "aes-256-gcm" -> ShadowsocksEncryption.AES256
+    | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 password
+    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF password
+    | "aes-128-gcm" -> ShadowsocksEncryption.AES128 password
+    | "aes-256-gcm" -> ShadowsocksEncryption.AES256 password
     | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
-
-  let password = ssServer.Password
 
   (name, host, port, method, password)
 
