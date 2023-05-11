@@ -2,7 +2,6 @@
 
 open System.Collections.Generic
 open Aurum
-open Aurum.Configuration.Shared
 open Aurum.Configuration.Shared.Shadowsocks
 open Aurum.Configuration.Shared.V2fly
 
@@ -79,24 +78,31 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
 
   (description, protocolSetting, transportSetting, securitySetting)
 
-let createV2flyShadowsocksObjectFromSsNET (ssServer: Shadowsocks.Models.Server) =
-  let name = ssServer.Name
-  let host = ssServer.Host
-  let port = ssServer.Port
+let createShadowsocksObjectFromUri (uriObject: System.Uri) =
+  let host = uriObject.Host
+  let port = uriObject.Port
 
-  let password = ssServer.Password
+  let protocolString :: encryptionInfo =
+    if uriObject.UserInfo.IndexOf(":") <> -1 then
+      Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
+    else
+      Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":"))
 
   let method =
-    match ssServer.Method with
+    match protocolString with
     | "none" -> ShadowsocksEncryption.None
     | "plain" -> ShadowsocksEncryption.Plain
-    | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 password
-    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF password
-    | "aes-128-gcm" -> ShadowsocksEncryption.AES128 password
-    | "aes-256-gcm" -> ShadowsocksEncryption.AES256 password
+    | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 encryptionInfo.Head
+    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF encryptionInfo.Head
+    | "aes-128-gcm" -> ShadowsocksEncryption.AES128 encryptionInfo.Head
+    | "aes-256-gcm" -> ShadowsocksEncryption.AES256 encryptionInfo.Head
+    | "2022-blake3-aes-128-gcm" -> ShadowsocksEncryption.AES128_2022 encryptionInfo
+    | "2022-blake3-aes-256-gcm" -> ShadowsocksEncryption.AES256_2022 encryptionInfo
+    | "2022-blake3-chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20_2022 encryptionInfo
+    | "2022-blake3-chacha8-poly1305" -> ShadowsocksEncryption.ChaCha8_2022 encryptionInfo
     | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
 
-  (name, host, port, method, password)
+  createShadowsocksObject (host, port, method)
 
 let decodeShareLink link =
   let uriObject = System.Uri link

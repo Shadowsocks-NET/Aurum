@@ -19,7 +19,7 @@ type ShadowsocksEncryption =
 
 type ShadowsocksObject =
   { Host: string
-    Port: string
+    Port: int
     Encryption: ShadowsocksEncryption }
 
 let createShadowsocksObject (host, port, encryption) =
