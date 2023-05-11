@@ -33,20 +33,6 @@ and WebSocketObject =
 
   static member Headers_ = (fun a -> a.Headers), (fun b a -> { a with Headers = b })
 
-  static member Create(path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
-    let constructedHeaders = Option.defaultValue (Dictionary()) headers
-
-    match host with
-    | Some host -> constructedHeaders.Add("Host", host)
-    | None -> ()
-
-    WebSocket
-      { WebSocketObject.Path = Option.defaultValue "/" path
-        MaxEarlyData = Option.defaultValue 0 maxEarlyData
-        BrowserForwarding = Option.defaultValue false browserForwarding
-        EarlyDataHeader = Option.defaultValue "" earlyDataHeader
-        Headers = Some(constructedHeaders) }
-
 and KcpObject =
   { MTU: int
     TTI: int
