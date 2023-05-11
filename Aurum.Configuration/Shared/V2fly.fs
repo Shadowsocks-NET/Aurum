@@ -91,12 +91,6 @@ type TLSObject =
   static member ALPN_ = (fun a -> a.ALPN), (fun b a -> { a with ALPN = b })
 
 [<RequireQualifiedAccess>]
-type TProxyType =
-  | Redirect
-  | TProxy
-  | Off
-
-[<RequireQualifiedAccess>]
 type TransportSecurity =
   | [<JsonName "none">] None
   | [<JsonName "tls">] TLS of TLSObject
