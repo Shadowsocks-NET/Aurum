@@ -44,7 +44,7 @@ type OutboundObject =
           | GRPC _ -> "+gRPC"
           | HTTP _ -> "+HTTP2"
           | KCP _ -> "+mKCP"
-          | QUIC -> "+QUIC"
+          | QUIC _ -> "+QUIC"
           | TCP _ -> "+TCP"
           | WebSocket _ -> "+WS")
         this.StreamSettings
