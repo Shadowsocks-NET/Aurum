@@ -5,12 +5,7 @@ open Aurum
 open Aurum.Configuration.Shared.Adapter
 open Aurum.Configuration.Shared.Shadowsocks
 open Aurum.Configuration.Shared.V2fly
-
-type OocApiToken =
-  { version: int
-    baseUrl: string
-    secret: string
-    userId: string }
+open Aurum.Configuration.SubscriptionAdapter.OOCv1
 
 type Subscriptions =
   | Base64 of url: string
