@@ -95,7 +95,7 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
          Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":")))
     with
     | protocol :: info -> protocol, info
-    | _ -> raise (ShareLinkFormatException $"ill-formed user info: {uriObject.UserInfo}")
+    | _ -> raise (ShareLinkFormatException $"ill-formed user info \"{uriObject.UserInfo}\"")
 
   let method =
     match protocolString with
@@ -119,7 +119,8 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
       match pluginOpt with
       | "obfs" :: opts -> SimpleObfs(System.String.Join(",", List.toArray opts))
       | "v2ray" :: opts -> V2ray(System.String.Join(",", List.toArray opts))
-      | pluginName :: _ -> raise (ShareLinkFormatException $"unknown plugin {pluginName}"))
+      | pluginName :: _ -> raise (ShareLinkFormatException $"unknown plugin {pluginName}")
+      | unknown -> raise (ShareLinkFormatException $"ill-formed plugin option \"{unknown}\""))
 
   createConfigurationEntry (description, Shadowsocks(createShadowsocksObject (host, port, method, plugin)))
 
