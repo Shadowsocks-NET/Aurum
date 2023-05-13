@@ -1,6 +1,7 @@
 ﻿module Aurum.Configuration.Shared.Share
 
 open System.Collections.Generic
+open Microsoft.AspNetCore.WebUtilities
 open Aurum
 open Aurum.Configuration.Shared.Adapter
 open Aurum.Configuration.Shared.Shadowsocks
@@ -25,20 +26,15 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
     else
       uriObject.Fragment.Substring(1)
 
-  let queryParams =
-    Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery uriObject.Query
+  let queryParams = QueryHelpers.ParseQuery uriObject.Query
 
   let retrieveFromShareLink = getFirstQuerystringEntry queryParams
 
-  let tryRetrieveFromShareLink key =
-    tryGetFirstQuerystringEntry queryParams key
-    |> blankStringToNone
+  let tryRetrieveFromShareLink = tryRetrieveFromShareLink queryParams
 
   let transportType = retrieveFromShareLink "type"
 
-  let securityType =
-    tryRetrieveFromShareLink "security"
-    |> Option.defaultValue "none"
+  let securityType = tryRetrieveFromShareLink "security" |> Option.defaultValue "none"
 
   let transportSetting =
     match transportType with
@@ -51,9 +47,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
         (tryRetrieveFromShareLink "host"),
         None
       )
-    | "grpc" ->
-      retrieveFromShareLink "serviceName"
-      |> createGrpcObject
+    | "grpc" -> retrieveFromShareLink "serviceName" |> createGrpcObject
     | "http" -> createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
     | "quic" -> createQuicObject ()
     | "kcp" -> createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
@@ -83,6 +77,10 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
   let host = uriObject.Host
   let port = uriObject.Port
 
+  let queryParams = QueryHelpers.ParseQuery uriObject.Query
+
+  let tryRetrieveFromShareLink = tryRetrieveFromShareLink queryParams
+
   let description =
     if uriObject.Fragment.Length = 0 then
       ""
@@ -91,12 +89,7 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
 
   let protocolString :: encryptionInfo =
     if uriObject.UserInfo.IndexOf(":") <> -1 then
-      Array.toList (
-        System
-          .Uri
-          .UnescapeDataString(uriObject.UserInfo)
-          .Split(":")
-      )
+      Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
     else
       Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":"))
 
@@ -105,7 +98,7 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
     | "none" -> ShadowsocksEncryption.None
     | "plain" -> ShadowsocksEncryption.Plain
     | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 encryptionInfo.Head
-    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20IETF encryptionInfo.Head
+    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20Ietf encryptionInfo.Head
     | "aes-128-gcm" -> ShadowsocksEncryption.AES128 encryptionInfo.Head
     | "aes-256-gcm" -> ShadowsocksEncryption.AES256 encryptionInfo.Head
     | "2022-blake3-aes-128-gcm" -> ShadowsocksEncryption.AES128_2022 encryptionInfo
@@ -114,7 +107,17 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
     | "2022-blake3-chacha8-poly1305" -> ShadowsocksEncryption.ChaCha8_2022 encryptionInfo
     | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
 
-  (description, Shadowsocks(createShadowsocksObject (host, port, method)))
+  let plugin =
+    tryRetrieveFromShareLink "plugin"
+    |> Option.map (fun op ->
+      let pluginOpt = op.Split ";" |> Array.toList
+
+      match pluginOpt with
+      | "obfs" :: opts -> SimpleObfs(System.String.Join(",", List.toArray opts))
+      | "v2ray" :: opts -> V2ray(System.String.Join(",", List.toArray opts))
+      | pluginName :: _ -> raise (ShareLinkFormatException $"unknown plugin {pluginName}"))
+
+  (description, Shadowsocks(createShadowsocksObject (host, port, method, plugin)))
 
 let decodeShareLink link =
   let uriObject = System.Uri link

@@ -9,7 +9,7 @@ type ShadowsocksEncryption =
   | [<JsonName("none")>] None
   | [<JsonName("plain")>] Plain
   | [<JsonName("chacha20-poly1305")>] ChaCha20 of Password: string
-  | [<JsonName("chacha20-ietf-poly1305")>] ChaCha20IETF of Password: string
+  | [<JsonName("chacha20-ietf-poly1305")>] ChaCha20Ietf of Password: string
   | [<JsonName("aes-128-gcm")>] AES128 of Password: string
   | [<JsonName("aes-256-gcm")>] AES256 of Password: string
   | [<JsonName("2022-blake3-aes-128-gcm")>] AES128_2022 of PSKs: string list
@@ -17,12 +17,18 @@ type ShadowsocksEncryption =
   | [<JsonName("2022-blake3-chacha20-poly1305")>] ChaCha20_2022 of PSKs: string list
   | [<JsonName("2022-blake3-chacha8-poly1305")>] ChaCha8_2022 of PSKs: string list
 
+type ShadowsocksPlugin =
+  | SimpleObfs of option: string
+  | V2ray of option: string
+
 type ShadowsocksObject =
   { Host: string
     Port: int
-    Encryption: ShadowsocksEncryption }
+    Encryption: ShadowsocksEncryption
+    Plugin: ShadowsocksPlugin option }
 
-let createShadowsocksObject (host, port, encryption) =
+let createShadowsocksObject (host, port, encryption, plugin) =
   { Host = host
     Port = port
-    Encryption = encryption }
+    Encryption = encryption
+    Plugin = plugin }

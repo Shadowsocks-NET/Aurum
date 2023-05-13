@@ -34,3 +34,7 @@ with the following exceptions:
 - Though disguise type other than `http` is always ignored, `host` will still be respected when the transport is TCP or
   HTTP (HTTP/2). None of `v2ray@5` and `sing-box` supports custom headers on QUIC and KCP, thus `host` will be ignored
   on these transports.
+
+## Shadowsocks SIP002 URI Scheme
+
+Shadowsocks SIP002 URI Scheme is fully implemented with the exception of obsolete Stream Ciphers.
