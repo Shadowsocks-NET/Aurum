@@ -38,3 +38,6 @@ with the following exceptions:
 ## Shadowsocks SIP002 URI Scheme
 
 Shadowsocks SIP002 URI Scheme is fully implemented with the exception of obsolete Stream Ciphers.
+
+Only simple-obfs and v2ray plugins are supported. Simple-obfs is deprecated, though, thus you should consider migrating
+to v2ray.
