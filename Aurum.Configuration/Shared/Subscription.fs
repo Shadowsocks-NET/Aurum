@@ -71,7 +71,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
     | "none" -> TransportSecurity.None
     | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
 
-  (description, V2fly(createV2flyObject protocolSetting transportSetting securitySetting))
+  createConfigurationEntry (description, V2fly(createV2flyObject protocolSetting transportSetting securitySetting))
 
 let createShadowsocksObjectFromUri (uriObject: System.Uri) =
   let host = uriObject.Host
@@ -121,7 +121,7 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
       | "v2ray" :: opts -> V2ray(System.String.Join(",", List.toArray opts))
       | pluginName :: _ -> raise (ShareLinkFormatException $"unknown plugin {pluginName}"))
 
-  (description, Shadowsocks(createShadowsocksObject (host, port, method, plugin)))
+  createConfigurationEntry (description, Shadowsocks(createShadowsocksObject (host, port, method, plugin)))
 
 let decodeShareLink link =
   let uriObject = System.Uri link
