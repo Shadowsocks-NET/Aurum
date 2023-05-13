@@ -14,8 +14,8 @@
         "fake"
       ]
     },
-    "fantomas-tool": {
-      "version": "4.7.9",
+    "fantomas": {
+      "version": "6.0.2",
       "commands": [
         "fantomas"
       ]
