@@ -87,11 +87,15 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
     else
       uriObject.Fragment.Substring(1)
 
-  let protocolString :: encryptionInfo =
-    if uriObject.UserInfo.IndexOf(":") <> -1 then
-      Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
-    else
-      Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":"))
+  let protocolString, encryptionInfo =
+    match
+      (if uriObject.UserInfo.IndexOf(":") <> -1 then
+         Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
+       else
+         Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":")))
+    with
+    | protocol :: info -> protocol, info
+    | _ -> raise (ShareLinkFormatException $"ill-formed user info: {uriObject.UserInfo}")
 
   let method =
     match protocolString with
