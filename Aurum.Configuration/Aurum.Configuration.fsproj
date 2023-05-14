@@ -24,13 +24,13 @@
       <Compile Include="Sing\Inbound.fs"/>
       <Compile Include="Sing\Base.fs"/>
       <Compile Include="AdapterTypes\VMessLegacyShare.fs"/>
-    <Compile Include="SubscriptionAdapter\V2rayNBase64.fs" />
-    <Compile Include="SubscriptionAdapter\OOCv1.fs" />
-    <Compile Include="Shared\Subscription.fs" />
-    <Compile Include="Share.fs" />
-    <Compile Include="Base.fs" />
-    <Content Include="paket.references" />
-    <Content Include="paket.template" />
+      <Compile Include="ShareLinks.fs"/>
+      <Compile Include="SubscriptionAdapter\V2rayNBase64.fs"/>
+      <Compile Include="SubscriptionAdapter\OOCv1.fs"/>
+      <Compile Include="Shared\Subscription.fs"/>
+      <Compile Include="Base.fs"/>
+      <Content Include="paket.references"/>
+      <Content Include="paket.template"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aurum\Aurum.fsproj" />
