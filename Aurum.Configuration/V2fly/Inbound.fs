@@ -84,7 +84,7 @@ let createSocksInboundObject (auth, accounts, udp, ip, userLevel) =
       Network = None
       FollowRedirect = None }
 
-let createHttpInoundObject (timeout, accounts, allowTransparent, userLevel) =
+let createHttpInboundObject (timeout, accounts, allowTransparent, userLevel) =
     { InboundConfigurationObject.Auth = None
       Accounts = accounts
       UserLevel = userLevel
