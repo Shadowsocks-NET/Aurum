@@ -4,19 +4,19 @@ open Aurum
 open System.Text.Json.Serialization
 
 type DomainStrategy =
-  | [<JsonName("AsIs")>] AsIs
-  | [<JsonName("IPIfNonMatch")>] IPIfNonMatch
-  | [<JsonName("IPOnDemand")>] IPOnDemand
+  | AsIs
+  | IPIfNonMatch
+  | IPOnDemand
 
 type RuleMatchProtocol =
-  | [<JsonName("http")>] HTTP
-  | [<JsonName("tls")>] TLS
-  | [<JsonName("bittorrent")>] BitTorrent
+  | HTTP
+  | TLS
+  | BitTorrent
 
 type RuleMatchNetwork =
-  | [<JsonName("tcp")>] TCP
-  | [<JsonName("udp")>] UDP
-  | [<JsonName("tcp,udp")>] TCPAndUDP
+  | TCP
+  | UDP
+  | TCPAndUDP
 
 type DomainType =
   | Domain of string
