@@ -193,9 +193,9 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
         None
       )
 
-    let proxyRule = Proxy(Some([ Geosite"geolocation-!cn" ]), None)
+    let proxyRule = Proxy(Some([ Geosite "geolocation-!cn" ]), None)
 
-    let directRule2 = Direct(Some([ Geosite"cn" ]), None)
+    let directRule2 = Direct(Some([ Geosite "cn" ]), None)
 
     constructRuleSet
       [ mergeRules userBlockRule blockRule
