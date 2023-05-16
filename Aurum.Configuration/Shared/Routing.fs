@@ -19,7 +19,10 @@ type RuleMatchNetwork =
   | TCPAndUDP
 
 type DomainType =
-  | Domain of string
+  | Plain of string
+  | Regex of string
+  | RootDomain of string
+  | Full of string
   | Geosite of string
 
 type IpType =
@@ -165,7 +168,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let userProxyRule = Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
 
-    let proxyRule = Proxy(Some(domainList |> List.map (fun a -> Domain a)), None)
+    let proxyRule = Proxy(Some(domainList |> List.map (fun a -> Plain a)), None)
 
     constructRuleSet
       [ mergeRules userBlockRule blockPreset
