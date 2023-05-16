@@ -1,7 +1,6 @@
-module Aurum.Configuration.V2fly.Routing
+module Aurum.Configuration.Shared.Routing
 
 open Aurum
-open System.Text.Json.Serialization
 
 type DomainStrategy =
   | AsIs
