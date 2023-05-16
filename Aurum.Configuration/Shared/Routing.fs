@@ -10,7 +10,6 @@ type DomainStrategy =
 type RuleMatchProtocol =
   | HTTP
   | TLS
-  | BitTorrent
 
 type RuleMatchNetwork =
   | TCP
