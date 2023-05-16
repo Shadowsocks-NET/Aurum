@@ -20,11 +20,11 @@ type RuleMatchNetwork =
 
 type DomainType =
   | Domain of string
-  | GeoDomain of string
+  | Geosite of string
 
 type IpType =
   | IP of string
-  | GeoIp of string
+  | Geoip of string
 
 type RuleObject =
   { Domain: DomainType list option
@@ -67,7 +67,7 @@ type RuleType =
   | Block of DomainRuleList option * IpRuleList option
   | Skip
 
-let constructDirect (domainRule, ipRule) : RuleObject =
+let constructDirect (domainRule, ipRule) =
   { Domain = domainRule
     Ip = ipRule
     Port = None
@@ -75,7 +75,7 @@ let constructDirect (domainRule, ipRule) : RuleObject =
     Protocol = None
     Tag = Some "freedom" }
 
-let constructProxy (domainRule, ipRule) proxyTag : RuleObject =
+let constructProxy (domainRule, ipRule) proxyTag =
   { Domain = domainRule
     Ip = ipRule
     Port = None
@@ -83,7 +83,7 @@ let constructProxy (domainRule, ipRule) proxyTag : RuleObject =
     Protocol = None
     Tag = proxyTag }
 
-let constructBlock (domainRule, ipRule) : RuleObject =
+let constructBlock (domainRule, ipRule) =
   { Domain = domainRule
     Ip = ipRule
     Port = None
@@ -91,7 +91,7 @@ let constructBlock (domainRule, ipRule) : RuleObject =
     Protocol = None
     Tag = Some "blackhole" }
 
-let constructSingleRule rule proxyTag : RuleObject option =
+let constructSingleRule rule proxyTag =
   match rule with
   | Direct(domainRule, ipRule) -> Some(constructDirect (domainRule, ipRule))
   | Proxy(domainRule, ipRule) -> Some(constructProxy (domainRule, ipRule) proxyTag)
@@ -114,7 +114,7 @@ let constructPreset constructionStrategy =
 
   let blockRule =
     if constructionStrategy.BlockAds then
-      Block(Some [ GeoDomain "category-ads-all" ], None)
+      Block(Some [ Geosite "category-ads-all" ], None)
     else
       Skip
 
@@ -131,18 +131,18 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let userBlockRule = Block(Some userDomainRules.Block, Some userIpRules.Block)
 
-    let geolocationProxy = Proxy(Some [ GeoDomain "geolocation-!cn" ], None)
+    let geolocationProxy = Proxy(Some [ Geosite "geolocation-!cn" ], None)
 
-    let scholarProxy = Proxy(Some [ GeoDomain "google-scholar" ], None)
+    let scholarProxy = Proxy(Some [ Geosite "google-scholar" ], None)
 
     let scholarDirect =
-      Direct(Some [ GeoDomain "category-scholar-!cn"; GeoDomain "category-scholar-cn" ], None)
+      Direct(Some [ Geosite "category-scholar-!cn"; Geosite "category-scholar-cn" ], None)
 
-    let siteCNDirect = Direct(Some [ GeoDomain "cn" ], None)
+    let siteCNDirect = Direct(Some [ Geosite "cn" ], None)
 
-    let sarProxy = Proxy(None, Some [ GeoIp "hk"; GeoIp "mo" ])
+    let sarProxy = Proxy(None, Some [ Geoip "hk"; Geoip "mo" ])
 
-    let ipDirect = Direct(None, Some [ GeoIp "private"; GeoIp "cn" ])
+    let ipDirect = Direct(None, Some [ Geoip "private"; Geoip "cn" ])
 
     constructRuleSet
       [ mergeRules userBlockRule blockPreset
@@ -179,23 +179,23 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let userProxyRule = Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
 
-    let blockRule = Block(Some([ GeoDomain "category-ads-all" ]), None)
+    let blockRule = Block(Some([ Geosite "category-ads-all" ]), None)
 
     let directRule1 =
       Direct(
         Some(
-          [ GeoDomain "private"
-            GeoDomain "apple-cn"
-            GeoDomain "google-cn"
-            GeoDomain "tld-cn"
-            GeoDomain "category-games@cn" ]
+          [ Geosite "private"
+            Geosite "apple-cn"
+            Geosite "google-cn"
+            Geosite "tld-cn"
+            Geosite "category-games@cn" ]
         ),
         None
       )
 
-    let proxyRule = Proxy(Some([ GeoDomain"geolocation-!cn" ]), None)
+    let proxyRule = Proxy(Some([ Geosite"geolocation-!cn" ]), None)
 
-    let directRule2 = Direct(Some([ GeoDomain"cn" ]), None)
+    let directRule2 = Direct(Some([ Geosite"cn" ]), None)
 
     constructRuleSet
       [ mergeRules userBlockRule blockRule
