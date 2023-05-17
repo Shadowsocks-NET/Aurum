@@ -55,7 +55,6 @@ type IpStringListObject =
 type RulePresets =
   | BypassMainland // adopted from v2rayA's mainland whitelist mode
   | GFWList of string list // uses Loyalsoldier/v2ray-rules-dat's gfw.txt
-  | Greatfire of string list // uses Loyalsoldier/v2ray-rules-dat's greatfire.txt
   | Loyalsoldier // uses Loyalsoldier/v2ray-rules-dat's recommended v2ray setting in README
   | Empty // no preset rules
 
@@ -163,8 +162,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
         sarProxy
         ipDirect
         Proxy(None, None) ]
-  | GFWList domainList
-  | Greatfire domainList ->
+  | GFWList domainList ->
     let blockPreset = constructPreset constructionStrategy
 
     let userBlockRule = Block(Some userDomainRules.Block, Some userIpRules.Block)
