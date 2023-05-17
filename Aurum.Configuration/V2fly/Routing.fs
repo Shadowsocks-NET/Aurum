@@ -28,24 +28,19 @@ type DomainObject =
   | RootDomain of string
   | Full of string
 
-type GeoDomainObject =
+type GeoDataObject =
   { InverseMatch: bool option
     Code: string option
     FilePath: string option }
 
 type CidrObject = { IpAddr: string; Prefix: int }
 
-type GeoIpObject =
-  { InverseMatch: bool option
-    Code: string option
-    FilePath: string option }
-
 type RuleObject =
   { Tag: string
     Domain: DomainObject list option
-    GeoDomain: GeoDomainObject list option
+    GeoDomain: GeoDataObject list option
     Ip: CidrObject list option
-    GeoIp: GeoIpObject list option
+    GeoIp: GeoDataObject list option
     Networks: RuleMatchNetwork
     PortList: string option
     InboundTag: string option }
