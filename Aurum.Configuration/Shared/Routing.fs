@@ -30,6 +30,7 @@ type RuleObject =
     Port: string option
     Networks: RuleMatchNetwork option
     Protocol: RuleMatchProtocol option
+    InboundTag: string option
     Tag: string option }
 
 type DomainRuleList = DomainType list
@@ -71,6 +72,7 @@ let constructDirect (domainRule, ipRule) =
     Port = None
     Networks = Some TCPAndUDP
     Protocol = None
+    InboundTag = None
     Tag = Some "freedom" }
 
 let constructProxy (domainRule, ipRule) proxyTag =
@@ -79,6 +81,7 @@ let constructProxy (domainRule, ipRule) proxyTag =
     Port = None
     Networks = Some TCPAndUDP
     Protocol = None
+    InboundTag = None
     Tag = proxyTag }
 
 let constructBlock (domainRule, ipRule) =
@@ -87,6 +90,7 @@ let constructBlock (domainRule, ipRule) =
     Port = None
     Networks = Some TCPAndUDP
     Protocol = None
+    InboundTag = None
     Tag = Some "blackhole" }
 
 let constructSingleRule rule proxyTag =
