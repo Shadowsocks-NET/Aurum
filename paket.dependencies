@@ -12,7 +12,6 @@ nuget Nanoid
 nuget FSharp.Json
 nuget FSharp.SystemTextJson
 nuget FSharp.Core
-nuget Shadowsocks.OnlineConfig
 nuget Aether
 nuget System.Security.Cryptography.ProtectedData
 nuget ProtoBuf.FSharp
