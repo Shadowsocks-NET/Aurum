@@ -17,51 +17,6 @@ type OutboundObject =
     StreamSettings: StreamSettings option
     Mux: MuxObject option }
 
-  static member SendThrough_ = (fun a -> a.SendThrough), (fun b a -> { a with SendThrough = b })
-
-  static member Settings_ = (fun a -> a.Settings), (fun b a -> { a with Settings = b })
-
-  static member Tag_ = (fun a -> a.Tag), (fun b a -> { a with Tag = b })
-
-  static member StreamSettings_ =
-    (fun a -> a.StreamSettings), (fun b a -> { a with StreamSettings = b })
-
-  static member Mux_ = (fun a -> a.Mux), (fun b a -> { a with Mux = b })
-
-  member this.GetConnectionType() =
-    let protocol =
-      match this.Settings with
-      | VMess _ -> "VMess"
-      | VLESS _ -> "VLESS"
-      | VLite _ -> "VLite"
-      | Shadowsocks _ -> "Shadowsocks"
-      | Trojan _ -> "Trojan"
-
-    let network =
-      Option.map
-        (fun streamSetting ->
-          match streamSetting.TransportSettings with
-          | GRPC _ -> "+gRPC"
-          | HTTP _ -> "+HTTP2"
-          | KCP _ -> "+mKCP"
-          | QUIC _ -> "+QUIC"
-          | TCP _ -> "+TCP"
-          | WebSocket _ -> "+WS")
-        this.StreamSettings
-      |> Option.defaultValue ""
-
-    let tlsFlag =
-      Option.map
-        (fun streamSetting ->
-          match streamSetting.SecuritySettings with
-          | TransportSecurity.None -> ""
-          | TransportSecurity.TLS _ -> "+TLS"
-          | TransportSecurity.XTLS -> "+XTLS")
-        this.StreamSettings
-      |> Option.defaultValue ""
-
-    protocol + network + tlsFlag
-
 type OutboundJsonObject =
   { SendThrough: string option
     Protocol: string
