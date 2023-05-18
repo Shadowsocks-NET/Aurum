@@ -41,6 +41,9 @@ module Helpers =
   let blankStringToNone (string: string option) =
     Option.filter (fun x -> x.Equals("")) string
 
+  let emptyListToNone list =
+    if List.isEmpty list then None else Some list
+
   let tryRetrieveFromShareLink queryParams key =
     tryGetFirstQuerystringEntry queryParams key
     |> blankStringToNone

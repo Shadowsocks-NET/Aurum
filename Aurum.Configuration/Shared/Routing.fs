@@ -37,7 +37,7 @@ type RuleObject =
     Networks: RuleMatchNetwork option
     Protocol: RuleMatchProtocol option
     InboundTag: string option
-    Tag: string option }
+    Tag: string }
 
 type DomainRuleList = DomainType list
 type IpRuleList = IpType list
@@ -78,7 +78,7 @@ let constructDirect (domainRule, ipRule) =
     Networks = Some TCPAndUDP
     Protocol = None
     InboundTag = None
-    Tag = Some "freedom" }
+    Tag = "freedom" }
 
 let constructProxy (domainRule, ipRule) proxyTag =
   { Domain = domainRule
@@ -96,7 +96,7 @@ let constructBlock (domainRule, ipRule) =
     Networks = Some TCPAndUDP
     Protocol = None
     InboundTag = None
-    Tag = Some "blackhole" }
+    Tag = "blackhole" }
 
 let constructSingleRule rule proxyTag =
   match rule with
