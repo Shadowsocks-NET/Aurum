@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.V2fly.Outbound
+module Aurum.Configuration.V2fly.Outbound
 
 open Aurum
 open Aurum.Configuration.Shared.V2fly

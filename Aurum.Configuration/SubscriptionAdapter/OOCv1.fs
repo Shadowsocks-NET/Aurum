@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.SubscriptionAdapter.OOCv1
+module Aurum.Configuration.SubscriptionAdapter.OOCv1
 
 type OocApiToken =
   { version: int

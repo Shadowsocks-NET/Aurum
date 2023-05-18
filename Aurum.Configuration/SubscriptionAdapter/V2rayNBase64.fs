@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.SubscriptionAdapter.V2rayNBase64
+module Aurum.Configuration.SubscriptionAdapter.V2rayNBase64
 
 open Aurum
 

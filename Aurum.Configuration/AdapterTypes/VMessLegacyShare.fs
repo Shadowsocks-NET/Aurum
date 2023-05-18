@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.AdapterTypes.VMessLegacyShare
+module Aurum.Configuration.AdapterTypes.VMessLegacyShare
 
 open System.Text.Json.Serialization
 

@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.V2fly.Base
+module Aurum.Configuration.V2fly.Base
 
 open Aurum.Configuration.V2fly.DNS
 open Aurum.Configuration.V2fly.Inbound

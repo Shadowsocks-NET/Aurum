@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.Sing.Inbound
+module Aurum.Configuration.Sing.Inbound
 
 open System.Text.Json.Serialization
 open Aurum.Configuration.Sing.Shared

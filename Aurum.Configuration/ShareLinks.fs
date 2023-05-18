@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.ShareLinks
+module Aurum.Configuration.ShareLinks
 
 open System.Collections.Generic
 open Microsoft.AspNetCore.WebUtilities

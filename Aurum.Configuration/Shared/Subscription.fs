@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.Shared.Share
+module Aurum.Configuration.Shared.Share
 
 open Aurum.Configuration.SubscriptionAdapter.OOCv1
 

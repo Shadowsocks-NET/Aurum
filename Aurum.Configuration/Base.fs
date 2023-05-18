@@ -1,4 +1,4 @@
-﻿module Aurum.Configuration.Base
+module Aurum.Configuration.Base
 
 open Aurum.Configuration.Sing.Base
 open Aurum.Configuration.V2fly.Base
