@@ -22,4 +22,5 @@ this [MyGet Feed](https://www.myget.org/feed/Packages/aurum).
 
 ## License
 
-The Aurum project is licensed under [LGPL-3.0-only](LICENSE)
+The Aurum project is licensed under [LGPL-3.0-only](LICENSE).
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FShadowsocks-NET%2FAurum?ref=badge_large)
