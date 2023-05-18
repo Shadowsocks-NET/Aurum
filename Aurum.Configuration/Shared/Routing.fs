@@ -171,7 +171,8 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let userProxyRule = Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)
 
-    let proxyRule = Proxy(Some(domainList |> List.map (fun a -> Domain (Suffix a))), None)
+    let proxyRule =
+      Proxy(Some(domainList |> List.map (fun a -> Domain(Suffix a))), None)
 
     constructRuleSet
       [ mergeRules userBlockRule blockPreset

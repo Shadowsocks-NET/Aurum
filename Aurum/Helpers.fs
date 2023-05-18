@@ -16,14 +16,14 @@ module Helpers =
   let retrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
       Ok(dict.[key])
-    with
-    | :? KeyNotFoundException as e -> Error(e)
+    with :? KeyNotFoundException as e ->
+      Error(e)
 
   let tryRetrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
       Some(dict.[key])
-    with
-    | :? KeyNotFoundException -> None
+    with :? KeyNotFoundException ->
+      None
 
   let unwrapResult result =
     match result with
@@ -45,8 +45,7 @@ module Helpers =
     if List.isEmpty list then None else Some list
 
   let tryRetrieveFromShareLink queryParams key =
-    tryGetFirstQuerystringEntry queryParams key
-    |> blankStringToNone
+    tryGetFirstQuerystringEntry queryParams key |> blankStringToNone
 
   let mergeOptionList op1 op2 =
     match op1, op2 with

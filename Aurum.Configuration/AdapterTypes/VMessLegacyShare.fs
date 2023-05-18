@@ -36,5 +36,6 @@ type ShareObject =
     net: VMessTransport
     tls: TLSSetting
     sni: string
-    [<JsonName "type">] dType: DisguiseType
+    [<JsonName "type">]
+    dType: DisguiseType
     host: string }

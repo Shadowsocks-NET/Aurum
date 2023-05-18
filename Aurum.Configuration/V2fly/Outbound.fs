@@ -69,6 +69,7 @@ type OutboundJsonObject =
     Tag: string
     StreamSettings: StreamSettings option
     Mux: MuxObject option }
+
   static member FromOutboundObject(outboundObject: OutboundObject) =
     let protocol, (settings: obj) =
       match outboundObject.Settings with
@@ -88,11 +89,11 @@ type OutboundJsonObject =
   member this.ToOutboundObject() =
     let settings =
       match this.Protocol with
-      | "vmess" -> VMess (downcast this.Settings)
-      | "vless" -> VLESS (downcast this.Settings)
-      | "vlite" -> VLite (downcast this.Settings)
-      | "shadowsocks" -> Shadowsocks (downcast this.Settings)
-      | "trojan" -> Trojan (downcast this.Settings)
+      | "vmess" -> VMess(downcast this.Settings)
+      | "vless" -> VLESS(downcast this.Settings)
+      | "vlite" -> VLite(downcast this.Settings)
+      | "shadowsocks" -> Shadowsocks(downcast this.Settings)
+      | "trojan" -> Trojan(downcast this.Settings)
       | _ -> raise (ConfigurationParameterException $"unknown protocol type '{this.Protocol}'")
 
     { OutboundObject.SendThrough = this.SendThrough
@@ -107,4 +108,3 @@ let createV2flyOutboundObject (sendThrough, setting, streamSetting, tag, mux) : 
     Settings = setting
     Mux = mux
     Tag = tag }
-

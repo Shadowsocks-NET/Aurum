@@ -9,6 +9,6 @@ type SnakeCaseNamingPolicy() =
   override this.ConvertName(name) = name.ToSnakeCase()
 
 /// Added by Sing Configuration Generator.
-/// 
+///
 /// This naming policy converts all names to lower-cased snake case, such as PascalCase -> pascal_case
 let SnakeCase = SnakeCaseNamingPolicy()

@@ -42,6 +42,7 @@ and KcpObject =
     ReadBufferSize: int
     WriteBufferSize: int
     Seed: string option }
+
   static member MTU_ = (fun a -> a.MTU), (fun b a -> { a with MTU = b })
 
   static member TTI_ = (fun a -> a.TTI), (fun b a -> { a with TTI = b })
@@ -197,9 +198,9 @@ let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, rea
 
   KCP config
 
-let createQuicObject () = QUIC {|  |}
+let createQuicObject () = QUIC {| |}
 
-let createTCPObject () = TCP {|  |}
+let createTCPObject () = TCP {| |}
 
 let createTLSObject (serverName, alpn, disableSystemRoot) =
   TransportSecurity.TLS

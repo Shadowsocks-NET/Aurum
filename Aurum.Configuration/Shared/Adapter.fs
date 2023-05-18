@@ -3,8 +3,7 @@
 open Aurum.Configuration.Shared.V2fly
 open Aurum.Configuration.Shared.Shadowsocks
 
-type SharedConfigObject =
-  { TcpFastOpen: bool }
+type SharedConfigObject = { TcpFastOpen: bool }
 
 type ConfigurationFamily =
   | V2fly of V2flyObject
@@ -14,6 +13,4 @@ type ConfigurationEntry =
   { Name: string
     Config: ConfigurationFamily }
 
-let createConfigurationEntry (name, config) =
-  { Name = name
-    Config = config }
+let createConfigurationEntry (name, config) = { Name = name; Config = config }
