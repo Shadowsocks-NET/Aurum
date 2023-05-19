@@ -1,13 +1,48 @@
 module Aurum.Configuration.V2fly.Outbound
 
+open System.Text.Json.Serialization
 open Aurum
+open Aurum.Configuration.Shared
+open Aurum.Configuration.Shared.Adapter
 open Aurum.Configuration.Shared.V2fly
+open Aurum.Configuration.Shared.Shadowsocks
+
+[<RequireQualifiedAccess>]
+type ShadowsocksEncryption =
+  | [<JsonName("none")>] None
+  | [<JsonName("plain")>] Plain
+  | [<JsonName("chacha20-poly1305")>] ChaCha20
+  | [<JsonName("chacha20-ietf-poly1305")>] ChaCha20Ietf
+  | [<JsonName("aes-128-gcm")>] AES128
+  | [<JsonName("aes-256-gcm")>] AES256
+
+type V2flyShadowsocksObject =
+  { Address: string
+    Port: int
+    Method: ShadowsocksEncryption
+    Password: string }
+
+  static member FromGenericShadowsocksObject(genericShadowsocksObject: ShadowsocksObject) =
+    let method, password =
+      match genericShadowsocksObject.Encryption with
+      | Shadowsocks.ShadowsocksEncryption.None -> ShadowsocksEncryption.None, ""
+      | Shadowsocks.ShadowsocksEncryption.Plain -> ShadowsocksEncryption.Plain, ""
+      | Shadowsocks.ShadowsocksEncryption.AES128 password -> ShadowsocksEncryption.AES128, password
+      | Shadowsocks.ShadowsocksEncryption.AES256 password -> ShadowsocksEncryption.AES256, password
+      | Shadowsocks.ShadowsocksEncryption.ChaCha20 password -> ShadowsocksEncryption.ChaCha20, password
+      | Shadowsocks.ShadowsocksEncryption.ChaCha20Ietf password -> ShadowsocksEncryption.ChaCha20Ietf, password
+      | encryption -> raise (ConfigurationParameterException $"unsupported Shadowsocks encryption ${encryption}")
+
+    { Address = genericShadowsocksObject.Host
+      Port = genericShadowsocksObject.Port
+      Method = method
+      Password = password }
 
 type OutboundProtocols =
   | VMess of VMessObject
   | VLESS of obj
   | VLite of obj
-  | Shadowsocks of obj
+  | Shadowsocks of V2flyShadowsocksObject
   | Trojan of obj
 
 type OutboundObject =
@@ -16,6 +51,29 @@ type OutboundObject =
     Tag: string
     StreamSettings: StreamSettings option
     Mux: MuxObject option }
+
+  static member FromGenericConfigurationObject(tag, genericConfiguration: ConfigurationFamily) =
+    match genericConfiguration with
+    | V2fly settings ->
+      match settings.Protocol with
+      | Protocols.VMess protocolSettings ->
+        { OutboundObject.SendThrough = None
+          Settings = VMess protocolSettings
+          Tag = tag
+          StreamSettings = Some settings.StreamSettings
+          Mux = None }
+      | Protocols.VLESS ->
+        { OutboundObject.SendThrough = None
+          Settings = VLESS {||}
+          Tag = tag
+          StreamSettings = Some settings.StreamSettings
+          Mux = None }
+    | ConfigurationFamily.Shadowsocks settings ->
+      { OutboundObject.SendThrough = None
+        Settings = V2flyShadowsocksObject.FromGenericShadowsocksObject settings |> Shadowsocks
+        Tag = tag
+        StreamSettings = None
+        Mux = None }
 
 type OutboundJsonObject =
   { SendThrough: string option
