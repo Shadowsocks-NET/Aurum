@@ -4,7 +4,6 @@ open Aurum
 open Aurum.Configuration.Shared
 open Aurum.Configuration.Shared.Routing
 open System.Text.Json.Serialization
-open System.Text.RegularExpressions
 
 type DomainStrategy =
   | [<JsonName("AsIs")>] AsIs
@@ -38,16 +37,6 @@ type GeoDataObject =
 
 type CidrObject = { IpAddr: string; Prefix: int }
 
-type RuleObject =
-  { Tag: string
-    Domain: DomainObject list option
-    GeoDomain: GeoDataObject list option
-    Ip: CidrObject list option
-    GeoIp: GeoDataObject list option
-    Networks: RuleMatchNetwork option
-    PortList: string option
-    InboundTag: string option }
-
 let createGeoDataObject (code, filepath) =
   { InverseMatch = None
     Code = Some code
@@ -72,55 +61,64 @@ let parseCidrString (cidrString: string) =
   { IpAddr = cidrStringParts[0]
     Prefix = System.Int32.Parse(cidrStringParts[1]) }
 
-let createRuleObjectFromGenericRuleObject (genericRuleObject: Routing.RuleObject) =
-  let ipList =
-    genericRuleObject.Ip
-    |> Option.map (fun imp ->
-      imp
-      |> List.choose (fun x ->
-        match x with
-        | IP ip -> parseCidrString ip |> Some
-        | _ -> None))
-    |> Option.bind emptyListToNone
+type RuleObject =
+  { Tag: string
+    Domain: DomainObject list option
+    GeoDomain: GeoDataObject list option
+    Ip: CidrObject list option
+    GeoIp: GeoDataObject list option
+    Networks: RuleMatchNetwork option
+    PortList: string option
+    InboundTag: string option }
+  static member FromGenericRuleObject(genericRuleObject: Routing.RuleObject) =
+    let ipList =
+      genericRuleObject.Ip
+      |> Option.map (fun imp ->
+        imp
+        |> List.choose (fun x ->
+          match x with
+          | IP ip -> parseCidrString ip |> Some
+          | _ -> None))
+      |> Option.bind emptyListToNone
 
-  let geoipList =
-    genericRuleObject.Ip
-    |> Option.map (fun inp ->
-      inp
-      |> List.choose (fun x ->
-        match x with
-        | Geoip geoip -> createGeoDataObject (geoip, None) |> Some
-        | _ -> None))
-    |> Option.bind emptyListToNone
+    let geoipList =
+      genericRuleObject.Ip
+      |> Option.map (fun inp ->
+        inp
+        |> List.choose (fun x ->
+          match x with
+          | Geoip geoip -> createGeoDataObject (geoip, None) |> Some
+          | _ -> None))
+      |> Option.bind emptyListToNone
 
-  let domainList =
-    genericRuleObject.Domain
-    |> Option.map (fun inp ->
-      inp
-      |> List.choose (fun entries ->
-        match entries with
-        | Domain domainMatchingType -> mapDomainMatchingType domainMatchingType |> Some
-        | _ -> None))
-    |> Option.bind emptyListToNone
+    let domainList =
+      genericRuleObject.Domain
+      |> Option.map (fun inp ->
+        inp
+        |> List.choose (fun entries ->
+          match entries with
+          | Domain domainMatchingType -> mapDomainMatchingType domainMatchingType |> Some
+          | _ -> None))
+      |> Option.bind emptyListToNone
 
-  let geositeList =
-    genericRuleObject.Domain
-    |> Option.map (fun inp ->
-      inp
-      |> List.choose (fun entries ->
-        match entries with
-        | Geosite geosite -> createGeoDataObject (geosite, None) |> Some
-        | _ -> None))
-    |> Option.bind emptyListToNone
+    let geositeList =
+      genericRuleObject.Domain
+      |> Option.map (fun inp ->
+        inp
+        |> List.choose (fun entries ->
+          match entries with
+          | Geosite geosite -> createGeoDataObject (geosite, None) |> Some
+          | _ -> None))
+      |> Option.bind emptyListToNone
 
-  { RuleObject.Tag = genericRuleObject.Tag
-    Domain = domainList
-    GeoDomain = geositeList
-    Ip = ipList
-    GeoIp = geoipList
-    Networks = genericRuleObject.Networks |> Option.map mapRuleMatchNetwork
-    PortList = genericRuleObject.Port |> Option.map (fun imp -> System.String.Join(",", imp))
-    InboundTag = genericRuleObject.InboundTag }
+    { RuleObject.Tag = genericRuleObject.Tag
+      Domain = domainList
+      GeoDomain = geositeList
+      Ip = ipList
+      GeoIp = geoipList
+      Networks = genericRuleObject.Networks |> Option.map mapRuleMatchNetwork
+      PortList = genericRuleObject.Port |> Option.map (fun imp -> System.String.Join(",", imp))
+      InboundTag = genericRuleObject.InboundTag }
 
 type RoutingObject =
   { DomainStrategy: DomainStrategy option
