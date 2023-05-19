@@ -52,29 +52,6 @@ type OutboundObject =
     StreamSettings: StreamSettings option
     Mux: MuxObject option }
 
-  static member FromGenericConfigurationObject(tag, genericConfiguration: ConfigurationFamily) =
-    match genericConfiguration with
-    | V2fly settings ->
-      match settings.Protocol with
-      | Protocols.VMess protocolSettings ->
-        { OutboundObject.SendThrough = None
-          Settings = VMess protocolSettings
-          Tag = tag
-          StreamSettings = Some settings.StreamSettings
-          Mux = None }
-      | Protocols.VLESS ->
-        { OutboundObject.SendThrough = None
-          Settings = VLESS {| |} // this is a stub. VLESS support will be implemented later
-          Tag = tag
-          StreamSettings = Some settings.StreamSettings
-          Mux = None }
-    | ConfigurationFamily.Shadowsocks settings ->
-      { OutboundObject.SendThrough = None
-        Settings = V2flyShadowsocksObject.FromGenericShadowsocksObject settings |> Shadowsocks
-        Tag = tag
-        StreamSettings = None
-        Mux = None }
-
   static member ParseGenericShadowsocksPlugin(genericConfiguration: ShadowsocksObject) =
     genericConfiguration.Plugin
     |> Option.map (fun inp ->
@@ -107,6 +84,29 @@ type OutboundObject =
             SecuritySettings = securitySettings }
         else
           raise (ConfigurationParameterException $"unknown Shadowsocks v2ray-plugin options '{opt}'"))
+
+  static member FromGenericConfigurationObject(tag, genericConfiguration: ConfigurationFamily) =
+    match genericConfiguration with
+    | V2fly settings ->
+      match settings.Protocol with
+      | Protocols.VMess protocolSettings ->
+        { OutboundObject.SendThrough = None
+          Settings = VMess protocolSettings
+          Tag = tag
+          StreamSettings = Some settings.StreamSettings
+          Mux = None }
+      | Protocols.VLESS ->
+        { OutboundObject.SendThrough = None
+          Settings = VLESS {| |} // this is a stub. VLESS support will be implemented later
+          Tag = tag
+          StreamSettings = Some settings.StreamSettings
+          Mux = None }
+    | ConfigurationFamily.Shadowsocks settings ->
+      { OutboundObject.SendThrough = None
+        Settings = V2flyShadowsocksObject.FromGenericShadowsocksObject settings |> Shadowsocks
+        Tag = tag
+        StreamSettings = OutboundObject.ParseGenericShadowsocksPlugin settings
+        Mux = None }
 
 type OutboundJsonObject =
   { SendThrough: string option
