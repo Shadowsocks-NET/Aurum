@@ -64,7 +64,7 @@ type OutboundObject =
           Mux = None }
       | Protocols.VLESS ->
         { OutboundObject.SendThrough = None
-          Settings = VLESS {||}
+          Settings = VLESS {| |} // this is a stub. VLESS support will be implemented later
           Tag = tag
           StreamSettings = Some settings.StreamSettings
           Mux = None }
@@ -74,6 +74,39 @@ type OutboundObject =
         Tag = tag
         StreamSettings = None
         Mux = None }
+
+  static member ParseGenericShadowsocksPlugin(genericConfiguration: ShadowsocksObject) =
+    genericConfiguration.Plugin
+    |> Option.map (fun inp ->
+      match inp with
+      | SimpleObfs _ -> raise (ConfigurationParameterException "simple-obfs plugin is unsupported by v2ray")
+      | V2ray opt ->
+        let options = opt.Split(";") |> Array.toList
+
+        if options.Length = 0 then
+          let transportSettings = createWebSocketObject (None, None, None, None, None, None)
+
+          { TransportSettings = transportSettings
+            SecuritySettings = TransportSecurity.None }
+        elif options |> List.contains "tls" then
+          let host = (options |> List.find (fun a -> a.IndexOf("host") <> -1)).Split("=")[1]
+
+          let transportSettings =
+            createWebSocketObject (None, None, None, Some host, None, None)
+
+          let securitySettings = createTLSObject (Some host, None)
+
+          { TransportSettings = transportSettings
+            SecuritySettings = securitySettings }
+        elif options |> List.exists (fun a -> a.IndexOf("mode") <> -1) then
+          let host = (options |> List.find (fun a -> a.IndexOf("host") <> -1)).Split("=")[1]
+          let transportSettings = createQuicObject ()
+          let securitySettings = createTLSObject (Some host, None)
+
+          { TransportSettings = transportSettings
+            SecuritySettings = securitySettings }
+        else
+          raise (ConfigurationParameterException $"unknown Shadowsocks v2ray-plugin options '{opt}'"))
 
 type OutboundJsonObject =
   { SendThrough: string option
