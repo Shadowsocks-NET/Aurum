@@ -1,6 +1,5 @@
 module Aurum.Configuration.V2fly.Base
 
-open Aurum.Configuration.V2fly.DNS
 open Aurum.Configuration.V2fly.Inbound
 open Aurum.Configuration.V2fly.Outbound
 open Aurum.Configuration.V2fly.Routing
@@ -25,7 +24,6 @@ type LogObject =
 
 type V2flyBaseConfiguration =
   { Log: LogObject
-    DNS: DNSObject
     Routing: RoutingObject
     Inbounds: InboundObject list
     Outbounds: OutboundObject list }
