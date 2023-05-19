@@ -69,7 +69,7 @@ type RuleObject =
     GeoIp: GeoDataObject list option
     Networks: RuleMatchNetwork option
     PortList: string option
-    InboundTag: string option }
+    InboundTag: string list option }
   static member FromGenericRuleObject(genericRuleObject: Routing.RuleObject) =
     let ipList =
       genericRuleObject.Ip
