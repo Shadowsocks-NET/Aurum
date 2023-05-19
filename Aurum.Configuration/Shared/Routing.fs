@@ -36,7 +36,7 @@ type RuleObject =
     Port: string option
     Networks: RuleMatchNetwork option
     Protocol: RuleMatchProtocol option
-    InboundTag: string option
+    InboundTag: string list option
     Tag: string }
 
 type DomainRuleList = DomainType list
