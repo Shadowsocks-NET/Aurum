@@ -58,8 +58,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
       createTLSObject (
         tryRetrieveFromShareLink "sni",
         tryRetrieveFromShareLink "alpn"
-        |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList),
-        Some false
+        |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList)
       )
     | "none" -> TransportSecurity.None
     | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
