@@ -202,7 +202,7 @@ let createQuicObject () = QUIC {| |}
 
 let createTCPObject () = TCP {| |}
 
-let createTLSObject (serverName, alpn, disableSystemRoot) =
+let createTLSObject (serverName, alpn) =
   TransportSecurity.TLS
     { TLSObject.ServerName = serverName
       ALPN = alpn
