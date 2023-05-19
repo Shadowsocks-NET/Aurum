@@ -1,5 +1,6 @@
 module Aurum.Configuration.Shared.Routing
 
+open System.Text.Json.Serialization
 open Aurum
 
 type DomainStrategy =
@@ -12,9 +13,9 @@ type RuleMatchProtocol =
   | TLS
 
 type RuleMatchNetwork =
-  | TCP
-  | UDP
-  | TCPAndUDP
+  | [<JsonName "tcp">] TCP
+  | [<JsonName "udp">] UDP
+  | [<JsonName "tcp,udp">] TCPAndUDP
 
 type DomainMatchingType =
   | Full of string

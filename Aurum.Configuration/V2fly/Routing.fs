@@ -18,11 +18,6 @@ type RuleMatchProtocol =
   | [<JsonName("http")>] HTTP
   | [<JsonName("tls")>] TLS
 
-type RuleMatchNetwork =
-  | [<JsonName("tcp")>] TCP
-  | [<JsonName("udp")>] UDP
-  | [<JsonName("tcp,udp")>] TCPAndUDP
-
 [<JsonFSharpConverter(BaseUnionEncoding = JsonUnionEncoding.AdjacentTag)>]
 type DomainObject =
   | Plain of string
@@ -48,12 +43,6 @@ let mapDomainMatchingType domainMatchingType =
   | DomainMatchingType.Regex str -> Regex str
   | Keyword str -> Plain str
   | Suffix str -> RootDomain str
-
-let mapRuleMatchNetwork genericRuleMatchNetwork =
-  match genericRuleMatchNetwork with
-  | Routing.RuleMatchNetwork.TCP -> RuleMatchNetwork.TCP
-  | Routing.RuleMatchNetwork.UDP -> RuleMatchNetwork.UDP
-  | Routing.RuleMatchNetwork.TCPAndUDP -> RuleMatchNetwork.TCPAndUDP
 
 let parseCidrString (cidrString: string) =
   let cidrStringParts = cidrString.Split("/")
@@ -116,7 +105,7 @@ type RuleObject =
       GeoDomain = geositeList
       Ip = ipList
       GeoIp = geoipList
-      Networks = genericRuleObject.Networks |> Option.map mapRuleMatchNetwork
+      Networks = genericRuleObject.Networks
       PortList = genericRuleObject.Port |> Option.map (fun imp -> System.String.Join(",", imp))
       InboundTag = genericRuleObject.InboundTag }
 
