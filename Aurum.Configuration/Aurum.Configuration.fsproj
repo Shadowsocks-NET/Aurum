@@ -23,6 +23,7 @@
     <Compile Include="Sing\Outbound.fs" />
     <Compile Include="Sing\Inbound.fs" />
     <Compile Include="Sing\Routing.fs" />
+    <Compile Include="Sing\DNS.fs" />
     <Compile Include="Sing\Base.fs" />
     <Compile Include="AdapterTypes\VMessLegacyShare.fs" />
     <Compile Include="ShareLinks.fs" />
