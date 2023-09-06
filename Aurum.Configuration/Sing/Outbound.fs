@@ -74,4 +74,5 @@ type Outbounds =
   | SOCKS of obj // SOCKSRecord
   | HTTP of obj //  HTTPRecord
   | Shadowsocks of ShadowsocksRecord
+  | VMess of VMessRecord
   | Selector of SelectorRecord
