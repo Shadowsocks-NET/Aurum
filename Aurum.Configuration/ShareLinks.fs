@@ -6,12 +6,20 @@ open Aurum
 open Aurum.Configuration.Shared.Adapter
 open Aurum.Configuration.Shared.Shadowsocks
 open Aurum.Configuration.Shared.V2fly
+open FSharpPlus
+open FSharpPlus.Data
+
+
+type WsTransportSettings = { Path: string; Host: string }
+type GrpcTransportSettings = { ServiceName: string }
 
 let createV2FlyObjectFromUri (uriObject: System.Uri) =
-  let protocol = uriObject.Scheme
-  let uuid = uriObject.UserInfo
-  let host = uriObject.Host
-  let port = uriObject.Port
+  let protocolSetting =
+    match uriObject.Scheme with
+    | "vmess" ->
+      createVMessObject (uriObject.Host, uriObject.Port, uriObject.UserInfo, VMessSecurity.Auto)
+      |> Success
+    | unknown -> Failure([ ShareLinkFormatException $"unknown sharelink protocol {unknown}" ])
 
   let description =
     if uriObject.Fragment.Length = 0 then
@@ -25,32 +33,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
 
   let tryRetrieveFromShareLink = tryRetrieveFromShareLink queryParams
 
-  let transportType = retrieveFromShareLink "type"
-
   let securityType = tryRetrieveFromShareLink "security" |> Option.defaultValue "none"
-
-  let transportSetting =
-    match transportType with
-    | "ws" ->
-      createWebSocketObject (
-        (tryRetrieveFromShareLink "path"),
-        None,
-        None,
-        None,
-        (tryRetrieveFromShareLink "host"),
-        None
-      )
-    | "grpc" -> retrieveFromShareLink "serviceName" |> createGrpcObject
-    | "http" -> createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
-    | "quic" -> createQuicObject ()
-    | "kcp" -> createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
-    | "tcp" -> createTCPObject ()
-    | unknown -> raise (ConfigurationParameterException $"unknown transport protocol {unknown}")
-
-  let protocolSetting =
-    match protocol with
-    | "vmess" -> createVMessObject (host, port, uuid, VMessSecurity.Auto)
-    | unknown -> raise (ShareLinkFormatException $"unknown sharelink protocol {unknown}")
 
   let securitySetting =
     match securityType with
@@ -60,10 +43,52 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
         tryRetrieveFromShareLink "alpn"
         |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList)
       )
-    | "none" -> TransportSecurity.None
-    | unsupported -> raise (ShareLinkFormatException $"unsupported security type {unsupported}")
+      |> Success
+    | "none" -> Success(TransportSecurity.None)
+    | unsupported -> Failure([ ShareLinkFormatException $"unsupported security type {unsupported}" ])
 
-  createConfigurationEntry (description, V2fly(createV2flyObject protocolSetting transportSetting securitySetting))
+  let transportType: Validation<exn list, string> =
+    retrieveFromShareLink "type"
+    |> Result.mapError (fun e -> [ e ])
+    |> Validation.ofResult
+
+  let transportSetting =
+    Validation.bind
+      (fun transportType ->
+        match transportType with
+        | "ws" ->
+          createWebSocketObject (
+            (tryRetrieveFromShareLink "path"),
+            None,
+            None,
+            None,
+            (tryRetrieveFromShareLink "host"),
+            None
+          )
+          |> Success
+        | "grpc" ->
+          retrieveFromShareLink "serviceName"
+          |> Result.mapError (fun e -> [ e ])
+          |> Validation.ofResult
+          |> Validation.map createGrpcObject
+        | "http" ->
+          createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
+          |> Success
+        | "quic" -> createQuicObject () |> Success
+        | "kcp" ->
+          createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
+          |> Success
+        | "tcp" -> createTCPObject () |> Success
+        | unknown -> Failure([ ConfigurationParameterException $"unknown transport protocol {unknown}" ]))
+      transportType
+
+  let v2flyObject =
+    createV2flyObject <!> protocolSetting <*> transportSetting <*> securitySetting
+    |> Validation.map V2fly
+
+  Validation.map (createConfigurationEntry description) v2flyObject
+
+type SsEncryptionInfo = { Method: string; PSKs: string list }
 
 let createShadowsocksObjectFromUri (uriObject: System.Uri) =
   let host = uriObject.Host
@@ -79,29 +104,32 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
     else
       uriObject.Fragment.Substring(1)
 
-  let protocolString, encryptionInfo =
+  let encryptionInfo =
     match
       (if uriObject.UserInfo.IndexOf(":") <> -1 then
          Array.toList (System.Uri.UnescapeDataString(uriObject.UserInfo).Split(":"))
        else
          Array.toList ((decodeBase64Url uriObject.UserInfo).Split(":")))
     with
-    | protocol :: info -> protocol, info
-    | _ -> raise (ShareLinkFormatException $"ill-formed user info \"{uriObject.UserInfo}\"")
+    | protocol :: info -> { Method = protocol; PSKs = info } |> Success
+    | _ -> Failure([ ShareLinkFormatException $"ill-formed user info \"{uriObject.UserInfo}\"" ])
 
   let method =
-    match protocolString with
-    | "none" -> ShadowsocksEncryption.None
-    | "plain" -> ShadowsocksEncryption.Plain
-    | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 encryptionInfo.Head
-    | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20Ietf encryptionInfo.Head
-    | "aes-128-gcm" -> ShadowsocksEncryption.AES128 encryptionInfo.Head
-    | "aes-256-gcm" -> ShadowsocksEncryption.AES256 encryptionInfo.Head
-    | "2022-blake3-aes-128-gcm" -> ShadowsocksEncryption.AES128_2022 encryptionInfo
-    | "2022-blake3-aes-256-gcm" -> ShadowsocksEncryption.AES256_2022 encryptionInfo
-    | "2022-blake3-chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20_2022 encryptionInfo
-    | "2022-blake3-chacha8-poly1305" -> ShadowsocksEncryption.ChaCha8_2022 encryptionInfo
-    | method -> raise (ShareLinkFormatException $"unknown Shadowsocks encryption method {method}")
+    Validation.bind
+      (fun encryptionInfo ->
+        match encryptionInfo.Method with
+        | "none" -> ShadowsocksEncryption.None |> Success
+        | "plain" -> ShadowsocksEncryption.Plain |> Success
+        | "chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20 encryptionInfo.PSKs.Head |> Success
+        | "chacha20-ietf-poly1305" -> ShadowsocksEncryption.ChaCha20Ietf encryptionInfo.PSKs.Head |> Success
+        | "aes-128-gcm" -> ShadowsocksEncryption.AES128 encryptionInfo.PSKs.Head |> Success
+        | "aes-256-gcm" -> ShadowsocksEncryption.AES256 encryptionInfo.PSKs.Head |> Success
+        | "2022-blake3-aes-128-gcm" -> ShadowsocksEncryption.AES128_2022 encryptionInfo.PSKs |> Success
+        | "2022-blake3-aes-256-gcm" -> ShadowsocksEncryption.AES256_2022 encryptionInfo.PSKs |> Success
+        | "2022-blake3-chacha20-poly1305" -> ShadowsocksEncryption.ChaCha20_2022 encryptionInfo.PSKs |> Success
+        | "2022-blake3-chacha8-poly1305" -> ShadowsocksEncryption.ChaCha8_2022 encryptionInfo.PSKs |> Success
+        | method -> Failure([ ShareLinkFormatException $"unknown Shadowsocks encryption method {method}" ]))
+      encryptionInfo
 
   let plugin =
     tryRetrieveFromShareLink "plugin"
@@ -109,12 +137,18 @@ let createShadowsocksObjectFromUri (uriObject: System.Uri) =
       let pluginOpt = op.Split ";" |> Array.toList
 
       match pluginOpt with
-      | "obfs" :: opts -> SimpleObfs(System.String.Join(",", List.toArray opts))
-      | "v2ray" :: opts -> V2ray(System.String.Join(",", List.toArray opts))
-      | pluginName :: _ -> raise (ShareLinkFormatException $"unknown plugin {pluginName}")
-      | unknown -> raise (ShareLinkFormatException $"ill-formed plugin option \"{unknown}\""))
+      | "obfs" :: opts -> SimpleObfs(System.String.Join(",", List.toArray opts)) |> Success
+      | "v2ray" :: opts -> V2ray(System.String.Join(",", List.toArray opts)) |> Success
+      | pluginName :: _ -> Failure([ ShareLinkFormatException $"unknown plugin {pluginName}" ])
+      | unknown -> Failure([ ShareLinkFormatException $"ill-formed plugin option \"{unknown}\"" ]))
+    |> sequence
 
-  createConfigurationEntry (description, Shadowsocks(createShadowsocksObject (host, port, method, plugin)))
+  let shadowsocksObject =
+    createShadowsocksObject host port <!> method <*> plugin
+    |> Validation.map Shadowsocks
+
+  Validation.map (createConfigurationEntry description) shadowsocksObject
+
 
 let decodeShareLink link =
   let uriObject = System.Uri link
@@ -123,4 +157,4 @@ let decodeShareLink link =
   | "vmess"
   | "vless" -> createV2FlyObjectFromUri uriObject
   | "ss" -> createShadowsocksObjectFromUri uriObject
-  | unknown -> raise (ShareLinkFormatException $"unsupported sharelink protocol {unknown}")
+  | unknown -> Failure([ ShareLinkFormatException $"unsupported sharelink protocol {unknown}" ])

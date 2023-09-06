@@ -7,7 +7,7 @@ open System.Collections.Generic
 open Microsoft.Extensions.Primitives
 open System.Text.Json
 open System.Text.Json.Serialization
-open Aether
+open FSharpPlus
 
 [<AutoOpen>]
 module Helpers =
@@ -17,7 +17,7 @@ module Helpers =
     try
       Ok(dict.[key])
     with :? KeyNotFoundException as e ->
-      Error(e)
+      Error(e :> exn)
 
   let tryRetrieveKeyFromDict (dict: Dictionary<'K, 'V>) key =
     try
@@ -30,8 +30,8 @@ module Helpers =
     | Ok some -> some
     | Error error -> raise error
 
-  let getFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) : string =
-    (retrieveKeyFromDict dict key |> unwrapResult).[0]
+  let getFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) =
+    retrieveKeyFromDict dict key |> Result.map (fun x -> x.[0])
 
   let tryGetFirstQuerystringEntry (dict: Dictionary<string, StringValues>) (key: string) : string option =
     match tryRetrieveKeyFromDict dict key with

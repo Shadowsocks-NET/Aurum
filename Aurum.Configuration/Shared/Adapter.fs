@@ -13,4 +13,4 @@ type ConfigurationEntry =
   { Name: string
     Config: ConfigurationFamily }
 
-let createConfigurationEntry (name, config) = { Name = name; Config = config }
+let createConfigurationEntry name config = { Name = name; Config = config }

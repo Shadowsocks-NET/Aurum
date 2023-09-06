@@ -27,7 +27,7 @@ type ShadowsocksObject =
     Encryption: ShadowsocksEncryption
     Plugin: ShadowsocksPlugin option }
 
-let createShadowsocksObject (host, port, encryption, plugin) =
+let createShadowsocksObject host port encryption plugin =
   { Host = host
     Port = port
     Encryption = encryption

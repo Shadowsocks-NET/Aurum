@@ -2,3 +2,4 @@ FSharp.SystemTextJson
 Microsoft.AspNetCore.WebUtilities
 Serilog
 Nanoid
+FSharpPlus
