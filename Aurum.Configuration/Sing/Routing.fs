@@ -141,3 +141,58 @@ type RuleObject =
       ClashMode = None
       Invert = None
       Outbound = genericRuleObject.Tag }
+
+module RuleObject =
+  let inline _inbound f p =
+    f p.Inbound <&> fun x -> { p with Inbound = x }
+
+let inline _ipVersion f p =
+  f p.IpVersion <&> fun x -> { p with IpVersion = x }
+
+let inline _network f p =
+  f p.Network <&> fun x -> { p with Network = x }
+
+let inline _authUser f p =
+  f p.AuthUser <&> fun x -> { p with AuthUser = x }
+
+let inline _protocol f p =
+  f p.Protocol <&> fun x -> { p with Protocol = x }
+
+let inline _domainKeyword f p =
+  f p.DomainKeyword <&> fun x -> { p with DomainKeyword = x }
+
+let inline _domainRegex f p =
+  f p.DomainRegex <&> fun x -> { p with DomainRegex = x }
+
+let inline _geoip f p =
+  f p.Geoip <&> fun x -> { p with Geoip = x }
+
+let inline _ipCidr f p =
+  f p.IpCidr <&> fun x -> { p with IpCidr = x }
+
+let inline _port f p =
+  f p.Port <&> fun x -> { p with Port = x }
+
+let inline _processName f p =
+  f p.ProcessName <&> fun x -> { p with ProcessName = x }
+
+let inline _processPath f p =
+  f p.ProcessPath <&> fun x -> { p with ProcessPath = x }
+
+let inline _packageName f p =
+  f p.PackageName <&> fun x -> { p with PackageName = x }
+
+let inline _user f p =
+  f p.User <&> fun x -> { p with User = x }
+
+let inline _userId f p =
+  f p.UserId <&> fun x -> { p with UserId = x }
+
+let inline _clashMode f p =
+  f p.ClashMode <&> fun x -> { p with ClashMode = x }
+
+let inline _invert f p =
+  f p.Invert <&> fun x -> { p with Invert = x }
+
+let inline _outbound f p =
+  f p.Outbound <&> fun x -> { p with Outbound = x }
