@@ -7,9 +7,11 @@ open System.Threading
 type CoreProcess
   (coreProcessInfo: ProcessStartInfo, loggerTaskBuilder: System.IO.StreamReader -> CancellationToken -> Tasks.Task<unit>)
   =
-  let disposed = false
+  let mutable disposed = false
   let coreProcessInfo = coreProcessInfo
   let cancelLogging = new CancellationTokenSource()
+
+  let mutable internalProcess = new Process()
 
   interface System.IDisposable with
     member this.Dispose() =
@@ -17,12 +19,14 @@ type CoreProcess
         cancelLogging.Cancel()
         cancelLogging.Dispose()
         this.Process.Dispose()
-        disposed = false |> ignore
+        disposed <- false
 
-  member this.Process = new Process()
+  member this.Process
+    with get() = internalProcess
+    and set(value) = internalProcess <- value
 
   member this.Start() =
-    (this.Process = Process.Start(coreProcessInfo)) |> ignore
+    (this.Process <- Process.Start(coreProcessInfo))
 
     let loggerTask = loggerTaskBuilder this.Process.StandardOutput cancelLogging.Token
 
@@ -37,15 +41,15 @@ let startCoreProcess (executablePath, configPath: string, assetPath) =
   let coreProcessInfo =
     ProcessStartInfo(executablePath, $"-config={configPath} -format=json")
 
-  coreProcessInfo.UseShellExecute = false |> ignore
-  coreProcessInfo.CreateNoWindow = false |> ignore
+  coreProcessInfo.UseShellExecute <- false
+  coreProcessInfo.CreateNoWindow <- false
 
-  coreProcessInfo.RedirectStandardError = true |> ignore
+  coreProcessInfo.RedirectStandardError <- true
 
-  coreProcessInfo.RedirectStandardOutput = true |> ignore
+  coreProcessInfo.RedirectStandardOutput <- true
 
   assetPath
-  |> Option.iter (fun a -> coreProcessInfo.Environment.["v2ray.location.asset"] = a |> ignore)
+  |> Option.iter (fun a -> coreProcessInfo.Environment.["v2ray.location.asset"] <- a)
 
   let createCoreLoggerTask (stdout: System.IO.StreamReader) (cancellationToken: CancellationToken) =
     backgroundTask {
