@@ -1,6 +1,7 @@
 module Aurum.Configuration.Sing.Outbound
 
 open System.Text.Json.Serialization
+open FSharpPlus.Lens
 
 type DirectRecord =
   { tag: string
