@@ -18,3 +18,7 @@ paket-cache/
 #nuget files
 nuget/**/*
 !.gitkeep
+
+#fsdocs
+tmp
+.fsdocs
