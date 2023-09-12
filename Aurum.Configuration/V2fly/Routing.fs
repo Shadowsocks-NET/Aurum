@@ -66,7 +66,7 @@ type RuleObject =
         imp
         |> List.choose (fun x ->
           match x with
-          | IP ip -> parseCidrString ip |> Some
+          | Ip ip -> parseCidrString ip |> Some
           | _ -> None))
       |> Option.bind emptyListToNone
 

@@ -2,6 +2,8 @@ module Aurum.Configuration.Shared.Routing
 
 open System.Text.Json.Serialization
 open Aurum
+open FSharpPlus.Lens
+open FSharpPlus.Data
 
 type DomainStrategy =
   | AsIs
@@ -23,13 +25,96 @@ type DomainMatchingType =
   | Suffix of string
   | Keyword of string
 
+module DomainMatchingType =
+  let inline _Full f p =
+    prism'
+      Full
+      (fun x ->
+        match x with
+        | Full x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Regex f p =
+    prism'
+      Regex
+      (fun x ->
+        match x with
+        | Regex x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Suffix f p =
+    prism'
+      Suffix
+      (fun x ->
+        match x with
+        | Suffix x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Keyword f p =
+    prism'
+      Keyword
+      (fun x ->
+        match x with
+        | Keyword x -> Some x
+        | _ -> None)
+      f
+      p
+
 type DomainType =
   | Domain of DomainMatchingType
   | Geosite of string
 
+module DomainType =
+  let inline _Domain f p =
+    prism'
+      Domain
+      (fun x ->
+        match x with
+        | Domain x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Geosite f p =
+    prism'
+      Geosite
+      (fun x ->
+        match x with
+        | Geosite x -> Some x
+        | _ -> None)
+      f
+      p
+
 type IpType =
-  | IP of string
+  | Ip of string
   | Geoip of string
+
+module IpType =
+  let inline _Ip f p =
+    prism'
+      Ip
+      (fun x ->
+        match x with
+        | Ip x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Geoip f p =
+    prism'
+      Geoip
+      (fun x ->
+        match x with
+        | Geoip x -> Some x
+        | _ -> None)
+      f
+      p
 
 type RuleObject =
   { Domain: DomainType list option
@@ -40,6 +125,26 @@ type RuleObject =
     InboundTag: string list option
     Tag: string }
 
+module RuleObject =
+  let inline _Domain f p =
+    f p.Domain <&> fun x -> { p with Domain = x }
+
+  let inline _Ip f p = f p.Ip <&> fun x -> { p with Ip = x }
+
+  let inline _Port f p =
+    f p.Port <&> fun x -> { p with Port = x }
+
+  let inline _Networks f p =
+    f p.Networks <&> fun x -> { p with Networks = x }
+
+  let inline _Protocol f p =
+    f p.Protocol <&> fun x -> { p with Protocol = x }
+
+  let inline _InboundTag f p =
+    f p.InboundTag <&> fun x -> { p with InboundTag = x }
+
+  let inline _Tag f p = f p.Tag <&> fun x -> { p with Tag = x }
+
 type DomainRuleList = DomainType list
 type IpRuleList = IpType list
 
@@ -48,10 +153,30 @@ type DomainStringListObject =
     Proxy: DomainRuleList
     Block: DomainRuleList }
 
+module DomainStringListObject =
+  let inline _Direct f p =
+    f p.Direct <&> fun x -> { p with Direct = x }
+
+  let inline _Proxy f p =
+    f p.Proxy <&> fun x -> { p with Proxy = x }
+
+  let inline _Block f p =
+    f p.Block <&> fun x -> { p with Block = x }
+
 type IpStringListObject =
   { Direct: IpRuleList
     Proxy: IpRuleList
     Block: IpRuleList }
+
+module IpStringListObject =
+  let inline _Direct f p =
+    f p.Direct <&> fun x -> { p with Direct = x }
+
+  let inline _Proxy f p =
+    f p.Proxy <&> fun x -> { p with Proxy = x }
+
+  let inline _Block f p =
+    f p.Block <&> fun x -> { p with Block = x }
 
 type RulePresets =
   | BypassMainland // adopted from v2rayA's mainland whitelist mode
@@ -62,9 +187,34 @@ type RulePresets =
 // when using full domain list or the recommended setting, these options will be ignored
 type RuleConstructionStrategy = { BlockAds: bool }
 
+module RuleConstructionStrategy =
+  let inline _BlockAds f p =
+    f p.BlockAds <&> fun x -> { p with BlockAds = x }
+
 type ProxyTag =
   | Outbound of string
   | Balancer of string
+
+module ProxyTag =
+  let inline _Outbound f p =
+    prism'
+      Outbound
+      (fun x ->
+        match x with
+        | Outbound x -> Some x
+        | _ -> None)
+      f
+      p
+
+  let inline _Balancer f p =
+    prism'
+      Balancer
+      (fun x ->
+        match x with
+        | Balancer x -> Some x
+        | _ -> None)
+      f
+      p
 
 type RuleType =
   | Direct of DomainRuleList option * IpRuleList option
