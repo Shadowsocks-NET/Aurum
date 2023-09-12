@@ -10,7 +10,7 @@ type Subscriptions =
   | SingOutbound of url: OocApiToken
 
 module Subscriptions =
-  let inline _Base64 f p =
+  let inline _Base64 f =
     prism'
       Base64
       (fun x ->
@@ -18,9 +18,8 @@ module Subscriptions =
         | Base64 x -> Some x
         | _ -> None)
       f
-      p
 
-  let inline _Clash f p =
+  let inline _Clash f =
     prism'
       Clash
       (fun x ->
@@ -28,9 +27,8 @@ module Subscriptions =
         | Clash x -> Some x
         | _ -> None)
       f
-      p
 
-  let inline _OocV1 f p =
+  let inline _OocV1 f =
     prism'
       OocV1
       (fun x ->
@@ -38,9 +36,8 @@ module Subscriptions =
         | OocV1 x -> Some x
         | _ -> None)
       f
-      p
 
-  let inline _SingOutbound f p =
+  let inline _SingOutbound f =
     prism'
       SingOutbound
       (fun x ->
