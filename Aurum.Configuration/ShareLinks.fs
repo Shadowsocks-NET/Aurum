@@ -9,10 +9,6 @@ open Aurum.Configuration.Shared.V2fly
 open FSharpPlus
 open FSharpPlus.Data
 
-
-type WsTransportSettings = { Path: string; Host: string }
-type GrpcTransportSettings = { ServiceName: string }
-
 let createV2FlyObjectFromUri (uriObject: System.Uri) =
   let protocolSetting =
     match uriObject.Scheme with
