@@ -6,7 +6,7 @@ on:
       - 'github-v*'
 
 env:
-  DOTNET_VERSION: "7.0.203" # The .NET SDK version to use
+  DOTNET_VERSION: "7.0.400" # The .NET SDK version to use
 
 jobs:
   publish_upload:
