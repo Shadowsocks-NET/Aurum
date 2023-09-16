@@ -5,6 +5,9 @@ on:
     tags:
       - 'github-v*'
 
+permissions:
+  packages: write
+
 env:
   DOTNET_VERSION: ${{ vars.DOTNET_VERSION }}
 
@@ -22,7 +25,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           source-url: https://nuget.pkg.github.com/Shadowsocks-NET/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.HUB_PACKAGE_PAT }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install buildtools
         run: dotnet tool restore
