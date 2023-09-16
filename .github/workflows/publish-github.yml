@@ -36,5 +36,5 @@ jobs:
       - name: Pack and upload NuGet package
         run: |
           dotnet pack -c Release
-          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.HUB_PACKAGE_PAT }}
-          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.HUB_PACKAGE_PAT }}
+          dotnet nuget push Aurum/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.HUB_PACKAGE_PAT }} --source https://nuget.pkg.github.com/Shadowsocks-NET/index.json
+          dotnet nuget push Aurum.*/bin/Release/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.HUB_PACKAGE_PAT }} --source https://nuget.pkg.github.com/Shadowsocks-NET/index.json
