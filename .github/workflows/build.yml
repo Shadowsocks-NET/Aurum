@@ -9,7 +9,7 @@ on:
       - "**.fsproj"
 
 env:
-  DOTNET_VERSION: "7.0.400" # The .NET SDK version to use
+  DOTNET_VERSION: ${{ vars.DOTNET_VERSION }} # The .NET SDK version to use
 
 jobs:
   build:
