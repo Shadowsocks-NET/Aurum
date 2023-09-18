@@ -6,6 +6,8 @@ open FSharpPlus.Lens
 open FSharpPlus.Data
 open FSharpPlus
 
+let inline traverseResultList (f: 'a -> Result<'b, 'e>) (xs: 'a list) : Result<'b list, 'e> = traverse f xs
+
 type DomainStrategy =
   | AsIs
   | IPIfNonMatch
@@ -315,7 +317,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
              ipDirect
              Proxy(None, None) ]
            |> List.map Ok))
-      |> sequence
+      |> traverseResultList id
     )
   | GFWList domainList ->
     let blockPreset = constructPreset constructionStrategy
@@ -334,7 +336,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
         Ok userDirectRule
         mergeRules userProxyRule proxyRule
         Ok(Proxy(None, None)) ]
-      |> sequence
+      |> traverseResultList id
     )
   | Loyalsoldier ->
     let userBlockRule = Block(Some userDomainRules.Block, Some userIpRules.Block)
@@ -370,7 +372,7 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
             directRule2
             Proxy(None, None) ]
           |> List.map Ok)
-      |> sequence
+      |> traverseResultList id
     )
   | Empty ->
     let blockPreset = constructPreset constructionStrategy
@@ -379,5 +381,5 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
       [ mergeRules blockPreset (Block(Some userDomainRules.Block, Some userIpRules.Block))
         Ok(Direct(Some userDomainRules.Direct, Some userIpRules.Direct))
         Ok(Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)) ]
-      |> sequence
+      |> traverseResultList id
     )
