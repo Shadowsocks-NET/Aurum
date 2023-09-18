@@ -365,12 +365,12 @@ let parseVMessSecurity security =
   let security = Option.defaultValue "auto" security
 
   match security with
-  | "none" -> VMessSecurity.None
-  | "zero" -> VMessSecurity.Zero
-  | "auto" -> VMessSecurity.Auto
-  | "aes-128-gcm" -> VMessSecurity.AES
-  | "chacha20-poly1305" -> VMessSecurity.ChaCha20
-  | _ -> raise (ConfigurationParameterException "unknown security type")
+  | "none" -> Ok VMessSecurity.None
+  | "zero" -> Ok VMessSecurity.Zero
+  | "auto" -> Ok VMessSecurity.Auto
+  | "aes-128-gcm" -> Ok VMessSecurity.AES
+  | "chacha20-poly1305" -> Ok VMessSecurity.ChaCha20
+  | _ -> Error (ConfigurationParameterException "unknown security type")
 
 let createV2flyObject protocol transportSettings securitySettings =
   { Protocol = protocol

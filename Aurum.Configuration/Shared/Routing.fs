@@ -4,6 +4,7 @@ open System.Text.Json.Serialization
 open Aurum
 open FSharpPlus.Lens
 open FSharpPlus.Data
+open FSharpPlus
 
 type DomainStrategy =
   | AsIs
@@ -257,26 +258,26 @@ let constructSingleRule rule proxyTag =
   | Skip -> None
 
 let constructRuleSet ruleSet proxyTag =
-  List.map (fun rule -> constructSingleRule rule proxyTag) ruleSet
-  |> List.filter Option.isSome
-  |> List.map Option.get
+  match ruleSet with
+  | Ok ruleSet ->
+    List.map (fun rule -> constructSingleRule rule proxyTag) ruleSet
+    |> List.filter Option.isSome
+    |> List.map Option.get
+    |> Ok
+  | Error e -> Error e
 
 let mergeRules rule1 rule2 =
   match rule1, rule2 with
-  | Direct(xDomain, xIP), Direct(yDomain, yIP) -> Direct(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
-  | Proxy(xDomain, xIP), Proxy(yDomain, yIP) -> Proxy(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
-  | Block(xDomain, xIP), Block(yDomain, yIP) -> Block(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP)
-  | _ -> raise RuleTypeNotMatchException
+  | Direct(xDomain, xIP), Direct(yDomain, yIP) -> Ok(Direct(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP))
+  | Proxy(xDomain, xIP), Proxy(yDomain, yIP) -> Ok(Proxy(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP))
+  | Block(xDomain, xIP), Block(yDomain, yIP) -> Ok(Block(mergeOptionList xDomain yDomain, mergeOptionList xIP yIP))
+  | _ -> Error RuleTypeNotMatchException
 
 let constructPreset constructionStrategy =
-
-  let blockRule =
-    if constructionStrategy.BlockAds then
-      Block(Some [ Geosite "category-ads-all" ], None)
-    else
-      Skip
-
-  blockRule
+  if constructionStrategy.BlockAds then
+    Block(Some [ Geosite "category-ads-all" ], None)
+  else
+    Skip
 
 let generateRoutingRules (domainList, constructionStrategy, userDomainRules: DomainStringListObject, userIpRules) =
   match domainList with
@@ -302,17 +303,20 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let ipDirect = Direct(None, Some [ Geoip "private"; Geoip "cn" ])
 
-    constructRuleSet
-      [ mergeRules userBlockRule blockPreset
-        userDirectRule
-        userProxyRule
-        geolocationProxy
-        scholarProxy
-        scholarDirect
-        siteCNDirect
-        sarProxy
-        ipDirect
-        Proxy(None, None) ]
+    constructRuleSet (
+      (mergeRules userBlockRule blockPreset
+       :: ([ userDirectRule
+             userProxyRule
+             geolocationProxy
+             scholarProxy
+             scholarDirect
+             siteCNDirect
+             sarProxy
+             ipDirect
+             Proxy(None, None) ]
+           |> List.map Ok))
+      |> sequence
+    )
   | GFWList domainList ->
     let blockPreset = constructPreset constructionStrategy
 
@@ -325,11 +329,13 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
     let proxyRule =
       Proxy(Some(domainList |> List.map (fun a -> Domain(Suffix a))), None)
 
-    constructRuleSet
+    constructRuleSet (
       [ mergeRules userBlockRule blockPreset
-        userDirectRule
+        Ok userDirectRule
         mergeRules userProxyRule proxyRule
-        Proxy(None, None) ]
+        Ok(Proxy(None, None)) ]
+      |> sequence
+    )
   | Loyalsoldier ->
     let userBlockRule = Block(Some userDomainRules.Block, Some userIpRules.Block)
 
@@ -355,18 +361,23 @@ let generateRoutingRules (domainList, constructionStrategy, userDomainRules: Dom
 
     let directRule2 = Direct(Some([ Geosite "cn" ]), None)
 
-    constructRuleSet
-      [ mergeRules userBlockRule blockRule
-        userDirectRule
-        userProxyRule
-        directRule1
-        proxyRule
-        directRule2
-        Proxy(None, None) ]
+    constructRuleSet (
+      (mergeRules userBlockRule blockRule)
+      :: ([ userDirectRule
+            userProxyRule
+            directRule1
+            proxyRule
+            directRule2
+            Proxy(None, None) ]
+          |> List.map Ok)
+      |> sequence
+    )
   | Empty ->
     let blockPreset = constructPreset constructionStrategy
 
-    constructRuleSet
+    constructRuleSet (
       [ mergeRules blockPreset (Block(Some userDomainRules.Block, Some userIpRules.Block))
-        Direct(Some userDomainRules.Direct, Some userIpRules.Direct)
-        Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy) ]
+        Ok(Direct(Some userDomainRules.Direct, Some userIpRules.Direct))
+        Ok(Proxy(Some userDomainRules.Proxy, Some userIpRules.Proxy)) ]
+      |> sequence
+    )
