@@ -105,7 +105,7 @@ module TransportProtocol =
       WebSocket
       (fun x ->
         match x with
-        | WebSocket x -> Some (WebSocket x)
+        | WebSocket x -> Some(WebSocket x)
         | _ -> None)
       f
 
@@ -114,7 +114,7 @@ module TransportProtocol =
       KCP
       (fun x ->
         match x with
-        | KCP x -> Some (KCP x)
+        | KCP x -> Some(KCP x)
         | _ -> None)
       f
 
@@ -123,7 +123,7 @@ module TransportProtocol =
       HTTP
       (fun x ->
         match x with
-        | HTTP x -> Some (HTTP x)
+        | HTTP x -> Some(HTTP x)
         | _ -> None)
       f
 
@@ -141,7 +141,7 @@ module TransportProtocol =
       GRPC
       (fun x ->
         match x with
-        | GRPC x -> Some (GRPC x)
+        | GRPC x -> Some(GRPC x)
         | _ -> None)
       f
 
@@ -182,7 +182,7 @@ module TransportSecurity =
       TransportSecurity.TLS
       (fun x ->
         match x with
-        | TransportSecurity.TLS x -> Some (TransportSecurity.TLS x)
+        | TransportSecurity.TLS x -> Some(TransportSecurity.TLS x)
         | _ -> None)
       f
 
@@ -282,7 +282,7 @@ module Protocols =
       Protocols.VMess
       (fun x ->
         match x with
-        | Protocols.VMess x -> Some (Protocols.VMess x)
+        | Protocols.VMess x -> Some(Protocols.VMess x)
         | _ -> None)
       f
 
@@ -370,7 +370,7 @@ let parseVMessSecurity security =
   | "auto" -> Ok VMessSecurity.Auto
   | "aes-128-gcm" -> Ok VMessSecurity.AES
   | "chacha20-poly1305" -> Ok VMessSecurity.ChaCha20
-  | _ -> Error (ConfigurationParameterException "unknown security type")
+  | _ -> Error(ConfigurationParameterException "unknown security type")
 
 let createV2flyObject protocol transportSettings securitySettings =
   { Protocol = protocol
