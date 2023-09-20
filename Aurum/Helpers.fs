@@ -68,6 +68,7 @@ module Helpers =
     .WithUnionTagNamingPolicy(JsonNamingPolicy.SnakeCase)
     .WithUnionFieldNamingPolicy(JsonNamingPolicy.SnakeCase)
     .WithSkippableOptionFields()
+    .WithAllowOverride()
     .AddToJsonSerializerOptions(singSystemTextJsonOptions)
 
   let v2flySystemTextJsonOptions =
