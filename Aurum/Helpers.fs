@@ -59,8 +59,9 @@ module Helpers =
       NumberHandling = JsonNumberHandling.AllowReadingFromString
     )
 
-  JsonFSharpOptions
-    .ThothLike()
+  JsonFSharpOptions()
+    .WithUnionInternalTag()
+    .WithUnionAllowUnorderedTag()
     .WithUnwrapOption()
     .WithUnionUnwrapRecordCases()
     .WithUnionTagName("type")
