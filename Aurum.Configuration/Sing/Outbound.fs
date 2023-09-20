@@ -1,7 +1,41 @@
 module Aurum.Configuration.Sing.Outbound
 
+open Aurum.Configuration.Shared.Adapter
 open System.Text.Json.Serialization
+open System.Collections.Generic
 open FSharpPlus.Lens
+
+[<JsonFSharpConverter(UnionUnwrapFieldlessTags = true)>]
+type MultiplexProtocol =
+  | Smux
+  | Yamux
+  | H2mux
+
+type MultiplexRecord =
+  { enabled: bool
+    protocol: MultiplexProtocol option
+    maxConnections: int option
+    minStreams: int option
+    maxStreams: int option
+    padding: bool option }
+
+module MultiplexRecord =
+  let inline _enabled f p = f p.enabled <&> fun x -> { p with enabled = x }
+
+  let inline _protocol f p =
+    f p.protocol <&> fun x -> { p with protocol = x }
+
+  let inline _maxConnections f p =
+    f p.maxConnections <&> fun x -> { p with maxConnections = x }
+
+  let inline _minStreams f p =
+    f p.minStreams <&> fun x -> { p with minStreams = x }
+
+  let inline _maxStreams f p =
+    f p.maxStreams <&> fun x -> { p with maxStreams = x }
+
+  let inline _padding f p =
+    f p.padding <&> fun x -> { p with padding = x }
 
 type DirectRecord =
   { tag: string
@@ -19,7 +53,6 @@ type DirectRecord =
     tcpFastOpen: bool option
     domainStrategy: string option
     fallbackDelay: string option }
-
 
 module DirectRecord =
   let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }
@@ -73,7 +106,8 @@ type ShadowsocksRecord =
     method: string
     password: string
     network: string option
-    udpOverTcp: bool option
+    udpOverTcp: obj option
+    multiplex: MultiplexRecord option
 
     detour: string option
     bindInterface: string option
@@ -106,6 +140,9 @@ module ShadowsocksRecord =
   let inline _udpOverTcp f p =
     f p.udpOverTcp <&> fun x -> { p with udpOverTcp = x }
 
+  let inline _multiplex f p =
+    f p.multiplex <&> fun x -> { p with multiplex = x }
+
   let inline _detour f p =
     f p.detour <&> fun x -> { p with detour = x }
 
@@ -133,6 +170,38 @@ module ShadowsocksRecord =
   let inline _fallbackDelay f p =
     f p.fallbackDelay <&> fun x -> { p with fallbackDelay = x }
 
+type HttpTransport =
+  { host: string list
+    path: string
+    method: string
+    headers: Dictionary<string, string>
+    idleTimeout: string
+    pingTimeout: string }
+
+type WebSocketTransport =
+  { path: string
+    headers: Dictionary<string, string>
+    maxEarlyData: int
+    earlyDataHeaderName: string }
+
+type GrpcTransport =
+  { serviceName: string
+    idleTimeout: string
+    pingTimeout: string
+    permitWithoutStream: bool }
+
+type V2RayTransport =
+  | HTTP of HttpTransport
+  | WebSocket of WebSocketTransport
+  | QUIC
+  | GRPC of GrpcTransport
+
+[<JsonFSharpConverter(UnionUnwrapFieldlessTags = true)>]
+type V2RayPaketEncoding =
+  | [<JsonName "">] None
+  | [<JsonName "paketaddr">] PaketAddr
+  | [<JsonName "xudp">] Xudp
+
 type VMessRecord =
   { tag: string
 
@@ -140,8 +209,13 @@ type VMessRecord =
     serverPort: int16
     security: string option
     uuid: string
+    alterId: int option
+    globalPadding: bool option
+    authenticatedLength: bool option
     network: string option
-    udpOverTcp: bool option
+    paketEncoding: V2RayPaketEncoding option
+    multiplex: MultiplexRecord option
+    transport: V2RayTransport
 
     detour: string option
     bindInterface: string option
@@ -152,6 +226,8 @@ type VMessRecord =
     tcpFastOpen: bool option
     domainStrategy: string option
     fallbackDelay: string option }
+
+    static member FromV2FlyObject v2flyObject = ()
 
 module VMessRecord =
   let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }
@@ -171,8 +247,8 @@ module VMessRecord =
   let inline _network f p =
     f p.network <&> fun x -> { p with network = x }
 
-  let inline _udpOverTcp f p =
-    f p.udpOverTcp <&> fun x -> { p with udpOverTcp = x }
+  let inline _multiplex f p =
+    f p.multiplex <&> fun x -> { p with multiplex = x }
 
 type SelectorRecord =
   { tag: string
@@ -198,3 +274,5 @@ type Outbounds =
   | Shadowsocks of ShadowsocksRecord
   | VMess of VMessRecord
   | Selector of SelectorRecord
+
+  static member FromSharedAdapters sharedAdapter = ()
