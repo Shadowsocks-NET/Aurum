@@ -133,22 +133,25 @@ type OutboundJsonObject =
       Mux = outboundObject.Mux }
 
   member this.ToOutboundObject() =
-    let settings =
+    let settings = // this process is error-prone, but there is no choice since FSharp.SystemTextJson does not have support for unwrapping records onto its upper-layer records.
       match this.Protocol with
-      | "vmess" -> VMess(downcast this.Settings)
-      | "vless" -> VLESS(downcast this.Settings)
-      | "vlite" -> VLite(downcast this.Settings)
-      | "shadowsocks" -> Shadowsocks(downcast this.Settings)
-      | "trojan" -> Trojan(downcast this.Settings)
-      | _ -> raise (ConfigurationParameterException $"unknown protocol type '{this.Protocol}'")
+      | "vmess" -> VMess(downcast this.Settings) |> Ok
+      | "vless" -> VLESS(downcast this.Settings) |> Ok
+      | "vlite" -> VLite(downcast this.Settings) |> Ok
+      | "shadowsocks" -> Shadowsocks(downcast this.Settings) |> Ok
+      | "trojan" -> Trojan(downcast this.Settings) |> Ok
+      | _ -> Error(ConfigurationParameterException $"unknown protocol type '{this.Protocol}'")
 
-    { OutboundObject.SendThrough = this.SendThrough
-      Settings = settings
-      Tag = this.Tag
-      StreamSettings = this.StreamSettings
-      Mux = this.Mux }
+    match settings with
+    | Ok settings ->
+      { OutboundObject.SendThrough = this.SendThrough
+        Settings = settings
+        Tag = this.Tag
+        StreamSettings = this.StreamSettings
+        Mux = this.Mux } |> Ok
+    | Error e -> Error e
 
-let createV2flyOutboundObject (sendThrough, setting, streamSetting, tag, mux) : OutboundObject =
+let createV2flyOutboundObject sendThrough setting streamSetting tag mux =
   { OutboundObject.SendThrough = sendThrough
     StreamSettings = streamSetting
     Settings = setting
