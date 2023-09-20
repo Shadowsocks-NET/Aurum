@@ -146,53 +146,53 @@ module RuleObject =
   let inline _inbound f p =
     f p.inbound <&> fun x -> { p with inbound = x }
 
-let inline _ipVersion f p =
-  f p.ipVersion <&> fun x -> { p with ipVersion = x }
+  let inline _ipVersion f p =
+    f p.ipVersion <&> fun x -> { p with ipVersion = x }
 
-let inline _network f p =
-  f p.network <&> fun x -> { p with network = x }
+  let inline _network f p =
+    f p.network <&> fun x -> { p with network = x }
 
-let inline _authUser f p =
-  f p.authUser <&> fun x -> { p with authUser = x }
+  let inline _authUser f p =
+    f p.authUser <&> fun x -> { p with authUser = x }
 
-let inline _protocol f p =
-  f p.protocol <&> fun x -> { p with protocol = x }
+  let inline _protocol f p =
+    f p.protocol <&> fun x -> { p with protocol = x }
 
-let inline _domainKeyword f p =
-  f p.domainKeyword <&> fun x -> { p with domainKeyword = x }
+  let inline _domainKeyword f p =
+    f p.domainKeyword <&> fun x -> { p with domainKeyword = x }
 
-let inline _domainRegex f p =
-  f p.domainRegex <&> fun x -> { p with domainRegex = x }
+  let inline _domainRegex f p =
+    f p.domainRegex <&> fun x -> { p with domainRegex = x }
 
-let inline _geoip f p =
-  f p.geoip <&> fun x -> { p with geoip = x }
+  let inline _geoip f p =
+    f p.geoip <&> fun x -> { p with geoip = x }
 
-let inline _ipCidr f p =
-  f p.ipCidr <&> fun x -> { p with ipCidr = x }
+  let inline _ipCidr f p =
+    f p.ipCidr <&> fun x -> { p with ipCidr = x }
 
-let inline _port f p =
-  f p.port <&> fun x -> { p with port = x }
+  let inline _port f p =
+    f p.port <&> fun x -> { p with port = x }
 
-let inline _processName f p =
-  f p.processName <&> fun x -> { p with processName = x }
+  let inline _processName f p =
+    f p.processName <&> fun x -> { p with processName = x }
 
-let inline _processPath f p =
-  f p.processPath <&> fun x -> { p with processPath = x }
+  let inline _processPath f p =
+    f p.processPath <&> fun x -> { p with processPath = x }
 
-let inline _packageName f p =
-  f p.packageName <&> fun x -> { p with packageName = x }
+  let inline _packageName f p =
+    f p.packageName <&> fun x -> { p with packageName = x }
 
-let inline _user f p =
-  f p.user <&> fun x -> { p with user = x }
+  let inline _user f p =
+    f p.user <&> fun x -> { p with user = x }
 
-let inline _userId f p =
-  f p.userId <&> fun x -> { p with userId = x }
+  let inline _userId f p =
+    f p.userId <&> fun x -> { p with userId = x }
 
-let inline _clashMode f p =
-  f p.clashMode <&> fun x -> { p with clashMode = x }
+  let inline _clashMode f p =
+    f p.clashMode <&> fun x -> { p with clashMode = x }
 
-let inline _invert f p =
-  f p.invert <&> fun x -> { p with invert = x }
+  let inline _invert f p =
+    f p.invert <&> fun x -> { p with invert = x }
 
-let inline _outbound f p =
-  f p.outbound <&> fun x -> { p with outbound = x }
+  let inline _outbound f p =
+    f p.outbound <&> fun x -> { p with outbound = x }
