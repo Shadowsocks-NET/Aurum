@@ -5,8 +5,12 @@ open Aurum
 open System.Collections.Generic
 open FSharpPlus.Lens
 
+type HttpVersion =
+  | [<JsonName "http/1.1">] HTTP1
+  | [<JsonName "h2">] HTTP2
+  | [<JsonName "h3">] HTTP3
+
 type TransportProtocol =
-  | TCP
   | KCP of KcpObject
   | WebSocket of WebSocketObject
   | HTTP of HttpObject
@@ -33,7 +37,8 @@ and KcpObject =
 and HttpObject =
   { Host: string list
     Path: string
-    Headers: Dictionary<string, string list> }
+    Version: HttpVersion
+    Headers: Dictionary<string, string list> option }
 
 and GrpcObject = { ServiceName: string }
 
@@ -91,15 +96,6 @@ module GrpcObject =
     f p.ServiceName <&> fun x -> { p with ServiceName = x }
 
 module TransportProtocol =
-  let inline _TCP f =
-    prism'
-      (fun _ -> TCP)
-      (fun x ->
-        match x with
-        | TCP -> Some TCP
-        | _ -> None)
-      f
-
   let inline _WebSocket f =
     prism'
       WebSocket
@@ -345,8 +341,6 @@ let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, rea
   KCP config
 
 let createQuicObject () = QUIC
-
-let createTCPObject () = TCP
 
 let createTLSObject (serverName, alpn) =
   TransportSecurity.TLS
