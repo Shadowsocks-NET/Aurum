@@ -45,7 +45,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.ChaCha20
       (fun x ->
         match x with
-        | ShadowsocksEncryption.ChaCha20 x -> Some (ShadowsocksEncryption.ChaCha20 x)
+        | ShadowsocksEncryption.ChaCha20 x -> Some(ShadowsocksEncryption.ChaCha20 x)
         | _ -> None)
       f
       p
@@ -55,7 +55,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.ChaCha20Ietf
       (fun x ->
         match x with
-        | ShadowsocksEncryption.ChaCha20Ietf x -> Some (ShadowsocksEncryption.ChaCha20Ietf x)
+        | ShadowsocksEncryption.ChaCha20Ietf x -> Some(ShadowsocksEncryption.ChaCha20Ietf x)
         | _ -> None)
       f
       p
@@ -65,7 +65,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.AES128
       (fun x ->
         match x with
-        | ShadowsocksEncryption.AES128 x -> Some (ShadowsocksEncryption.AES128 x)
+        | ShadowsocksEncryption.AES128 x -> Some(ShadowsocksEncryption.AES128 x)
         | _ -> None)
       f
       p
@@ -75,7 +75,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.AES256
       (fun x ->
         match x with
-        | ShadowsocksEncryption.AES256 x -> Some (ShadowsocksEncryption.AES256 x)
+        | ShadowsocksEncryption.AES256 x -> Some(ShadowsocksEncryption.AES256 x)
         | _ -> None)
       f
       p
@@ -85,7 +85,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.AES128_2022
       (fun x ->
         match x with
-        | ShadowsocksEncryption.AES128_2022 x -> Some (ShadowsocksEncryption.AES128_2022 x)
+        | ShadowsocksEncryption.AES128_2022 x -> Some(ShadowsocksEncryption.AES128_2022 x)
         | _ -> None)
       f
       p
@@ -95,7 +95,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.AES256_2022
       (fun x ->
         match x with
-        | ShadowsocksEncryption.AES256_2022 x -> Some (ShadowsocksEncryption.AES256_2022 x)
+        | ShadowsocksEncryption.AES256_2022 x -> Some(ShadowsocksEncryption.AES256_2022 x)
         | _ -> None)
       f
       p
@@ -105,7 +105,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.ChaCha20_2022
       (fun x ->
         match x with
-        | ShadowsocksEncryption.ChaCha20_2022 x -> Some (ShadowsocksEncryption.ChaCha20_2022 x)
+        | ShadowsocksEncryption.ChaCha20_2022 x -> Some(ShadowsocksEncryption.ChaCha20_2022 x)
         | _ -> None)
       f
       p
@@ -115,7 +115,7 @@ module ShadowsocksEncryption =
       ShadowsocksEncryption.ChaCha8_2022
       (fun x ->
         match x with
-        | ShadowsocksEncryption.ChaCha8_2022 x -> Some (ShadowsocksEncryption.ChaCha8_2022 x)
+        | ShadowsocksEncryption.ChaCha8_2022 x -> Some(ShadowsocksEncryption.ChaCha8_2022 x)
         | _ -> None)
       f
       p
@@ -130,7 +130,7 @@ module ShadowsocksPlugin =
       ShadowsocksPlugin.SimpleObfs
       (fun x ->
         match x with
-        | ShadowsocksPlugin.SimpleObfs x -> Some (ShadowsocksPlugin.SimpleObfs x)
+        | ShadowsocksPlugin.SimpleObfs x -> Some(ShadowsocksPlugin.SimpleObfs x)
         | _ -> None)
       f
       p
@@ -140,7 +140,7 @@ module ShadowsocksPlugin =
       ShadowsocksPlugin.V2ray
       (fun x ->
         match x with
-        | ShadowsocksPlugin.V2ray x -> Some (ShadowsocksPlugin.V2ray x)
+        | ShadowsocksPlugin.V2ray x -> Some(ShadowsocksPlugin.V2ray x)
         | _ -> None)
       f
       p
@@ -154,10 +154,13 @@ type ShadowsocksObject =
 module ShadowsocksObject =
   let inline _Host f p =
     f p.Host <&> fun x -> { p with Host = x }
+
   let inline _Port f p =
     f p.Port <&> fun x -> { p with Port = x }
+
   let inline _Encryption f p =
     f p.Encryption <&> fun x -> { p with Encryption = x }
+
   let inline _Plugin f p =
     f p.Plugin <&> fun x -> { p with Plugin = x }
 

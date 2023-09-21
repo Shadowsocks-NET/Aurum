@@ -29,9 +29,7 @@ type DnsDomainRuleType =
   | Keyword of string list
   | Regex of string list
 
-type DnsServerObject =
-  { tag: string
-    address: string }
+type DnsServerObject = { tag: string; address: string }
 
 type RuleType =
   | Block of rules: DnsDomainRuleType
@@ -58,9 +56,15 @@ type DnsObject =
 let mapDnsRuleType dnsRuleType (origObject: DnsRuleObject) =
   match dnsRuleType with
   | Full domain -> { origObject with Domain = Some domain }
-  | Suffix domain -> { origObject with DomainSuffix = Some domain }
-  | Keyword domain -> { origObject with DomainKeyword = Some domain }
-  | Regex domain -> { origObject with DomainRegex = Some domain }
+  | Suffix domain ->
+    { origObject with
+        DomainSuffix = Some domain }
+  | Keyword domain ->
+    { origObject with
+        DomainKeyword = Some domain }
+  | Regex domain ->
+    { origObject with
+        DomainRegex = Some domain }
 
 let mapRuleType ruleType =
   match ruleType with
@@ -82,8 +86,9 @@ let mapRuleType ruleType =
       Outbound = None
       Server = "block"
       DisableCache = None
-      RewriteTtl = None } |> mapDnsRuleType rules
-  | Redirect (rules, tag) ->
+      RewriteTtl = None }
+    |> mapDnsRuleType rules
+  | Redirect(rules, tag) ->
     { Inbound = None
       QueryType = None
       Network = None
@@ -101,7 +106,8 @@ let mapRuleType ruleType =
       Outbound = None
       Server = tag
       DisableCache = None
-      RewriteTtl = None } |> mapDnsRuleType rules
+      RewriteTtl = None }
+    |> mapDnsRuleType rules
 
 let createDnsObject (internalDnsObject: InternalDnsObject) =
   { DnsObject.rules = List.map mapRuleType internalDnsObject.rules

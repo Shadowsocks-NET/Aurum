@@ -21,11 +21,10 @@ type SOCKSRecord =
     users: obj list }
 
 module SOCKSRecord =
-  let inline _tag f p =
-    f p.tag <&> fun x -> { p with tag = x }
+  let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }
 
   let inline _listen f p =
-    f p.listen <&> fun x -> { p with listen = x}
+    f p.listen <&> fun x -> { p with listen = x }
 
   let inline _listenPort f p =
     f p.listenPort <&> fun x -> { p with listenPort = x }
@@ -40,7 +39,8 @@ module SOCKSRecord =
     f p.sniff <&> fun x -> { p with sniff = x }
 
   let inline _sniffOverrideDestination f p =
-    f p.sniffOverrideDestination <&> fun x -> { p with sniffOverrideDestination = x }
+    f p.sniffOverrideDestination
+    <&> fun x -> { p with sniffOverrideDestination = x }
 
   let inline _domainStrategy f p =
     f p.domainStrategy <&> fun x -> { p with domainStrategy = x }
@@ -52,7 +52,10 @@ module SOCKSRecord =
     f p.proxyProtocol <&> fun x -> { p with proxyProtocol = x }
 
   let inline _proxyProtocolAcceptNoHeader f p =
-    f p.proxyProtocolAcceptNoHeader <&> fun x -> { p with proxyProtocolAcceptNoHeader = x }
+    f p.proxyProtocolAcceptNoHeader
+    <&> fun x ->
+      { p with
+          proxyProtocolAcceptNoHeader = x }
 
   let inline _detour f p =
     f p.detour <&> fun x -> { p with detour = x }
@@ -80,8 +83,7 @@ type HttpRecord =
     setSystemProxy: bool option }
 
 module HttpRecord =
-  let inline _tag f p =
-    f p.tag <&> fun x -> { p with tag = x }
+  let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }
 
   let inline _listen f p =
     f p.listen <&> fun x -> { p with listen = x }
@@ -99,7 +101,8 @@ module HttpRecord =
     f p.sniff <&> fun x -> { p with sniff = x }
 
   let inline _sniffOverrideDestination f p =
-    f p.sniffOverrideDestination <&> fun x -> { p with sniffOverrideDestination = x }
+    f p.sniffOverrideDestination
+    <&> fun x -> { p with sniffOverrideDestination = x }
 
   let inline _domainStrategy f p =
     f p.domainStrategy <&> fun x -> { p with domainStrategy = x }
@@ -111,7 +114,10 @@ module HttpRecord =
     f p.proxyProtocol <&> fun x -> { p with proxyProtocol = x }
 
   let inline _proxyProtocolAcceptNoHeader f p =
-    f p.proxyProtocolAcceptNoHeader <&> fun x -> { p with proxyProtocolAcceptNoHeader = x }
+    f p.proxyProtocolAcceptNoHeader
+    <&> fun x ->
+      { p with
+          proxyProtocolAcceptNoHeader = x }
 
   let inline _detour f p =
     f p.detour <&> fun x -> { p with detour = x }
@@ -119,8 +125,7 @@ module HttpRecord =
   let inline _users f p =
     f p.users <&> fun x -> { p with users = x }
 
-  let inline _tls f p =
-    f p.tls <&> fun x -> { p with tls = x }
+  let inline _tls f p = f p.tls <&> fun x -> { p with tls = x }
 
   let inline _setSystemProxy f p =
     f p.setSystemProxy <&> fun x -> { p with setSystemProxy = x }
@@ -141,11 +146,10 @@ type MixedRecord =
     detour: string option
 
     users: obj list option
-    setSystemProxy: bool option}
+    setSystemProxy: bool option }
 
 module MixedRecord =
-  let inline tag_ f p =
-    f p.tag <&> fun x -> { p with tag = x }
+  let inline tag_ f p = f p.tag <&> fun x -> { p with tag = x }
 
   let inline _listen f p =
     f p.listen <&> fun x -> { p with listen = x }
@@ -163,10 +167,12 @@ module MixedRecord =
     f p.sniff <&> fun x -> { p with sniff = x }
 
   let inline _sniffOverrideDestination f p =
-    f p.sniffOverrideDestination <&> fun x -> { p with sniffOverrideDestination = x }
+    f p.sniffOverrideDestination
+    <&> fun x -> { p with sniffOverrideDestination = x }
 
   let inline _domainStrategy f p =
     f p.domainStrategy <&> fun x -> { p with domainStrategy = x }
+
   let inline _udpTimeout f p =
     f p.udpTimeout <&> fun x -> { p with udpTimeout = x }
 
@@ -174,7 +180,10 @@ module MixedRecord =
     f p.proxyProtocol <&> fun x -> { p with proxyProtocol = x }
 
   let inline _proxyProtocolAcceptNoHeader f p =
-    f p.proxyProtocolAcceptNoHeader <&> fun x -> { p with proxyProtocolAcceptNoHeader = x }
+    f p.proxyProtocolAcceptNoHeader
+    <&> fun x ->
+      { p with
+          proxyProtocolAcceptNoHeader = x }
 
   let inline _detour f p =
     f p.detour <&> fun x -> { p with detour = x }
@@ -227,8 +236,7 @@ type TunRecord =
     detour: string option }
 
 module TunRecord =
-  let inline _tag f p =
-    f p.tag <&> fun x -> { p with tag = x }
+  let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }
 
   let inline _interfaceName f p =
     f p.interfaceName <&> fun x -> { p with interfaceName = x }
@@ -288,7 +296,8 @@ module TunRecord =
     f p.sniff <&> fun x -> { p with sniff = x }
 
   let inline _sniffOverrideDestination f p =
-    f p.sniffOverrideDestination <&> fun x -> { p with sniffOverrideDestination = x }
+    f p.sniffOverrideDestination
+    <&> fun x -> { p with sniffOverrideDestination = x }
 
   let inline _domainStrategy f p =
     f p.domainStrategy <&> fun x -> { p with domainStrategy = x }
@@ -297,7 +306,10 @@ module TunRecord =
     f p.proxyProtocol <&> fun x -> { p with proxyProtocol = x }
 
   let inline _proxyProtocolAcceptNoHeader f p =
-    f p.proxyProtocolAcceptNoHeader <&> fun x -> { p with proxyProtocolAcceptNoHeader = x }
+    f p.proxyProtocolAcceptNoHeader
+    <&> fun x ->
+      { p with
+          proxyProtocolAcceptNoHeader = x }
 
   let inline _detour f p =
     f p.detour <&> fun x -> { p with detour = x }

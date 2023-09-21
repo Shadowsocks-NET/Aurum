@@ -20,7 +20,8 @@ type MultiplexRecord =
     padding: bool option }
 
 module MultiplexRecord =
-  let inline _enabled f p = f p.enabled <&> fun x -> { p with enabled = x }
+  let inline _enabled f p =
+    f p.enabled <&> fun x -> { p with enabled = x }
 
   let inline _protocol f p =
     f p.protocol <&> fun x -> { p with protocol = x }
@@ -227,7 +228,7 @@ type VMessRecord =
     domainStrategy: string option
     fallbackDelay: string option }
 
-    static member FromV2FlyObject v2flyObject = ()
+  static member FromV2FlyObject v2flyObject = ()
 
 module VMessRecord =
   let inline _tag f p = f p.tag <&> fun x -> { p with tag = x }

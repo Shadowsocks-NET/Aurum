@@ -59,6 +59,7 @@ type RuleObject =
     Networks: RuleMatchNetwork option
     PortList: string option
     InboundTag: string list option }
+
   static member FromGenericRuleObject(genericRuleObject: Routing.RuleObject) =
     let ipList =
       genericRuleObject.Ip

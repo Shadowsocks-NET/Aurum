@@ -68,8 +68,7 @@ type OutboundObject =
         elif options |> List.contains "tls" then
           let host = (options |> List.find (fun a -> a.IndexOf("host") <> -1)).Split("=")[1]
 
-          let transportSettings =
-            createWebSocketObject None None None (Some host) None None
+          let transportSettings = createWebSocketObject None None None (Some host) None None
 
           let securitySettings = createTLSObject (Some host) None
 

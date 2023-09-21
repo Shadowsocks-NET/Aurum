@@ -22,8 +22,8 @@ type CoreProcess
         disposed <- false
 
   member this.Process
-    with get() = internalProcess
-    and set(value) = internalProcess <- value
+    with get () = internalProcess
+    and set (value) = internalProcess <- value
 
   member this.Start() =
     (this.Process <- Process.Start(coreProcessInfo))

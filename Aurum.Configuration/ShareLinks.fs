@@ -54,7 +54,6 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
         match transportType with
         | "ws" ->
           createWebSocketObject (tryRetrieveFromShareLink "path") None None None (tryRetrieveFromShareLink "host") None
-
           |> Success
         | "grpc" ->
           retrieveFromShareLink "serviceName"
