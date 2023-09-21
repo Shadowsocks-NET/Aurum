@@ -61,7 +61,7 @@ type OutboundObject =
         let options = opt.Split(";") |> Array.toList
 
         if options.Length = 0 then
-          let transportSettings = createWebSocketObject (None, None, None, None, None, None)
+          let transportSettings = createWebSocketObject None None None None None None
 
           { TransportSettings = transportSettings
             SecuritySettings = TransportSecurity.None }
@@ -69,16 +69,16 @@ type OutboundObject =
           let host = (options |> List.find (fun a -> a.IndexOf("host") <> -1)).Split("=")[1]
 
           let transportSettings =
-            createWebSocketObject (None, None, None, Some host, None, None)
+            createWebSocketObject None None None (Some host) None None
 
-          let securitySettings = createTLSObject (Some host, None)
+          let securitySettings = createTLSObject (Some host) None
 
           { TransportSettings = transportSettings
             SecuritySettings = securitySettings }
         elif options |> List.exists (fun a -> a.IndexOf("mode") <> -1) then
           let host = (options |> List.find (fun a -> a.IndexOf("host") <> -1)).Split("=")[1]
           let transportSettings = createQuicObject ()
-          let securitySettings = createTLSObject (Some host, None)
+          let securitySettings = createTLSObject (Some host) None
 
           { TransportSettings = transportSettings
             SecuritySettings = securitySettings }
@@ -148,7 +148,8 @@ type OutboundJsonObject =
         Settings = settings
         Tag = this.Tag
         StreamSettings = this.StreamSettings
-        Mux = this.Mux } |> Ok
+        Mux = this.Mux }
+      |> Ok
     | Error e -> Error e
 
 let createV2flyOutboundObject sendThrough setting streamSetting tag mux =

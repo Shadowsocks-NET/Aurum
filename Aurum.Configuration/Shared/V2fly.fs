@@ -293,7 +293,7 @@ module V2flyObject =
   let inline _StreamSettings f (p: V2flyObject) =
     f p.StreamSettings <&> fun x -> { p with StreamSettings = x }
 
-let createWebSocketObject (path, maxEarlyData, browserForwarding, earlyDataHeader, host, headers) =
+let createWebSocketObject path maxEarlyData browserForwarding earlyDataHeader host headers =
   let constructedHeaders = Option.defaultValue (Dictionary()) headers
 
   match host with
@@ -314,7 +314,7 @@ let createGrpcObject serviceName =
 
   GRPC config
 
-let createHttpObject (path, host: string option, headers) =
+let createHttpObjectWithHost path (host: string option) version headers =
   let parsedHost =
     Option.map (fun (host: string) -> host.Split "," |> Seq.toList) host
     |> Option.defaultValue []
@@ -322,11 +322,12 @@ let createHttpObject (path, host: string option, headers) =
   let config =
     { HttpObject.Path = Option.defaultValue "/" path
       Headers = headers
+      Version = version
       Host = parsedHost }
 
   HTTP config
 
-let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, readBufferSize, writeBufferSize, seed) =
+let createKCPObject mtu tti uplinkCapacity downlinkCapacity congestion readBufferSize writeBufferSize seed =
 
   let config =
     { KcpObject.MTU = Option.defaultValue 1350 mtu
@@ -342,13 +343,13 @@ let createKCPObject (mtu, tti, uplinkCapacity, downlinkCapacity, congestion, rea
 
 let createQuicObject () = QUIC
 
-let createTLSObject (serverName, alpn) =
+let createTLSObject serverName alpn =
   TransportSecurity.TLS
     { TlsObject.ServerName = serverName
       ALPN = alpn
       AllowInsecure = Some false }
 
-let createVMessObject (host, port, uuid, security) =
+let createVMessObject host port uuid security =
   VMess
     { VMessObject.Address = host
       Port = port

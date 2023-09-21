@@ -13,7 +13,7 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
   let protocolSetting =
     match uriObject.Scheme with
     | "vmess" ->
-      createVMessObject (uriObject.Host, uriObject.Port, uriObject.UserInfo, VMessSecurity.Auto)
+      createVMessObject uriObject.Host uriObject.Port uriObject.UserInfo VMessSecurity.Auto
       |> Success
     | unknown -> Failure([ ShareLinkFormatException $"unknown sharelink protocol {unknown}" ])
 
@@ -34,11 +34,11 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
   let securitySetting =
     match securityType with
     | "tls" ->
-      createTLSObject (
-        tryRetrieveFromShareLink "sni",
-        tryRetrieveFromShareLink "alpn"
-        |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList)
-      )
+      createTLSObject
+        (tryRetrieveFromShareLink "sni")
+        (tryRetrieveFromShareLink "alpn"
+         |> Option.map (fun alpn -> alpn.Split(",") |> Seq.toList))
+
       |> Success
     | "none" -> Success(TransportSecurity.None)
     | unsupported -> Failure([ ShareLinkFormatException $"unsupported security type {unsupported}" ])
@@ -53,14 +53,8 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
       (fun transportType ->
         match transportType with
         | "ws" ->
-          createWebSocketObject (
-            (tryRetrieveFromShareLink "path"),
-            None,
-            None,
-            None,
-            (tryRetrieveFromShareLink "host"),
-            None
-          )
+          createWebSocketObject (tryRetrieveFromShareLink "path") None None None (tryRetrieveFromShareLink "host") None
+
           |> Success
         | "grpc" ->
           retrieveFromShareLink "serviceName"
@@ -68,13 +62,17 @@ let createV2FlyObjectFromUri (uriObject: System.Uri) =
           |> Validation.ofResult
           |> Validation.map createGrpcObject
         | "http" ->
-          createHttpObject (tryRetrieveFromShareLink "path", tryRetrieveFromShareLink "host", Dictionary())
+          createHttpObjectWithHost
+            (tryRetrieveFromShareLink "path")
+            (tryRetrieveFromShareLink "host")
+            (HTTP2)
+            (Some(Dictionary()))
           |> Success
         | "quic" -> createQuicObject () |> Success
         | "kcp" ->
-          createKCPObject (None, None, None, None, None, None, None, (tryRetrieveFromShareLink "seed"))
+          createKCPObject None None None None None None None (tryRetrieveFromShareLink "seed")
           |> Success
-        | "tcp" -> createTCPObject () |> Success
+        | "tcp" -> createHttpObjectWithHost None None HTTP1 None |> Success
         | unknown -> Failure([ ConfigurationParameterException $"unknown transport protocol {unknown}" ]))
       transportType
 
